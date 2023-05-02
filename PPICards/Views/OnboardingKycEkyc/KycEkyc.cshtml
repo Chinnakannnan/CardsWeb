@@ -1,0 +1,746 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    @*<meta name="viewport" content="width=device-width, initial-scale=1.0" />*@
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>portal - Dashboard</title>
+    <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/portal.css" rel="stylesheet" />
+
+</head>
+<body>
+<div class="row d-flex justify-content-center">
+    <div class="col-xl-8 col-lg-8 col-md-12 my-4">
+        <div class="card mb-4 border-radius border-0 bg-gradient-primary-light">
+            <div class="card-body text-center">
+                <h3 class="text-center">Welcome onboarding KYC and EKYC</h3>
+                <hr />
+                <div class="small"> Please Choose an Option</div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="customRadio" name="example"
+                           value="customEx">
+                    <label class="custom-control-label" for="customRadio">KYC</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="customRadio2"
+                           name="example" value="customEx">
+                    <label class="custom-control-label" for="customRadio2">eKYC</label>
+                </div>
+            </div>
+        </div>
+
+        <h4 class="font-weight-bold">Stepper </h4>
+        <div class="stepper d-flex flex-column mt-5 ml-2">
+            <div class="d-flex">
+                <div class="d-flex flex-column pr-4 align-items-center">
+                    <div class="rounded-circle">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <div class="line h-100"></div>
+                </div>
+                <div class="card mb-4 border-radius w-100">
+                    <a href="#panDetails" class="d-block card-header border-radius bg-white py-3"
+                       data-toggle="collapse" role="button" aria-expanded="true"
+                       aria-controls="panDetails">
+                        <h6 class="m-0 font-weight-bold text-primary"> Your PAN Details </h6>
+                    </a>
+                    <!-- Card Content - Collapse -->
+                    <div class="collapse show" id="panDetails">
+                        <div class="card-body">
+                            <h6 class="font-weight-bold">Upload Proprietor PAN</h6>
+                            <div class="row mt-4">
+                                <div class="col-md-6 col-sm-12 ">
+                                    <div class="form-group mb-3">
+                                        <label class="floating-label">
+                                            <input type="text" class="form-control"
+                                                   placeholder="PAN" value="BDJPJ4235K" disabled>
+                                            <span class="floating-text">PAN</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group mb-3">
+                                        <label class="floating-label">
+                                            <input type="date" class="form-control"
+                                                   placeholder="Date">
+                                            <span class="floating-text">Date</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-8">
+                                    <div class="form-group mb-3">
+                                        <label class="floating-label">
+                                            <input type="text" class="form-control"
+                                                   placeholder="PAN">
+                                            <span class="floating-text">PAN</span>
+                                        </label>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-3 col-sm-4">
+                                    <button class="btn btn-primary btn-large mb-3">
+                                        <i class="fas fa-stamp mr-2"></i>
+                                        validate
+                                    </button>
+                                    <div class="loader"></div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group mb-3">
+                                        <label class="floating-label">
+                                            <input type="text" class="form-control"
+                                                   placeholder="A/C Name">
+                                            <span class="floating-text">A/C Name</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group mb-3">
+                                        <label class="floating-label">
+                                            <input type="text" class="form-control"
+                                                   placeholder="A/C Name">
+                                            <span class="floating-text">A/C Name</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-1">
+                                    <div class="form-group mb-3">
+                                        <label class="floating-label">
+                                            <input type="text" class="form-control"
+                                                   placeholder="A/C Name">
+                                            <span class="floating-text">A/C Name</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem
+                                consequatur velit repellat dolores illum.
+                            </p>
+                            <div class="d-flex justify-content-end mb-4">
+                                <button class="btn btn-outline-primary px-3 mr-3">
+                                    <i class="fas fa-save mr-2"
+                                       aria-hidden="true"></i>save
+                                </button>
+                                <button class="btn btn-primary px-3">Continue</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="d-flex">
+                <div class="d-flex flex-column pr-4 align-items-center">
+                    <div class="rounded-circle">
+                        <i class="fa fa-id-card" aria-expanded="true"></i>
+                    </div>
+                    <div class="line h-100"></div>
+                </div>
+                <div class="card mb-4 border-radius w-100">
+                    <a href="#aadhaarDetails"
+                       class="d-block card-header border-radius bg-white py-3"
+                       data-toggle="collapse" role="button" aria-expanded="true"
+                       aria-controls="aadhaarDetails">
+                        <h6 class="m-0 font-weight-bold text-primary"> Your Aadhaar Details </h6>
+                    </a>
+                    <div class="collapse" id="aadhaarDetails">
+                        <div class="card-body">
+                            <h6 class="font-weight-bold">Upload Aadhaar</h6>
+                            <div class="row mt-4">
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group mb-3">
+                                        <label class="floating-label">
+                                            <input type="text" class="form-control"
+                                                   placeholder="A/C Name">
+                                            <span class="floating-text">A/C Name</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group mb-3">
+                                        <label class="floating-label">
+                                            <input type="date" class="form-control"
+                                                   placeholder="Date">
+                                            <span class="floating-text">Date</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-8">
+                                    <div class="form-group mb-3">
+                                        <label class="floating-label">
+                                            <input type="text" class="form-control"
+                                                   placeholder="Aadhaar">
+                                            <span class="floating-text">Aadhaar</span>
+                                        </label>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-3 col-sm-4">
+                                    <button class="btn btn-primary btn-large  mb-3">
+                                        <i class="fas fa-stamp mr-2"></i>
+                                        validate
+                                    </button>
+                                    <div class="loader"></div>
+                                </div>
+                                <div class="d-flex align-items-end">
+                                    <div class="col-md-6 col-sm-12">
+
+                                        <div class="form-group mb-3">
+                                            <label class="" for="customFile">
+                                                Aadhar Front
+                                                file
+                                            </label>
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input"
+                                                       id="customFile">
+                                                <div class="custom-file-label">Choose file</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12">
+
+                                        <div class="form-group mb-3">
+                                            <label class="" for="customFile">
+                                                Aadhar Back
+                                                file
+                                            </label>
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input"
+                                                       id="customFile">
+                                                <div class="custom-file-label">Choose file</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-1">
+                                    <div class="form-group mb-3">
+                                        <label class="floating-label">
+                                            <input type="file" class="form-control"
+                                                   placeholder="A/C Name">
+                                            <span class="floating-text">A/C Name</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem
+                                consequatur velit repellat dolores illum.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="d-flex">
+                <div class="d-flex flex-column pr-4 align-items-center">
+                    <div class="rounded-circle">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <div class="line h-100 d-none"></div>
+                </div>
+                <div class="card mb-4 border-radius w-100">
+                    <a href="#personalDetails"
+                       class="d-block card-header border-radius bg-white py-3"
+                       data-toggle="collapse" role="button" aria-expanded="true"
+                       aria-controls="personalDetails">
+                        <h6 class="m-0 font-weight-bold text-primary"> Your Personal Details </h6>
+                    </a>
+                    <div class="collapse" id="personalDetails">
+                        <div class="card-body">
+                            <h6 class="font-weight-bold">Upload Aadhaar</h6>
+                            <div class="row mt-4">
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group mb-3">
+                                        <label class="floating-label">
+                                            <input type="text" class="form-control"
+                                                   placeholder="A/C Name">
+                                            <span class="floating-text">A/C Name</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group mb-3">
+                                        <label class="floating-label">
+                                            <input type="date" class="form-control"
+                                                   placeholder="Date">
+                                            <span class="floating-text">Date</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-8">
+                                    <div class="form-group mb-3">
+                                        <label class="floating-label">
+                                            <input type="text" class="form-control"
+                                                   placeholder="Aadhaar">
+                                            <span class="floating-text">Aadhaar</span>
+                                        </label>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-3 col-sm-4">
+                                    <button class="btn btn-primary btn-large mb-3">
+                                        <i class="fas fa-stamp mr-2"></i>
+                                        validate
+                                    </button>
+                                    <div class="loader"></div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group mb-3">
+                                        <label class="floating-label">
+                                            <input type="text" class="form-control"
+                                                   placeholder="A/C Name">
+                                            <span class="floating-text">A/C Name</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group mb-3">
+                                        <label class="floating-label">
+                                            <input type="text" class="form-control"
+                                                   placeholder="A/C Name">
+                                            <span class="floating-text">A/C Name</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-1">
+                                    <div class="form-group mb-3">
+                                        <label class="floating-label">
+                                            <input type="text" class="form-control"
+                                                   placeholder="A/C Name">
+                                            <span class="floating-text">A/C Name</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem
+                                consequatur velit repellat dolores illum.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary bg-gradient-primary btn-large"> Submit</button>
+        </div>
+    </div>
+
+</div>
+
+    <div class="row d-flex justify-content-center">
+    <!-- <div class="col-xl-8 col-lg-8 col-md-12 my-4"> -->
+    <div class="col-12 my-4">
+        <h4 class="font-weight-bold">Vertical Stepper </h4>
+        <section class="design-process-section" id="process-tab">
+
+            <div class="row">
+                <div class="col-12">
+                    <ul class="nav nav-tabs process-model more-icon-preocess stepper-tab justify-content-center"
+                        role="tablist">
+                        <li class="active">
+                            <a href="#panCard1" aria-controls="panCard1" role="tab"
+                               data-toggle="tab">
+                                <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                <p>PAN Details</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#aadharCard1" aria-controls="aadharCard1" role="tab"
+                               data-toggle="tab">
+                                <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                <p>Aadhar Details</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#contactDetails1" aria-controls="contactDetails1" role="tab"
+                               data-toggle="tab">
+                                <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                <p>Contact Details</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#content1" aria-controls="content1" role="tab" data-toggle="tab">
+                                <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                <p>Content</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#reporting1" aria-controls="reporting1" role="tab"
+                               data-toggle="tab">
+                                <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                <p>Reporting</p>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- end design process steps-->
+                    <!-- Tab panes -->
+                    <div class="tab-content card border-0 border-radius">
+                        <div role="tabpanel" class="tab-pane active" id="panCard1">
+                            <div class="design-process-content">
+                                <h6 class="font-weight-bold">Upload Aadhaar</h6>
+                                <p class="text-primary">
+                                    Lorem ipsum dolor sit amet consectetur
+                                    adipisicing elit. Quidem
+                                    consequatur velit repellat dolores illum.
+                                </p>
+                                <div class="row mt-4">
+                                    <div class="col-md-6 col-sm-12">
+                                        <div class="form-group mb-3">
+                                            <label class="floating-label">
+                                                <input type="text" class="form-control"
+                                                       placeholder="A/C Name">
+                                                <span class="floating-text">A/C Name</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12">
+                                        <div class="form-group mb-3">
+                                            <label class="floating-label">
+                                                <input type="date" class="form-control"
+                                                       placeholder="Date">
+                                                <span class="floating-text">Date</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-8">
+                                        <div class="form-group mb-3">
+                                            <label class="floating-label">
+                                                <input type="text" class="form-control"
+                                                       placeholder="Aadhaar">
+                                                <span class="floating-text">Aadhaar</span>
+                                            </label>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-3 col-sm-4">
+                                        <button class="btn btn-primary btn-large mb-3">
+                                            <i class="fas fa-stamp mr-2"></i>
+                                            validate
+                                        </button>
+                                        <div class="loader"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group mb-3">
+                                            <label class="floating-label">
+                                                <input type="text" class="form-control"
+                                                       placeholder="A/C Name">
+                                                <span class="floating-text">A/C Name</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12">
+                                        <div class="form-group mb-3">
+                                            <label class="floating-label">
+                                                <input type="text" class="form-control"
+                                                       placeholder="A/C Name">
+                                                <span class="floating-text">A/C Name</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-1">
+                                        <div class="form-group mb-3">
+                                            <label class="floating-label">
+                                                <input type="text" class="form-control"
+                                                       placeholder="A/C Name">
+                                                <span class="floating-text">A/C Name</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row d-flex align-items-end">
+                                    <div class="col-md-6 col-sm-12">
+
+                                        <div class="form-group mb-3">
+                                            <label class="" for="customFile">
+                                                Aadhar Front
+                                                file
+                                            </label>
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input"
+                                                       id="customFile">
+                                                <div class="custom-file-label">Choose file</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12">
+
+                                        <div class="form-group mb-3">
+                                            <label class="" for="customFile">
+                                                Aadhar Back
+                                                file
+                                            </label>
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input"
+                                                       id="customFile">
+                                                <div class="custom-file-label">Choose file</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p>
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem
+                                    consequatur velit repellat dolores illum.
+                                </p>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="aadharCard1">
+                            <div class="design-process-content">
+                                <h3 class="semi-bold">aadharCard</h3>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
+                                    diam nonummy nibh euismod tincid unt ut laoreet dolore magna
+                                    aliquam erat volutpat
+                                </p>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="contactDetails1">
+                            <div class="design-process-content">
+                                <h3 class="semi-bold">contactDetails</h3>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
+                                    diam nonummy nibh euismod tincid unt ut laoreet dolore magna
+                                    aliquam erat volutpat
+                                </p>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="content1">
+                            <div class="design-process-content">
+                                <h3 class="semi-bold">Content</h3>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
+                                    diam nonummy nibh euismod tincid unt ut laoreet dolore magna
+                                    aliquam erat volutpat
+                                </p>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="reporting1">
+                            <div class="design-process-content">
+                                <h3>Reporting</h3>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
+                                    diam nonummy nibh euismod tincid unt ut laoreet dolore magna
+                                    aliquam erat volutpat.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</div>
+
+<h4>tabs</h4>
+
+<div class="row d-flex justify-content-center">
+    <div class="col-12">
+        <ul class="nav nav-tabs justify-content-start stepper-tab tabs_design"
+            role="tablist">
+            <li class="active">
+                <a href="#panCard" aria-controls="panCard" role="tab"
+                   data-toggle="tab">
+                    <i class="fa fa-credit-card" aria-hidden="true"></i>
+                    <p class="mb-0">PAN Details</p>
+                </a>
+            </li>
+            <li>
+                <a href="#aadharCard" aria-controls="aadharCard" role="tab"
+                   data-toggle="tab">
+                    <i class="fa fa-credit-card" aria-hidden="true"></i>
+                    <p class="mb-0">Aadhar Details</p>
+                </a>
+            </li>
+            <li>
+                <a href="#contactDetails" aria-controls="contactDetails" role="tab"
+                   data-toggle="tab">
+                    <i class="fa fa-credit-card" aria-hidden="true"></i>
+                    <p class="mb-0">Contact Details</p>
+                </a>
+            </li>
+            <li>
+                <a href="#content" aria-controls="content" role="tab" data-toggle="tab">
+                    <i class="fa fa-credit-card" aria-hidden="true"></i>
+                    <p class="mb-0">Content</p>
+                </a>
+            </li>
+            <li>
+                <a href="#reporting" aria-controls="reporting" role="tab"
+                   data-toggle="tab">
+                    <i class="fa fa-credit-card" aria-hidden="true"></i>
+                    <p class="mb-0">Reporting</p>
+                </a>
+            </li>
+        </ul>
+        <!-- end design process steps-->
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="panCard">
+                <div class="design-process-content">
+                    <h6 class="font-weight-bold">Upload Aadhaar</h6>
+                    <p class="text-primary">
+                        Lorem ipsum dolor sit amet consectetur
+                        adipisicing elit. Quidem
+                        consequatur velit repellat dolores illum.
+                    </p>
+                    <div class="row mt-4">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group mb-3">
+                                <label class="floating-label">
+                                    <input type="text" class="form-control"
+                                           placeholder="A/C Name">
+                                    <span class="floating-text">A/C Name</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group mb-3">
+                                <label class="floating-label">
+                                    <input type="date" class="form-control"
+                                           placeholder="Date">
+                                    <span class="floating-text">Date</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-8">
+                            <div class="form-group mb-3">
+                                <label class="floating-label">
+                                    <input type="text" class="form-control"
+                                           placeholder="Aadhaar">
+                                    <span class="floating-text">Aadhaar</span>
+                                </label>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3 col-sm-4">
+                            <button class="btn btn-primary btn-large mb-3">
+                                <i class="fas fa-stamp mr-2"></i>
+                                validate
+                            </button>
+                            <div class="loader"></div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group mb-3">
+                                <label class="floating-label">
+                                    <input type="text" class="form-control"
+                                           placeholder="A/C Name">
+                                    <span class="floating-text">A/C Name</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group mb-3">
+                                <label class="floating-label">
+                                    <input type="text" class="form-control"
+                                           placeholder="A/C Name">
+                                    <span class="floating-text">A/C Name</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-1">
+                            <div class="form-group mb-3">
+                                <label class="floating-label">
+                                    <input type="text" class="form-control"
+                                           placeholder="A/C Name">
+                                    <span class="floating-text">A/C Name</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row d-flex align-items-end">
+                        <div class="col-md-6 col-sm-12">
+
+                            <div class="form-group mb-3">
+                                <label class="" for="customFile">
+                                    Aadhar Front
+                                    file
+                                </label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input"
+                                           id="customFile">
+                                    <div class="custom-file-label">Choose file</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+
+                            <div class="form-group mb-3">
+                                <label class="" for="customFile">
+                                    Aadhar Back
+                                    file
+                                </label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input"
+                                           id="customFile">
+                                    <div class="custom-file-label">Choose file</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem
+                        consequatur velit repellat dolores illum.
+                    </p>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="aadharCard">
+                <div class="design-process-content">
+                    <h3 class="semi-bold">aadharCard</h3>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
+                        diam nonummy nibh euismod tincid unt ut laoreet dolore magna
+                        aliquam erat volutpat
+                    </p>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="contactDetails">
+                <div class="design-process-content">
+                    <h3 class="semi-bold">contactDetails</h3>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
+                        diam nonummy nibh euismod tincid unt ut laoreet dolore magna
+                        aliquam erat volutpat
+                    </p>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="content">
+                <div class="design-process-content">
+                    <h3 class="semi-bold">Content</h3>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
+                        diam nonummy nibh euismod tincid unt ut laoreet dolore magna
+                        aliquam erat volutpat
+                    </p>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="reporting">
+                <div class="design-process-content">
+                    <h3>Reporting</h3>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
+                        diam nonummy nibh euismod tincid unt ut laoreet dolore magna
+                        aliquam erat volutpat.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+  
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/portal.js"></script>
+@*    @await RenderSectionAsync("Scripts", required: false)*@
+
+</body>
+</html>

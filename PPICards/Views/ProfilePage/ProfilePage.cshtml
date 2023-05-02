@@ -1,0 +1,615 @@
+﻿    @model PPICards.Models.LockUnlock
+
+    @using Microsoft.AspNetCore.Http
+    @inject IHttpContextAccessor Accessor
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/useractivity.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#Sub_mit").click(function () {
+                alert("mail");
+                var EmailId = $("#EmailId").val();
+
+
+                alert(Amount + kitrefno);
+                if (Amount != "" && kitrefno != null) {
+                    $.ajax(
+                        {
+                            type: 'POST',
+                            dataType: 'JSON',
+                            url: "/ProfilePage/UpdateCustomer",
+                            contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                            data: { emailId: EmailId },
+                            success:
+                                function (data) {
+                                    //  alert("success" + " " + JSON.stringify(data));
+                                    if (data == 0) {
+                                        //alert("welcome");
+                                        $("#successPopup").modal("show");
+                                        $("#close").trigger("click");
+                                    }
+                                },
+                            error:
+                                function (response) {
+                                    //alert("approve failed")
+                                    //$("#successModal").modal('show');
+                                    $(".erroralert").show().delay(8000).fadeOut();
+                                    $("#errortext").text("Please try again!").show().delay(8000).fadeOut();
+                                }
+                        });
+
+                }
+                else {
+
+                    $("#alertPopup").modal("show");
+
+                }
+                return false;
+            });
+
+        $('#ResetPwdSubmit').click(function () {
+            var CurrentPassword = $("#CurrentPwd").val();
+            var NewPassword = $("#NewPwd").val();
+            var ConfirmPassword = $("#ConfirmPwd").val();
+        
+
+            if (CurrentPassword == '' || NewPassword == '' || ConfirmPassword == '') {
+                DispalyError("Please fill all values");
+                return;
+            }
+            else if (NewPassword != ConfirmPassword) {
+                DispalyError("Confirm Password mismatch with new password ");
+                return;
+            }
+            else if ((NewPassword.length) < '12') {
+                DispalyError(" Password should be 12 letters");
+                return;
+            }
+            else if ((NewPassword.length) >= '12') {
+                 var passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^\w\d\s:])([^\s]){8,}$/;
+                 var passwordError = "Password must contain at least 12 characters including one uppercase letter, one lowercase letter, one digit and one special character.";
+                  if (!passwordRegex.test(NewPassword))
+                      {
+                     DispalyError(passwordError);
+                    return;
+                      }  
+            }
+            
+   
+
+            $.ajax({
+                type: 'POST',
+                url: '/ProfilePage/ChangePassword?CurrentPassword=' + CurrentPassword + "&NewPassword=" + NewPassword + "&ConfirmPassword=" + ConfirmPassword,
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                success: function (result) {
+                    data = $.parseJSON(result);
+
+                    if (data == '0') {
+                        DispalyError("Something worng...Please Contact Admin");
+                    }
+                    else if (data.statuscode == '000') {
+                        DispalySuccess("Password Changed successfully !!!");
+                    }
+                    else {
+                        DispalyError(data.statusdesc);
+                    }
+                   
+                }
+
+            });;
+        });
+
+        });
+    
+    function DispalyError(message) {
+        if (message != '') {
+            $('#displaydangermessage').text(message);
+            $('#alertPopup').modal('show');
+        }
+    }
+
+    function DispalySuccess(message) {
+        if (message != '') {
+            $('#displaysuccessmessage').text(message);
+            $('#SuccessPopup').modal('show');
+        }
+    }
+
+    function DisableSuccessPopup() {
+        var hrf = $("#btnSuccessok").attr("href");
+        if (hrf != '' && hrf != undefined && hrf != "undefined") {
+            window.location.href = hrf;
+        }
+        else {
+            $('#SuccessPopup').modal('hide');
+        }
+    }
+
+</script>
+
+<div class="row">
+    <div class="col-xl-8 col-lg-8 col-md-12 my-4">
+        <h4 class="font-weight-bold">Profile </h4>
+        <div class="card mb-4 border-0 border-radius">
+            <div class="card-body card-body border-radius pb-5">
+
+                <h5 class="font-weight-bold text-primary">Personal Details </h5>
+                <div class="profileDetails my-4">
+                    <div class="imageContent">
+                        <img class="profileImage" src="~/img/undraw_profile.svg" />
+                        <button class="btn btn-primary btn-file btn-circle" data-toggle="modal"
+                                data-target="#editProfilePopup" tabindex="500">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                    </div>
+                    <div class="profileInfo">
+                        <p class="profileName mb-0 font-weight-bold"> @Accessor.HttpContext.Session.GetString(ConstValues.LoginName)</p>
+                        <p class="profileContact">
+                            <span class="mobNo">@Accessor.HttpContext.Session.GetString(ConstValues.SessionMobileNo)</span> | <span class="email">@Accessor.HttpContext.Session.GetString(ConstValues.SessionEmailId)</span>
+                        </p>
+                        <button class="btn btn-outline-primary" data-toggle="modal"
+                                data-target="#changePasswordPopup">
+                            Change Password
+                        </button>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between my-5">
+                    <h5 class="font-weight-bold text-primary">Bank Details</h5>
+                    <button class="btn btn-outline-primary px-4" data-toggle="modal"
+                            data-target="#updateAccountPopup">
+                        Edit
+                    </button>
+                </div>
+                <div class="bankDetails d-flex justify-content-between justify-content-md-start flex-md-column">
+
+                    <div class="row">
+                        <div class="col-lg-6 col-md-12">
+                            <h6 class="mb-1 text-gray-600">Account Holder Name</h6>
+                            <p class="font-weight-bold"> @Accessor.HttpContext.Session.GetString(ConstValues.LoginName) S</p>
+                            <h6 class="mb-0 text-gray-600">IFSC Code</h6>
+                            <p class="font-weight-bold">UTIB0CCH274</p>
+                            <h6 class="mb-0 text-gray-600">Branch</h6>
+                            <p class="font-weight-bold">Central </p>
+                        </div>
+                        <div class="col-lg-6 col-md-12 text-lg-right text-md-left">
+                            <h6 class="mb-0 text-gray-600">Account Number</h6>
+                            <p class="font-weight-bold">@Accessor.HttpContext.Session.GetString(ConstValues.UserAccount)</p>
+                            <h6 class="mb-0 text-gray-600">bank</h6>
+                            <p class="font-weight-bold">Axis Bank</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-lg-4 col-md-12 my-4">
+        <h4 class="font-weight-bold">Notifications </h4>
+        <div class="card mb-4 bg-gradient-primary-light border-0 border-radius">
+            <div class="card-body border-radius">
+                <div class="d-flex justify-content-between">
+                    <p class="font-weight-bold">Email</p>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <div class="mb-2">
+                        <button class="btn btn-sm text-danger">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        <span> @Accessor.HttpContext.Session.GetString(ConstValues.SessionEmailId)</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="d-flex flex-column">
+                    <button class="btn text-primary font-weight-bold text-left"
+                            data-toggle="modal" data-target="#addNewEmailPopup" id="addEmailInput">
+                        + Add new Email Address
+                    </button>
+                </div>
+                <hr />
+                <div class="d-flex justify-content-between">
+                    <p class="font-weight-bold">SMS</p>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <div class="mb-2">
+                        <button class="btn btn-sm text-danger">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        <span> @Accessor.HttpContext.Session.GetString(ConstValues.SessionMobileNo)</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="d-flex flex-column">
+                    <button class="btn text-primary font-weight-bold text-left" id="addMobileInput"
+                            data-toggle="modal" data-target="#addNewPhonePopup">
+                        + Add new Mobile
+                        Number
+                    </button>
+                </div>
+                <hr />
+
+
+                <div class="d-flex justify-content-between">
+                    <p class="font-weight-bold">Whataspp</p>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <div class="mb-2">
+                        <button class="btn btn-sm text-danger">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        <span> @Accessor.HttpContext.Session.GetString(ConstValues.SessionMobileNo)</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="d-flex flex-column">
+                    <button class="btn text-primary font-weight-bold text-left"
+                            data-toggle="modal" data-target="#addNewPhonePopup">
+                        + Add new Whatsapp Number
+                    </button>
+                </div>
+                <hr />
+              @*  <div class="d-flex justify-content-between">
+                    <p class="font-weight-bold"> Layer Customer Notifications</p>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <hr />
+                <div class="d-flex justify-content-between">
+                    <p class="font-weight-bold">Layer Merchant Notifications</p>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+                                <!-- Profile edit modal-->
+        <div class="modal side-modal animate__animated animate__slideInRight" id="editProfilePopup" tabindex="-1"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" id="personalDetails">
+                    <div class="modal-header">
+                        <h5 class="modal-title font-weight-bold text-primary">Edit Profile</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="36px" height="36px">
+                                <path
+                                    d="M 38.982422 6.9707031 A 2.0002 2.0002 0 0 0 37.585938 7.5859375 L 24 21.171875 L 10.414062 7.5859375 A 2.0002 2.0002 0 0 0 8.9785156 6.9804688 A 2.0002 2.0002 0 0 0 7.5859375 10.414062 L 21.171875 24 L 7.5859375 37.585938 A 2.0002 2.0002 0 1 0 10.414062 40.414062 L 24 26.828125 L 37.585938 40.414062 A 2.0002 2.0002 0 1 0 40.414062 37.585938 L 26.828125 24 L 40.414062 10.414062 A 2.0002 2.0002 0 0 0 38.982422 6.9707031 z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+
+                            <div class="col-12">
+                                <div class="form-group mb-3">
+                                    <div id="profilePreview" class="d-flex justify-content-center">
+                                    </div>
+                                    <label class="" for="customFile">Profile Photo</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="profilePhoto"
+                                            accept=".jfif,.jpg,.jpeg,.png,.gif">
+                                        <div class="custom-file-label">Choose file</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group mb-3">
+                                    <label class="floating-label">
+                                        <input type="text" class="form-control" placeholder="Name" value="Raj" disabled>
+                                        <span class="floating-text">Name</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group mb-3">
+                                    <label class="floating-label">
+                                        <input type="tel" class="form-control" value="9840506405"
+                                            placeholder="Mobile Number">
+                                        <span class="floating-text">Mobile Number</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group mb-3">
+                                    <label class="floating-label">
+                                        <input type="email" class="form-control" value="raj@zgrowsystems.com"
+                                            placeholder="email Address">
+                                        <span class="floating-text">Email</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary btn-block" type="button" data-dismiss="modal">Update
+                            Profile</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Change Password  modal-->
+        <div class="modal side-modal animate__animated animate__slideInRight" id="changePasswordPopup" tabindex="-1"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" id="personalDetails">
+                    <div class="modal-header">
+                        <h5 class="modal-title font-weight-bold text-primary">Change Password</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="36px" height="36px">
+                                <path
+                                    d="M 38.982422 6.9707031 A 2.0002 2.0002 0 0 0 37.585938 7.5859375 L 24 21.171875 L 10.414062 7.5859375 A 2.0002 2.0002 0 0 0 8.9785156 6.9804688 A 2.0002 2.0002 0 0 0 7.5859375 10.414062 L 21.171875 24 L 7.5859375 37.585938 A 2.0002 2.0002 0 1 0 10.414062 40.414062 L 24 26.828125 L 37.585938 40.414062 A 2.0002 2.0002 0 1 0 40.414062 37.585938 L 26.828125 24 L 40.414062 10.414062 A 2.0002 2.0002 0 0 0 38.982422 6.9707031 z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group my-3">
+                                    <label class="floating-label show_hide_password">
+                                        <input type="password" class="form-control" id="CurrentPwd"
+                                            placeholder="Enter Current Password" autocomplete="off">
+                                        <span class="floating-text">Current Password</span>
+                                        <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group mb-3">
+                                    <label class="floating-label show_hide_password">
+                                <input type="password" class="form-control" id="NewPwd" placeholder="Enter New Password" autocomplete="off" min="12" max="20">
+                                        <span class="floating-text">New Password</span>
+                                        <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                                    </label>
+                                </div>
+                        <span id="passstrength"></span>
+                            </div>
+                     <div class="col-12">
+                                <div class="form-group mb-3">
+                                    <label class="floating-label show_hide_password">
+                                <input type="password" class="form-control" id="ConfirmPwd"
+                                       placeholder="Enter Confirm Password" autocomplete="off" min="12" max="20">
+                                        <span class="floating-text">Confirm Password</span>
+                                        <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                                    </label>
+                                </div>
+                            </div>
+                    <span style="color:red">Note:Password must contain at least 12 characters including one uppercase letter, one lowercase letter, one digit and one special character</span>
+
+
+                </div>
+                    </div>
+                    <div class="modal-footer">
+                <button id="ResetPwdSubmit" class="btn btn-primary btn-block" type="button" data-dismiss="modal">Change Password</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Account Details Modal-->
+        <div class="modal side-modal animate__animated animate__slideInRight" id="updateAccountPopup" tabindex="-1"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title font-weight-bold text-primary">Update Account Details</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="36px" height="36px">
+                                <path
+                                    d="M 38.982422 6.9707031 A 2.0002 2.0002 0 0 0 37.585938 7.5859375 L 24 21.171875 L 10.414062 7.5859375 A 2.0002 2.0002 0 0 0 8.9785156 6.9804688 A 2.0002 2.0002 0 0 0 7.5859375 10.414062 L 21.171875 24 L 7.5859375 37.585938 A 2.0002 2.0002 0 1 0 10.414062 40.414062 L 24 26.828125 L 37.585938 40.414062 A 2.0002 2.0002 0 1 0 40.414062 37.585938 L 26.828125 24 L 40.414062 10.414062 A 2.0002 2.0002 0 0 0 38.982422 6.9707031 z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group mb-3">
+                                    <label class="floating-label">
+                                        <input type="text" class="form-control" placeholder="Account Holder Name"
+                                            value="RAJKUMAR S">
+                                        <span class="floating-text">Account Holder Name</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group mb-3">
+                                    <label class="floating-label">
+                                        <input type="text" class="form-control" placeholder="Account Number">
+                                        <span class="floating-text">Account Number</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group mb-3">
+                                    <label class="floating-label">
+                                        <input type="text" class="form-control" placeholder="Bank">
+                                        <span class="floating-text">Bank</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group mb-3">
+                                    <label class="floating-label">
+                                        <input type="text" class="form-control" placeholder="IFSC code">
+                                        <span class="floating-text">IFSC code</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group mb-3">
+                                    <label class="floating-label">
+                                        <input type="text" class="form-control" placeholder="Branch">
+                                        <span class="floating-text">Branch</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary btn-block" type="button" data-dismiss="modal">Submit</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+<!-- Add email Modal-->
+<div class="modal side-modal animate__animated animate__slideInRight" id="addNewEmailPopup" tabindex="-1"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold text-primary">Add Email Address</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="36px" height="36px">
+                        <path d="M 38.982422 6.9707031 A 2.0002 2.0002 0 0 0 37.585938 7.5859375 L 24 21.171875 L 10.414062 7.5859375 A 2.0002 2.0002 0 0 0 8.9785156 6.9804688 A 2.0002 2.0002 0 0 0 7.5859375 10.414062 L 21.171875 24 L 7.5859375 37.585938 A 2.0002 2.0002 0 1 0 10.414062 40.414062 L 24 26.828125 L 37.585938 40.414062 A 2.0002 2.0002 0 1 0 40.414062 37.585938 L 26.828125 24 L 40.414062 10.414062 A 2.0002 2.0002 0 0 0 38.982422 6.9707031 z" />
+                    </svg>
+                </button>
+            </div>
+            @using (Html.BeginForm("UpdateCustomer", "ProfilePage", FormMethod.Post, new { @onsubmit = "LoadLoader()" }))
+            {
+
+                @Html.AntiForgeryToken()
+                //@Html.HiddenFor(m => m.cardReferenceId,new{@id="CardNum"})
+
+                @*@Accessor.HttpContext.Session.GetString(ConstValues.KycStatus)*@
+                <div class="modal-body">
+                    <div class="row my-4">
+                        <div class="col-12 text-center">
+                            <div class="col-6 texte">
+                                <label id="invalidAmnt" style="color:red"></label>
+                            </div>
+                            <div class="col-sm-12">
+                                <label class="floating-label">
+
+                                    @Html.TextBoxFor(m => m.emailID, new
+                                {
+                                @required = "",
+                                pattern = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$",
+                                @autocomplete = "off",
+                                @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.@_-')",
+                                @class = "form-control",
+                                @maxlength = "35",
+                                placeholder = "Place your Email Address",
+                                id = "EmailId",
+                                name = "EmailId",
+                                // @Value = "cynthia@accupaydtech.com",
+                                @title = "For ex: xyz@gmail.com"
+                                })
+
+                                    <span class="floating-text">
+                                        Email ID
+                                        <span class="floating-text" style="color: red;">*</span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-primary btn-block" id="sub_mit" type="submit">Submit</button>
+
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+<!-- Add Phone Modal-->
+<div class="modal side-modal animate__animated animate__slideInRight" id="addNewPhonePopup" tabindex="-1"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold text-primary">Add Mobile Number</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="36px" height="36px">
+                        <path d="M 38.982422 6.9707031 A 2.0002 2.0002 0 0 0 37.585938 7.5859375 L 24 21.171875 L 10.414062 7.5859375 A 2.0002 2.0002 0 0 0 8.9785156 6.9804688 A 2.0002 2.0002 0 0 0 7.5859375 10.414062 L 21.171875 24 L 7.5859375 37.585938 A 2.0002 2.0002 0 1 0 10.414062 40.414062 L 24 26.828125 L 37.585938 40.414062 A 2.0002 2.0002 0 1 0 40.414062 37.585938 L 26.828125 24 L 40.414062 10.414062 A 2.0002 2.0002 0 0 0 38.982422 6.9707031 z" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group my-3">
+                            <label class="floating-label">
+                                <input type="tel" class="form-control" placeholder="Mobile Number">
+                                <span class="floating-text">Mobile Number</span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-block" type="button" data-dismiss="modal">Submit</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="SuccessPopup" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="d-flex justify-content-center my-4">
+                <i class="fas fa-check-circle text-success" style="font-size:72px"></i>
+            </div>
+            <div id="displaysuccessmessage" class="modal-body text-center">
+            </div>
+            <div class="modal-footer align-self-center">
+                <button id="btnSuccessok" onclick="DisableSuccessPopup();" class="btn btn-secondary btn-lg" type="button">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="alertPopup" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="d-flex justify-content-center my-4">
+                <i class="fas fa-check-circle text-danger" style="font-size:72px"></i>
+            </div>
+            <div id="displaydangermessage" class="modal-body text-center"></div>
+            <div class="modal-footer align-self-center">
+                <button class="btn btn-secondary btn-lg" type="button" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>

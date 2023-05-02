@@ -1,0 +1,715 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor Accessor
+@model PPICards.Models.WalletModel
+<script src="~/js/jquery.min.js"></script>
+<script src="~/js/useractivity.js"></script>
+<script src="~/js/portal.js"></script>
+<script src="~/js/userdetails.js"></script>
+<script src="~/vendor/jquery/jquery.min.js"></script>
+<script src="~/js/recent_transaction.js"></script>
+<style>
+    .limits {
+        display: none;
+    }
+
+    .texte {
+        white-space: nowrap;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+
+        $("#Sub_mit").click(function () {
+            var Amount = $("#amount1").val();
+            var kitrefno = $("#Active_Card").val();
+            //alert(Amount + kitrefno);
+            if (Amount != "" && kitrefno != "") {
+                $.ajax(
+                    {
+                        type: 'POST',
+                        dataType: 'JSON',
+                        url: "/ManageCard/CustomerWallet",
+                        contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                        data: { amount: Amount, KitRefNo: kitrefno },
+                        success:
+                            function (data) {
+                                alert("service temporarily unavailable , Please contact customer support" + " " + JSON.stringify(data));
+                                if (data == 2) {
+                                    $("#successPopup").modal("show");
+                                    $("#close").trigger("click");
+                                }
+
+                            },
+                        error:
+                            function (response) {
+                                //alert("approve failed")
+                                //$("#successModal").modal('show');
+                                $(".erroralert").show().delay(8000).fadeOut();
+                                $("#errortext").text("Please try again!").show().delay(8000).fadeOut();
+                            }
+                    });
+
+            }
+            else {
+
+                $("#alertPopup").modal("show");
+
+            }
+            return false;
+        });
+
+
+        $("#RefundSub_mit").click(function () {
+            alert("refund");
+            var Amount = $("#RefundAmt").val();
+
+
+            //alert(Amount);
+            if (Amount != "") {
+                $.ajax(
+                    {
+                        type: 'POST',
+                        dataType: 'JSON',
+                        url: "/ManageCard/CustomerRefund",
+                        contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                        data: { amount: Amount },
+                        success:
+                            function (data) {
+                                //  alert("success" + " " + JSON.stringify(data));
+                                if (data == 0) {
+                                    //alert("welcome");
+                                    $("#successPopup").modal("show");
+                                    $("#successPopup").modal("show").text("Successfully refund processed!");
+                                    $("#close").trigger("click");
+
+
+                                }
+
+                            },
+                        error:
+                            function (response) {
+                                //alert("approve failed")
+                                //$("#successModal").modal('show');
+                                $(".erroralert").show().delay(8000).fadeOut();
+                                $("#errortext").text("Please try again!").show().delay(8000).fadeOut();
+                            }
+                    });
+
+            }
+            else {
+
+                $("#alertPopup").modal("show");
+
+            }
+            return false;
+        });
+        $("#add_carD").click(function () {
+            LoadActivatedCardDetails();
+        });
+
+
+        $("#amount1").on('change', function () {
+            //alert("amount");
+            //var kycStatus=$("#kycStatus").val();
+            //     alert("sts", kycStatus);
+            //     if (kycStatus=="0"){
+
+            if ($(this).val() >= 1 && $(this).val() <= 10000) {
+                //alert("hello 10000 user");
+                $("#Sub_mit").trigger("click");
+            }
+            else {
+
+                alert("enter less than 10000");
+                $("#amount1").val("");
+
+                $("#invalidAmnt").text("Please enter less than Rs:10,000!").show().delay(8000).fadeOut();
+            }
+
+        });
+    });
+
+</script>
+<div class="row">
+    <div class="col-xl-4 col-lg-4 col-md-12 my-4 ">
+        <div class="card mb-4 bg-gradient-primary-light-reverse border-radius">
+            <div class="card-body border-radius">
+                <div class="d-flex justify-content-between mb-3 ">
+                    @*   <div class="form-group w-100 mb-0">
+                    <label for="cardNo" class="floating-label">
+                    <select class="form-control h-auto" id="cardNo">
+                    <option>378282246310005</option>
+                    <option selected>371449635398431</option>
+                    <option>5610591081018250</option>
+                    <option>4111111111111111</option>
+                    </select>
+                    <span class="floating-text">Card Number</span>
+                    </label>
+                    </div>*@
+                    @* <a href="#" data-toggle="modal" data-target="#addCard"
+                    class="btn btn-circle btn-primary border-radius btn-sm ml-2 mt-1">
+                    <i class="fas fa-search"></i>
+                    </a>*@
+
+                    @* <a href="#" data-toggle="modal" data-target="#addCard"
+                    class="btn btn-outline-primary border-radius btn-sm pl-3">
+                    <i class="fas fa-credit-card"></i>
+                    <span class="text">Activate / Add Card </span>
+                    </a>*@
+                </div>
+                <div class="d-flex justify-content-center">
+                    <div class="vyabari_card">
+                        <img src="~/img/vyabari_card.jpg" class="w-100 rounded">
+                        <div class="card_number">
+                            <span id="cardNumber"></span>
+                            <button class="link" onclick="copyToClipboard('#cardNumber')"
+                                    title="copy">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <div class="card_validity"> <span id="cardexpiry"></span></div>
+                        <div class="card_cvv"> <span id="cardcvv"></span></div>
+                    </div>
+
+                </div>
+                <div class="d-flex justify-content-between mt-2">
+                    <div>
+                        <label class="switch">
+                            <input id="cvvchkbox" type="checkbox">
+                            <span class="slider round"></span>
+                            <span class="labels" data-on="On" data-off="Off"></span>
+                        </label>
+                        <div> show Masked card details </div>
+                    </div>
+                    <div>
+                        @* @if (ViewBag.entityflag == 1)
+                        {
+
+                        <a href="#" data-toggle="modal" data-target="#addCard"
+                        class="btn btn-outline-primary border-radius btn-sm pl-3">
+                        <i class="fas fa-credit-card"></i>
+                        <span class="text">Activate / Add Card </span>
+                        </a>
+
+                        }
+                        else
+                        {*@
+                        <a href="#" data-toggle="modal" data-target="#activateCard"
+                           class="btn btn-outline-primary border-radius btn-sm pl-3">
+                            <i class="fas fa-credit-card"></i>
+                            <span class="text">Activate Card </span>
+                        </a>
+
+
+                    </div>
+                </div>
+                <div class="card mt-2 border-2 border-primary p-1 border-radius">
+                    <div class="card-body card-body bg-primary-light border-radius">
+                        <div class="accountSummary text-primary mb-3">
+                            <h5 class="accountHolderName font-weight-bold">@Accessor.HttpContext.Session.GetString(ConstValues.FirstName) </h5>
+                            <div class="accountInfo" id="accountInfo">
+                                <div class="accountNumber">
+                                    A/C No: <span class="font-weight-bold">@Accessor.HttpContext.Session.GetString(ConstValues.UserAccount)</span>
+                                </div>
+                                <div class="accountIFSC">
+                                    IFSC Code: <span class="font-weight-bold">UTIB0CCH274</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            @*<a href="#" data-toggle="modal" data-target="#addMoney"
+                            class="btn btn-primary btn-icon-split btn-sm">
+                            <span class="icon">
+                            <i class="fas fa-rupee-sign"></i>
+                            </span>
+                            <span class="text">Add Money</span>
+                            </a>*@
+                            <a data-toggle="modal" data-target="#topupCard" id="add_carD"
+                               class="btn btn-outline-primary border-radius btn-sm pl-3">
+                                <i class="fas fa-rupee-sign mr-1"></i>
+                                <span class="text">Topup Card</span>
+                            </a>
+                            <a href="" data-toggle="modal" data-target="#addMoney"
+                               class="btn btn-primary">Withdraw</a>
+                        </div>
+                    </div>
+                </div>
+                @*      <div class="connectAccounts my-4">
+                <h6 class="font-weight-bold">Connected Accounts</h6>
+                <ul>
+                <li>Link your business current accounts</li>
+                <li>Match your transactions with any of the current accounts</li>
+                </ul>
+                <a href="#" class="btn btn-primary btn-icon-split btn-sm">
+                <span class="icon">
+                <i class="fas fa-plus"></i>
+                </span>
+                <span class="text">link Accounts</span>
+                </a>
+                </div>*@
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-8 col-lg-8 col-md-12 my-4">
+        <div class="card mb-4 border-0 bg-gradient-primary-light border-radius">
+            <div class="card-body card-body border-radius pb-5">
+                <button class="btn btn-outline-primary btn-sm btn-circle p-0 float-right"
+                        onclick="copyToClipboard('#accountInfo')" title="copy">
+                    <i class="fas fa-copy"></i>
+                </button>
+                <div class="accountDetails">
+                    <div class="accountSummary">
+                        <div class="accountHolderName">@Accessor.HttpContext.Session.GetString(ConstValues.FirstName) </div>
+                        <div class="accountBalance">
+                            <i class="fas fa-rupee-sign"></i>
+                            <span>@ViewBag.Balance</span>
+                            <a href="#" class="btn btn-outline-primary btn-circle btn-sm">
+                                <i class="fas fa-undo"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="accountInfo" id="accountInfo">
+                        <div class="accountNumber">
+                            A/C No: <span class="font-weight-bold">@Accessor.HttpContext.Session.GetString(ConstValues.UserAccount)</span>
+                        </div>
+                        <div class="accountIFSC">
+                            IFSC Code: <span class="font-weight-bold">UTIB0CCH274</span>
+                        </div>
+                        <div class="kyc">
+                            KYC Status: <span class="font-weight-bold">Minimum KYC</span>
+                        </div>
+                        <div class="kyc">
+                            Card Status: <span class="font-weight-bold">@Accessor.HttpContext.Session.GetString(ConstValues.CardStatus)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="card mb-4 border-0">
+            <div class="card-body card-body">
+                <h5 id="recentTransactionheader" class="font-weight-bold">
+                    Recent Transaction</h5>
+                    <div class="recent-transaction table-responsive">
+                        <table class="table table-borderless">
+                            <thead class="text-gray-600">
+                                <tr>
+                                    <th width="40%">Transaction ID</th>
+                                    <th width="40%">Category</th>
+                                    <th width="20%">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="redenttransactiontbody">
+                            </tbody>
+                        </table>
+
+
+                    </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Activate card  Modal-->
+<div class="modal side-modal animate__animated animate__slideInRight" id="activateCard" tabindex="-1"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold text-primary">Activate Card</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="36px" height="36px">
+                        <path d="M 38.982422 6.9707031 A 2.0002 2.0002 0 0 0 37.585938 7.5859375 L 24 21.171875 L 10.414062 7.5859375 A 2.0002 2.0002 0 0 0 8.9785156 6.9804688 A 2.0002 2.0002 0 0 0 7.5859375 10.414062 L 21.171875 24 L 7.5859375 37.585938 A 2.0002 2.0002 0 1 0 10.414062 40.414062 L 24 26.828125 L 37.585938 40.414062 A 2.0002 2.0002 0 1 0 40.414062 37.585938 L 26.828125 24 L 40.414062 10.414062 A 2.0002 2.0002 0 0 0 38.982422 6.9707031 z" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row" id="addcard">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="cardNo" class="floating-label">
+                                <select class="form-control" id="cardNo">
+                                    <option selected>Select</option>
+                                </select>
+                                <span class="floating-text">Card Number</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-checkbox small">
+                                <input type="checkbox" class="custom-control-input"
+                                       id="customCheck">
+                                <label class="custom-control-label pl-2 pt-1" for="customCheck">
+
+                                    T& C <a href="#">link</a>
+                                    <a href="D:/GITHUB/PPI_Web_App/PPICards/TermsAndConditions/TermsAndConditions.pdf" target="_blank" onclick="javascipt:window.open('D:/GITHUB/PPI_Web_App/PPICards/TermsAndConditions/TermsAndConditions.pdf');" class="popup">Clic to open.</a>
+                                    Terms and conditions <a href="file:///D:/GITHUB/PPI_Web_App/PPICards/TermsAndConditions/TermsAndConditions.pdf">Please read our guidelines before activating the card</a>
+
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group mb-3">
+                            <label class="floating-label">
+                                @* <input type="text" class="form-control" placeholder="DD/MM">
+                                <span class="floating-text">Expiry Date</span>*@
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group mb-3">
+                            <label class="floating-label">
+                                @* <input type="text" class="form-control" placeholder="CVV">
+                                <span class="floating-text">CVV</span>*@
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="otp" style="display:none">
+                    <div class="otpValidation col-12">
+                        <form action="javascript: void(0)" class="otp-form" name="otp-form">
+
+                            <div class="text-center">
+                                <h4 class="h4 text-gray-900 font-weight-bold">OTP Verification</h4>
+                                <p id="emailId" class="text-primary">
+
+                                </p>
+                                <p class="text-danger">Please enter OTP to verify</p>
+                            </div>
+                            <div class="otp-input-fields">
+                                <input type="number" id="a_otp_1" class="otp__digit otp__field__1">
+                                <input type="number" id="a_otp_2" class="otp__digit otp__field__2">
+                                <input type="number" id="a_otp_3" class="otp__digit otp__field__3">
+                                <input type="number" id="a_otp_4" class="otp__digit otp__field__4">
+                                <input type="number" id="a_otp_5" class="otp__digit otp__field__5">
+                                <input type="number" id="a_otp_6" class="otp__digit otp__field__6">
+                            </div>
+                        </form>
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <a onclick="GenerateOTP();">Recent OTP</a>
+                            <a href="#" onclick="showHideFlex('addcard','otp')">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-block" onclick="GenerateOTP();">Generate OTP</button>
+                <button class="btn btn-primary btn-block bg-gradient-primary mt-4 btn-large" type="button"
+                        onclick="ActivateCard();">
+                    submit
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add card-->
+<div class="modal side-modal animate__animated animate__slideInRight" id="addCard" tabindex="-1"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold text-primary">Add Card/Activate Card</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="36px" height="36px">
+                        <path d="M 38.982422 6.9707031 A 2.0002 2.0002 0 0 0 37.585938 7.5859375 L 24 21.171875 L 10.414062 7.5859375 A 2.0002 2.0002 0 0 0 8.9785156 6.9804688 A 2.0002 2.0002 0 0 0 7.5859375 10.414062 L 21.171875 24 L 7.5859375 37.585938 A 2.0002 2.0002 0 1 0 10.414062 40.414062 L 24 26.828125 L 37.585938 40.414062 A 2.0002 2.0002 0 1 0 40.414062 37.585938 L 26.828125 24 L 40.414062 10.414062 A 2.0002 2.0002 0 0 0 38.982422 6.9707031 z" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row" id="addcard">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="cardNo" class="floating-label">
+                                <select class="form-control" id="cardNo">
+                                    <option>378282246310005</option>
+                                    <option selected>371449635398431</option>
+                                    <option>5610591081018250</option>
+                                    <option>4111111111111111</option>
+                                </select>
+                                <span class="floating-text">Card Number</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-checkbox small">
+                                <input type="checkbox" class="custom-control-input"
+                                       id="customCheck">
+                                <label class="custom-control-label pl-2 pt-2" for="customCheck">
+
+                                    T& C <a href="#">link</a>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group mb-3">
+                            <label class="floating-label">
+                                @* <input type="text" class="form-control" placeholder="DD/MM">
+                                <span class="floating-text">Expiry Date</span>*@
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group mb-3">
+                            <label class="floating-label">
+                                @* <input type="text" class="form-control" placeholder="CVV">
+                                <span class="floating-text">CVV</span>*@
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="otp" style="display:none">
+                    <div class="otpValidation col-12">
+                        <form action="javascript: void(0)" class="otp-form" name="otp-form">
+
+                            <div class="text-center">
+                                <h4 class="h4 text-gray-900 font-weight-bold">OTP Verification</h4>
+                                <p id="emailId" class="text-primary">
+
+                                </p>
+                                <p class="text-danger">Please enter OTP to verify</p>
+                            </div>
+                            <div class="otp-input-fields">
+                                <input type="number" id="a_otp_1" class="otp__digit otp__field__1">
+                                <input type="number" id="a_otp_2" class="otp__digit otp__field__2">
+                                <input type="number" id="a_otp_3" class="otp__digit otp__field__3">
+                                <input type="number" id="a_otp_4" class="otp__digit otp__field__4">
+                                <input type="number" id="a_otp_5" class="otp__digit otp__field__5">
+                                <input type="number" id="a_otp_6" class="otp__digit otp__field__6">
+                            </div>
+                        </form>
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <a onclick="GenerateOTP();">Recent OTP</a>
+                            <a href="#" onclick="showHideFlex('addcard','otp')">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-block bg-gradient-primary mt-4 btn-large" type="button"
+                        onclick="ActivateCard();">
+                    submit
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Topup Card Modal-->
+<div class="modal side-modal animate__animated animate__slideInRight" id="topupCard" tabindex="-1"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold text-primary">Topup Card</h5>
+                <button class="close" id="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="36px" height="36px">
+                        <path d="M 38.982422 6.9707031 A 2.0002 2.0002 0 0 0 37.585938 7.5859375 L 24 21.171875 L 10.414062 7.5859375 A 2.0002 2.0002 0 0 0 8.9785156 6.9804688 A 2.0002 2.0002 0 0 0 7.5859375 10.414062 L 21.171875 24 L 7.5859375 37.585938 A 2.0002 2.0002 0 1 0 10.414062 40.414062 L 24 26.828125 L 37.585938 40.414062 A 2.0002 2.0002 0 1 0 40.414062 37.585938 L 26.828125 24 L 40.414062 10.414062 A 2.0002 2.0002 0 0 0 38.982422 6.9707031 z" />
+                    </svg>
+                </button>
+            </div>
+            @using (Html.BeginForm("CustomerWallet", "ManageCard", FormMethod.Post, new { @onsubmit = "LoadLoader()" }))
+            {
+
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="row my-4">
+                        <div class="col-12 text-center">
+                            <div class="col-6 texte">
+                                <label id="invalidAmnt" style="color:red"></label>
+                            </div>
+                            <div class="form-group">
+                                <label for="cardNo" class="floating-label">
+                                    @Html.DropDownListFor(m => m.cardReferenceId, new List<SelectListItem>
+                                {new SelectListItem { Text = "Kit reference number", Value = ""},
+                                },"select Kit number", new {
+                                @Required = "",
+                                @class = "form-control form-select border-left-primary", @id = "Active_Card", autocomplete = "off" })
+
+
+
+                                    <span class="floating-text">Kit Reference Number</span>
+                                </label>
+                            </div>
+                            <div class="form-group mb-3">
+                                <p class="text-gray-600">Enter Amount(<i class="fas fa-rupee-sign"></i>) </p>
+
+
+
+                                @Html.TextBoxFor(m => m.amount, new
+                            {
+                            @Required = "",
+                            @placeholder = "0",
+                            @autocomplete = "off",
+                            @id = "amount1",
+                            editable = false,
+                            @onkeypress = "return AllowCustomFormat(this.event,'0123456789')",
+                            @class = "form-control customAmtInput",
+                            @maxlength = "5",
+                            @style="font-size:2rem"
+                            })
+
+
+
+                                <span class="text-danger">Minimum amount is ₹100</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-primary btn-block" id="Sub_mit" type="submit">Submit</button>
+
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+
+<!-- add Money Modal-->
+<div class="modal side-modal animate__animated animate__slideInRight" id="addMoney" tabindex="-1"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold text-primary">Add Money</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="36px" height="36px">
+                        <path d="M 38.982422 6.9707031 A 2.0002 2.0002 0 0 0 37.585938 7.5859375 L 24 21.171875 L 10.414062 7.5859375 A 2.0002 2.0002 0 0 0 8.9785156 6.9804688 A 2.0002 2.0002 0 0 0 7.5859375 10.414062 L 21.171875 24 L 7.5859375 37.585938 A 2.0002 2.0002 0 1 0 10.414062 40.414062 L 24 26.828125 L 37.585938 40.414062 A 2.0002 2.0002 0 1 0 40.414062 37.585938 L 26.828125 24 L 40.414062 10.414062 A 2.0002 2.0002 0 0 0 38.982422 6.9707031 z" />
+                    </svg>
+                </button>
+            </div>
+            @using (Html.BeginForm("CustomerRefund", "ManageCard", FormMethod.Post, new { @onsubmit = "LoadLoader()" }))
+            {
+
+                @Html.AntiForgeryToken()
+                //@Html.HiddenFor(m => m.cardReferenceId,new{@id="CardNum"})
+
+                @*@Accessor.HttpContext.Session.GetString(ConstValues.KycStatus)*@
+                <div class="modal-body">
+                    <div class="row my-4">
+                        <div class="col-12 text-center">
+                            <div class="col-6 texte">
+                                <label id="invalidAmnt" style="color:red"></label>
+                            </div>
+                            <div class="form-group mb-3">
+                                <p class="text-gray-600">Enter Amount(<i class="fas fa-rupee-sign"></i>) </p>
+
+
+
+                                @Html.TextBoxFor(m => m.amount, new
+                            {
+                            @Required = "",
+                            @placeholder = "0",
+                            @autocomplete = "off",
+                            @id = "RefundAmt",
+                            editable = false,
+                            @onkeypress = "return AllowCustomFormat(this.event,'0123456789')",
+                            @class = "form-control customAmtInput",
+                            @maxlength = "6",
+                            @style="font-size:2rem"
+                            })
+
+
+
+                                <span class="text-danger">Minimum amount is ₹100</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="card bg-gradient-primary-light">
+                        <div class="row justify-content-between p-3">
+                            <div class="col-6 py-3">
+                                <div class="text-gray-600">Account Number</div>
+                                <div class="font-weight-bold">@Accessor.HttpContext.Session.GetString(ConstValues.UserAccount) </div>
+                            </div>
+                            <div class="col-6 py-3">
+                                <div class="text-gray-600">IFSC Code</div>
+                                <div class="font-weight-bold">UTIB0CCH274</div>
+                            </div>
+                            <div class="col-6 py-3">
+                                <div class="text-gray-600">Bank Name</div>
+                                <div class="font-weight-bold">Axis BANK</div>
+                            </div>
+                            <div class="col-6 py-3">
+                                <div class="text-gray-600">Branch Name</div>
+                                <div class="font-weight-bold">Central</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-primary btn-block" id="RefundSub_mit" type="submit">Submit</button>
+
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- success Failure popup          -->
+<div class="modal fade" id="successPopup" style="" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:auto;">
+        <div class="modal-content">
+            <div class="d-flex justify-content-center my-2">
+                <i class="fas fa-check-circle text-success" style="font-size:50px"></i>
+                @*<i class="fas fa-times-circle text-danger" style="font-size:72px"></i>*@
+            </div>
+            <div class="modal-body text-center" style="font-size:20px">User Creation Successfull</div>
+            <div class="modal-footer" style="padding:5px;">
+                <button class="btn btn-primary" type="button" data-dismiss="modal">Ok</button>
+                @*// <a class="btn btn-primary" onclick="ActivateCard();">OK</a>*@
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="failurePopup" style="" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:auto;">
+        <div class="modal-content">
+            <div class="d-flex justify-content-center my-2">
+                <i class="fas fa-times-circle text-danger" style="font-size:50px"></i>
+                @*<i class="fas fa-times-circle text-danger" style="font-size:72px"></i>*@
+            </div>
+            <div class="modal-body text-center" style="font-size:20px" id="con_tent"></div>
+            <div class="modal-footer" style="padding:5px;">
+                <button class="btn btn-primary" type="button" data-dismiss="modal">Ok</button>
+                @*// <a class="btn btn-primary" onclick="ActivateCard();">OK</a>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*<div class="modal fade" id="successFailurePopup" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="d-flex justify-content-center my-4">
+                <i class="fas fa-check-circle text-success" style="font-size:72px"></i>
+                <i class="fas fa-times-circle text-danger" style="font-size:72px"></i>
+            </div>
+            <div class="modal-body text-center">Select OK for confirm the card activation</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href=" @Url.Action("Login", "Login")">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+*@

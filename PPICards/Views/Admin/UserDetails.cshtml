@@ -1,0 +1,1346 @@
+﻿@model PPICards.Models.OnboardingModel.RegistrationRequest
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@using static PPICards.Models.OnboardingModel;
+
+
+@{
+    PPICards.Models.OnboardingModel.KitDetails objreq = new PPICards.Models.OnboardingModel.KitDetails();
+    objreq = (PPICards.Models.OnboardingModel.KitDetails)TempData["Grouplist"];
+
+}
+@{
+    IList<PPICards.Models.OnboardingModel.RegistrationRequest> objUserDtls = new List<PPICards.Models.OnboardingModel.RegistrationRequest>();
+    objUserDtls = (IList<PPICards.Models.OnboardingModel.RegistrationRequest>)TempData["UserDtls"];
+
+    int indexs = 0;
+}
+@{
+    IList<PPICards.Models.OnboardingModel.KitDetails> objKitDtls = new List<PPICards.Models.OnboardingModel.KitDetails>();
+    objKitDtls = (IList<PPICards.Models.OnboardingModel.KitDetails>)TempData["KitDtls"];
+
+
+}
+<script src="~/vendor/jquery/jquery.min.js"></script>
+<script src="~/vendor/jquery/jquery.js"></script>
+
+<style>
+    .limits {
+        display: none;
+    }
+
+    .texte {
+        white-space: nowrap;
+    }
+
+</style>
+
+<script>
+    $(document).ready(function () {
+
+      //  alert("test");
+          $("#aadhaarNo").on('keyup', function (e) {
+        e.target.value = e.target.value.replace(/[^\dA-Z]/g, '').replace(/(.{4})/g, '$1 ').trim();
+    });
+        $("#SetKit").click(function () {
+            kitno = $("#KitNumbers").val();
+            custId = $("#CustID").val();
+           // alert(kitno);
+           // alert(custId);
+            $.ajax(
+                {
+                    type: 'POST',
+                    dataType: 'JSON',
+                    url: "/Admin/SetKIT",
+                    contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                    data: { KitNo: kitno, CustomerId: custId },
+                    success:
+                        function (data) {
+                          //  alert("success" + " " + JSON.stringify(data));
+                            if (data == 1) {
+                                //alert("welcome");
+                            
+                                $("#successPopup").modal("show");
+                                   $("#success_content").text("Kit has been assigned successfully");
+                            }
+                            else{
+                                $("#failurePopup").modal("show");
+                                $("#failure_content").text("Please try again!");
+                         
+                            }
+
+                        },
+                    error:
+                        function (response) {
+                            //alert("approve failed")
+                            $("#failurePopup").modal("show");
+                            $("#failure_content").text("Please try again!");
+                        }
+                });
+
+
+        });
+
+        function gettoken() {
+            var token = '@Html.AntiForgeryToken()';
+            token = $(token).val();
+            return token;
+        }
+
+
+
+        var switchStatus = false;
+
+        $(".togBtn").on('change', function () {
+
+           // alert("toggle");
+            var id = $(this).val();
+            var row = $(this).closest("id");
+           // alert("we get val" + id);
+          //  alert("we get val" + " " + row);
+
+
+            var spotted = $(this).find(".comehere").val();
+           // alert("spotted value" + spotted);
+            if (id.is(':checked')) {
+
+                switchStatus = $(this).is(':checked');
+                $('.limit2').css('display', 'block');
+
+            }
+            else {
+                switchStatus = $(this).is(':checked');
+                $('.limit2').css('display', 'none');
+                //$('.limit2').css('display', 'block');
+            }
+        });
+
+
+
+        $(".KitData3").click(function () {
+          //  alert("hello assign");
+            status = "kk";
+            var Custid = $(this).data("value");
+            $("#CustID").val(Custid);
+
+          //  alert(Custid);
+
+            $.ajax({
+                type: 'GET',
+                dataType: 'JSON',
+                url: '/Admin/AssignUserKit',
+                contentType: "application/json; charset=utf-8 ",
+                //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                //  data: {Status: status },
+                success: function (result) {
+
+                    if (result.length != 0) {
+
+                        var option = '';
+                        $('#KitNumbers option').remove();
+
+                        option += '<option value="">Select KIT</option>';
+                        $.each(result, function () {
+
+
+                            var refNo = this['kitReferenceNumber'];
+                            option += '<option value="' + refNo + '">' + '|' + refNo + '</option>';
+
+
+
+
+                            //$.map(data, function (item) {
+
+                            //    //console.log("item.CustomerId", item.CustomerId);
+
+                            //option += '<option value="' + refNo + '">' + '|' + refNo + '</option>';
+                            //})
+
+
+                            //ddlCustomers.append($("<option></option>").val(this['Value']).html(this['Text']));
+                        });
+                        $('#KitNumbers').append(option);
+
+                    }
+
+                },
+                error: function () {
+                    //alert("error");
+                }
+            }
+            );
+        });
+
+
+
+
+
+        $(".Edit_data").click(function () {
+            var i = $(this).attr("chck");
+            var Custid = $(this).data("value");
+            var addr1 = $(this).data("value1");
+            var addr2 = $(this).data("value2");
+            var city = $(this).data("value3");
+            var pin = $(this).data("value4");
+            var state = $(this).data("value5");
+            var country = $(this).data("value6");
+            var usertype = $(this).data("value7");
+            var aadhaarNo = $(this).data("value8");
+            var panNo = $(this).data("value9");
+            var gstNo = $(this).data("value10");
+            var Name1 = $(this).data("value11");
+            var email = $(this).data("value12");
+            var mobileNum = $(this).data("value13");
+            var title = $(this).data("value14");
+            var middleName = $(this).data("value15");
+            var lastName = $(this).data("value16");
+            var gender = $(this).data("value17");
+            var addressLine3 = $(this).data("value18");
+            var shopname = $(this).data("value19");
+            var proofType = $(this).data("value20");
+            var liCense = $(this).data("value21");
+            var VoterId = $(this).data("value22");
+
+           // alert("type ",proofType);
+           // alert("aadhaar ", aadhaarNo);
+            //alert(addressLine3+"adr3" + gender+"gen" + lastName+"last" + middleName+"middle");
+             // alert(Custid + addr1 + addr2 + city + pin + state + country + usertype);
+            //var dob = $(this).data("value24");
+
+            var array = $(this).data("value24").split("/");
+
+            //alert("type " + JSON.stringify(dob));
+            $.each(array, function (i) {
+                alert(array[i]);
+            });
+            //var dob="1990-03-29";
+            // var dob = array[2] + "-" + array[1] + "-"+array[0];
+            var arrays = array[2].split(" ");
+            var dob = arrays[0] + "-" + array[0] + "-" + array[1];
+            alert(dob + mobileNum);
+
+
+            $("#Name1").val(Name1);
+            $("#customer_Id").val(Custid);
+            $("#mobileNo").val(mobileNum);
+            $("#emailId").val(email);
+
+            $("#addressLine1").val(addr1);
+            $("#addressLine2").val(addr2);
+            $("#city").val(city);
+            $("#pin").val(pin);
+            $("#state").val("TAMILNADU");
+            $("#country").val("INDIA");
+            $("#aadhaarNo").val(aadhaarNo);
+            $("#panNo").val(panNo);
+            $("#gstNo").val(gstNo);
+            $("#birth_date").val(dob);
+            if (usertype == 1) { $("#userType").val("Admin"); }
+            if (usertype == 2) { $("#userType").val("Merchant"); }
+            if (usertype == 4) { $("#userType").val("Customer"); }
+
+            
+      
+
+            if (proofType == "1") {
+               // alert("type aadhaar");
+                $("#SelectProof").val(1);
+                $(".aaDH_ar").removeAttr('hidden');
+                $(".Voting").attr('hidden', true);
+                $(".dri_VER").attr('hidden', true);
+                $("#aadhaarNo").val(aadhaarNo);
+            }
+            if (proofType == "2") {
+                //alert("type license");
+                $("#SelectProof").val(2);
+                $(".dri_VER").removeAttr('hidden');
+                $(".aaDH_ar").attr('hidden', true);
+                $(".Voting").attr('hidden', true);
+                $("#drivingLicense").val(liCense);
+            }
+            if (proofType == "3") {
+                //alert("type voterID");
+                $("#SelectProof").val(3);
+                $(".Voting").removeAttr('hidden');
+                $(".dri_VER").attr('hidden', true);
+                $(".aaDH_ar").attr('hidden', true);
+                $("#voterId").val(VoterId);
+            }
+           //$("#userType").val(usertype);
+            $("#customer_Id").attr("readonly", "readonly");
+            $("#userType").attr("readonly", "readonly");
+            $("#emailId").attr("readonly", "readonly");
+            $("#state").attr("readonly", "readonly");
+            $("#country").attr("readonly", "readonly");
+            $("#title").val(title);
+            $("#middleName").val(middleName);
+            $("#lastName").val(lastName);
+            $("#gender").val(gender);
+            $("#addressLine3").val(addressLine3);
+            $("#shopname").val(shopname);
+            $("#drivingLicense").val(liCense);
+            $("#voterId").val(VoterId);
+     
+        });
+
+
+
+        $("#UpdateData").click(function () {
+            console.log('came into click');
+
+
+
+            //var i = $(this).attr("chck");
+            var Status = $("#UserStatus").val();
+            var customerId = $("#customer_Id").val();
+
+            if ($("#UserStatus").val() != "") {
+
+                console.log('came to else part');
+
+                var name1 = $("#Name1").val();
+                //var = $("#customerId").val();
+                var mobileNo = $("#mobileNo").val();
+                var emailId = $("#emailId").val();
+
+                var address1 = $("#addressLine1").val();
+                var address2 = $("#addressLine2").val();
+                var address3 = $("#addressLine3").val();
+                var City = $("#city").val();
+                var Pin = $("#pin").val();
+                var State = $("#state").val();
+                var Country = $("#country").val();
+                var aadhaarNo = $("#aadhaarNo").val();
+                var panNo = $("#panNo").val();
+                var gstNo = $("#gstNo").val();
+                var title = $("#title").val();
+                var middleName = $("#middleName").val();
+                var lastName = $("#lastName").val();
+                var gender = $("#gender").val();
+                var addressLine3 = $("#addressLine3").val();
+                var shopname = $("#shopname").val();
+                var proofType = $("#SelectProof").val();
+                var Dlicense = $("#drivingLicense").val();
+                var Voter_Id = $("#voterId").val();
+                var DOB = $("#birth_date").val();
+
+                if ($("#addressLine1").val() != "" &&
+                    $("#addressLine2").val() != "" &&
+                    $("#addressLine3").val() != "" &&
+                    $("#city").val() != "" &&
+                    $("#pin").val() != "" &&
+                    $("#state").val() != "" &&
+                    $("#country").val() != "" &&
+                    $("#Name1").val() != "" &&
+                    $("#title").val() != "" &&
+                    $("#middleName").val() != "" &&
+                    $("#lastName").val() != "" &&
+                    $("#gender").val() != "" &&
+                    $("#addressLine3").val() != "" &&
+                    $("#birth_date").val() != "" &&
+                    $("#mobileNo").val() != "") {
+
+                    $.ajax(
+                        {
+                            type: 'POST',
+                            dataType: 'JSON',
+                            url: "/Admin/UpdateStatus",
+                            contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                            data: {
+                                __RequestVerificationToken: gettoken(), Status: Status, CustomerId: customerId,
+                                Name1: name1,
+                                MobileNo: mobileNo,
+                                EmailId: emailId,
+                                Address1: address1,
+                                Address2: address2,
+                                City1: City,
+                                Pin1: Pin,
+                                State1: State,
+                                Country1: Country,
+                                AadhaarNo: aadhaarNo,
+                                PanNo: panNo,
+                                GstNo: gstNo,
+                                Title: title,
+                                MiddleName: middleName,
+                                LastName: lastName,
+                                Gender: gender,
+                                Address3: addressLine3,
+                                ShopName: shopname,
+                                ProofType: proofType,
+                                DrivingLicense: Dlicense,
+                                VoterId: Voter_Id,
+                                Dob: DOB
+                            },
+                            success:
+                                function (data) {
+                                    if (data == 0) {
+                                        $("#UpdateData").attr("data-dismiss", "modal");
+                                        // alert("success" + JSON.stringify(data));
+ 
+                                        $("#successPopup").modal("show");
+                                        $("#success_content").text("User has been approved Successfully");
+
+                                    }
+                                    else {
+                                        $("#failurePopup").modal("show");
+                                        $("#failure_content").text("Please try again!");
+                                    }
+                                },
+                            error:
+                                function (response) {
+                                    $("#failurePopup").modal("show");
+                                     $("#failure_content").text("Please try again!");
+                                   
+                                }
+                        });
+                }
+                else {
+                    $("#Error_text").text("Some mandatory fields are empty! Please fill it.").show().delay(5000).fadeOut();
+
+                }
+                return false;
+                //console.log('came into reject user');
+
+
+            }
+            else {
+                console.log('its false');
+                $("#invalidsts").text("Please select status to proceed!").show().delay(5000).fadeOut();
+            }
+
+        });
+
+
+         
+        $("#SelectProof").on('change', function () {
+       
+       
+            if ($(this).val() == "1") {
+                //alert( "aaadhar");
+                $(".aaDH_ar").removeAttr('hidden');
+                $(".Voting").attr('hidden', true);
+                $(".dri_VER").attr('hidden', true);
+            }
+            if ($(this).val() == "2") {
+
+               // alert("driv");
+                $(".dri_VER").removeAttr('hidden');
+                $(".aaDH_ar").attr('hidden', true);
+                $(".Voting").attr('hidden', true);
+            
+            } 
+            if ($(this).val() == "3") {
+               // alert("vote");
+               // alert($(this).val());
+                $(".Voting").removeAttr('hidden');
+                $(".dri_VER").attr('hidden', true);
+                $(".aaDH_ar").attr('hidden', true);
+            }
+
+
+    
+        });
+    
+    });
+
+
+
+
+</script>
+
+
+
+
+<div class="d-sm-flex align-items-center justify-content-between mt-4 mb-4">
+    <h1 class="h3 mb-0 text-gray-800">User Approvals</h1>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <div class="table-responsive">
+                    @if (objUserDtls != null)
+
+                    {
+
+                        <table class="table table-bordered" id="userDetails" width="100%" cellspacing="0">
+                            <thead>
+
+
+                                <tr>
+
+                                    <th>Customer Name</th>
+                                    <th>Customer ID</th>
+                                    <th>Mobile Number</th>
+                                    <th>Email Address</th>
+                                    <th>Status</th>
+                                    <th>Kit Status</th>
+                                    <th data-orderable="false">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var item in objUserDtls)
+                                {
+
+                                    indexs = ++indexs;
+
+                                    <tr>
+                                        <td scope="row">
+                                            <div class="contactDetails d-flex">
+                                                <div class="contactInitial">
+                                                    @(
+                                                        new string(@item.firstName.Split(' ').Select(x => x[0]).ToArray()))
+                                                </div>
+                                                <div class="contactInfo">
+                                                    <div class="contactName">@item.firstName</div>
+                                                    <div class="contactRef small">
+                                                        CITY : <span class="contactRefNo strong">@item.city</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td>
+
+                                            @item.customerId
+
+                                        </td>
+                                        <td>
+
+
+                                            @item.mobileNo
+
+
+                                        </td>
+                                        <td>
+
+                                            @crypto.AES_DECRYPT(@item.emailAddress, COMMON.EMAILKEY)
+
+                                        </td>
+
+                                        <td>
+
+                                            @if (item.status == "0")
+                                            {
+                                                <span class="text-white px-2 font-weight-bold bg-warning">Pending</span>
+                                            }
+                                            @if (item.status == "1")
+                                            {
+                                                <span class="text-white px-2 font-weight-bold bg-success">Active</span>
+
+                                            }
+                                            @if (item.status == "2")
+                                            {
+                                                <span class="text-white px-2 font-weight-bold bg-danger">Rejected</span>
+                                            } @if (item.status == "3")
+                                            {
+                                                <span class="text-white px-2 font-weight-bold bg-dark ">Blocked</span>
+                                            }
+
+
+                                        </td> 
+                                        <td>
+
+                                            @if (item.kitStatus == "0")
+                                            {
+                                                <span class="text-white px-2 font-weight-bold bg-danger">No Kit</span>
+                                            }
+                                            @if (item.kitStatus == "1")
+                                            {
+                                                <span class="text-white px-2 font-weight-bold bg-success">Kit User</span>
+
+                                            }
+                                        
+
+
+                                        </td>
+                                        <td>
+                                            <div class="dropdown no-arrow">
+                                                <a class="dropdown-toggle btn btn-primary btn-sm" href="#" role="button"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Actions
+                                                    <i class="fas fa-ellipsis-v fa-sm fa-fw"></i>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+
+                                                    <button class="dropdown-item Edit_data" data-toggle="modal"
+                                                    data-target="#customerDetails" chck="@indexs" id="btndataid_@indexs"
+                                                    data-value="@item.customerId"
+                                                    data-value1="@item.address1"
+                                                    data-value2="@item.address2"
+                                                    data-value3="@item.city"
+                                                    data-value4="@item.pincode"
+                                                    data-value5="@item.state"
+                                                    data-value6="@item.country"
+                                                    data-value7="@item.usertype"
+                                                    data-value8="@item.aadhaarNo"
+                                                    data-value9="@item.pan"
+                                                    data-value10="@item.gst"
+                                                    data-value11="@item.firstName"
+                                                    data-value12=" @crypto.AES_DECRYPT(@item.emailAddress, COMMON.EMAILKEY)"
+                                                    data-value13="@item.mobileNo"
+                                                    data-value14="@item.title"
+                                                    data-value15="@item.middleName"
+                                                    data-value16="@item.lastName"
+                                                    data-value17="@item.gender"
+                                                    data-value18="@item.address3"
+                                                    data-value19="@item.shopname"
+                                                    data-value20="@item.addressProofURL"
+                                                    data-value21="@item.drivingLicense"
+                                                    data-value22="@item.voterId"
+                                                    data-value23="@item.addressProofNumber"
+                                                    data-value24="@item.dob">
+                                                        
+                                                        <i class="fas fa-stamp mr-2"></i> Approvals
+                                                    </button>
+                                                    @if (item.kitStatus == "1")
+                                                    {
+                                                     <button class="dropdown-item KitData3" data-toggle="modal" data-target="#assignKits" disabled data-value="@item.customerId">
+                                                        <i class="fas fa-credit-card mr-2"></i> Assign Kit
+                                                        </button>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <button class="dropdown-item KitData3" data-toggle="modal" data-target="#assignKits" data-value="@item.customerId">
+                                                            <i class="fas fa-credit-card mr-2"></i> Assign Kit
+                                                        </button>
+                                                    }
+                                                    
+
+                                                    <button class="dropdown-item" data-toggle="modal"
+                                                    data-target="#passwordReset">
+                                                        <i class="fas fa-lock mr-2"></i> Reset Password
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Customer ApprovalsModal-->
+<div class="modal side-modal  animate__animated animate__slideInRight" id="customerDetails" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold text-primary">Customer Details</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="32px" height="32px">
+                        <path d="M 38.982422 6.9707031 A 2.0002 2.0002 0 0 0 37.585938 7.5859375 L 24 21.171875 L 10.414062 7.5859375 A 2.0002 2.0002 0 0 0 8.9785156 6.9804688 A 2.0002 2.0002 0 0 0 7.5859375 10.414062 L 21.171875 24 L 7.5859375 37.585938 A 2.0002 2.0002 0 1 0 10.414062 40.414062 L 24 26.828125 L 37.585938 40.414062 A 2.0002 2.0002 0 1 0 40.414062 37.585938 L 26.828125 24 L 40.414062 10.414062 A 2.0002 2.0002 0 0 0 38.982422 6.9707031 z" />
+                    </svg>
+                </button>
+            </div>
+
+
+
+            <div class="modal-body pt-4">
+                @using (Html.BeginForm("UpdateStatus", "Admin", FormMethod.Post, new { @onsubmit = "LoadLoader()" }))
+                {
+
+                    @Html.AntiForgeryToken()
+
+                    @Html.HiddenFor(m => m.customerId)
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group mb-3">
+                                <label class="floating-label">
+                                    <input type="text" class="form-control" placeholder="Customer ID" id="customer_Id">
+                                    <span class="floating-text">Customer ID <span class="mandatory">*</span></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group mb-3">
+                                <label class="floating-label">
+                                    <input type="text" class="form-control" placeholder="Enter E-mail ID" id="emailId">
+                                    <span class="floating-text">Email ID <span class="mandatory">*</span></span>
+                                </label>
+                            </div>
+                        </div>
+                      
+                        <div class="col-6">
+                        <div class="form-group mb-3">
+                        <label class="floating-label">
+
+                                    @Html.TextBoxFor(m => m.mobileNo, new
+                                {
+                                @required = "",
+                                @placeholder = "Mobile Number",
+                                @autocomplete = "off",
+                                @onkeypress = "return AllowCustomFormat(this.event,'0123456789')",
+                                @id = "mobileNo",
+                                @class = "form-control",
+                                @maxlength = "10",
+                                @pattern = "[0-9]{10,10}",
+                                @title = "Please enter exactly 10 digit Mobile Number"
+                                })
+
+                                    <span class="floating-text">
+                                        Mobile Number
+                                        <span class="floating-text" style="color: red;">*</span>
+                                    </span>
+                        </label>
+                        </div>
+                        </div>
+
+                        <div class="col-6">
+                        <div class="form-group mb-3">
+                        <label class="floating-label">
+                                    @Html.TextBoxFor(m => m.title, new
+                                {
+                                @Required = "",
+                                @placeholder = "Mr/Ms/Mrs",
+                                @autocomplete = "off",
+                                @id = "title",
+
+                                editable = false,
+                                @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')",
+                                @class = "form-control",
+                                @maxlength = "50"
+                                })
+
+                                    <span class="floating-text">
+                                        Title
+                                        <span class="floating-text" style="color: red;">*</span>
+                                    </span>
+                        </label>
+                        </div>
+                        </div> <div class="col-6">
+                        <div class="form-group mb-3">
+                        <label class="floating-label">
+                                    @Html.TextBoxFor(m => m.firstName, new
+                                {
+                                @Required = "",
+                                @placeholder = "Enter your name here",
+                                @autocomplete = "off",
+                                @id = "Name1",
+
+                                editable = false,
+                                @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')",
+                                @class = "form-control",
+                                @maxlength = "50"
+                                })
+
+
+                                    <span class="floating-text">
+                                        First Name
+                                        <span class="floating-text" style="color: red;">*</span>
+                                    </span>
+                        </label>
+                        </div>
+                        </div> <div class="col-6">
+                        <div class="form-group mb-3">
+                        <label class="floating-label">
+                         @Html.TextBoxFor(m => m.middleName, new
+                                {
+                                @Required = "",
+                                @placeholder = "Enter your middle name here",
+                                @autocomplete = "off",
+                                @id = "middleName",
+                            
+                                editable = false,
+                                @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')",
+                                @class = "form-control",
+                                @maxlength = "50"
+                                })
+
+
+                                    <span class="floating-text">
+                                       Middle Name
+                                        <span class="floating-text" style="color: red;">*</span>
+                                    </span>
+                        </label>
+                        </div>
+                        </div> <div class="col-6">
+                        <div class="form-group mb-3">
+                        <label class="floating-label">
+                                    @Html.TextBoxFor(m => m.lastName, new
+                                {
+                                @Required = "",
+                                @placeholder = "Enter your last name here",
+                                @autocomplete = "off",
+                                @id = "lastName",
+                                editable = false,
+                                @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')",
+                                @class = "form-control",
+                                @maxlength = "50"
+                                })
+
+
+                                    <span class="floating-text">
+                                        Last Name
+                                        <span class="floating-text" style="color: red;">*</span>
+                                    </span>
+                        </label>
+                        </div>
+                        </div>
+                        <div class="col-6">
+                        <div class="form-group mb-3">
+                        <label class="floating-label">
+                                    @Html.TextBoxFor(m => m.shopname, new
+                                {
+                                // @Required = "",
+                                @placeholder = "Enter your Shop name here",
+                                @autocomplete = "off",
+                                @id = "shopname",
+                                editable = false,
+                                @onkeypress = "return AllowCustomFormat(this.event,'0123456789 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_@.')",
+                                @class = "form-control",
+                                @maxlength = "50"
+                                })
+
+
+                                    <span class="floating-text">
+                                        Shop Name
+                                        @*//<span class="floating-text" style="color: red;">*</span>*@
+                                    </span>
+                        </label>
+                        </div>
+                        </div> <div class="col-6">
+                            <div class="form-group mb-3">
+                                <label class="floating-label">
+                                    @Html.TextBoxFor(m => m.gender, new
+                                {
+                                @Required = "",
+                                @placeholder = "Male/Female/Others",
+                                @autocomplete = "off",
+                                @id = "gender",
+                                editable = false,
+                                @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')",
+                                @class = "form-control",
+                                @maxlength = "50"
+                                })
+
+                                    <span class="floating-text">
+                                        Gender
+                                        <span class="floating-text" style="color: red;">*</span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group mb-3">
+                                <label class="floating-label ">
+                                    @Html.TextBoxFor(m => m.dob, DateTime.Now.ToString("yyyy-MM-dd"), new { @required = "", @autocomplete = "off",@class="form-control h-auto",  @id = "birth_date", @type = "date", @maxlength = "50", placeholder = "From Date" })
+                                    <span class="floating-text">Date of Birth <span class="floating-text" style="color: red;">*</span></span>
+                                </label>
+
+                            </div>
+                        </div>
+                         <div class="col-12">
+                            <div class="col-6 texte form-group mb-3">
+                            <label id="Error_text" style="color:red"></label>
+                        </div>
+                        </div>
+                        <div class="col-12">
+                        <div class="form-group mb-3" rows="3">
+                        <label class="floating-label">
+                   @*     <textarea class="form-control" id="addressLine1" name="addressLine1"
+                        placeholder="Enter Address Line 1" rows="3" value="" Name="Address1"
+                        > </textarea>*@
+                                    @Html.TextBoxFor(m => m.address1, new
+                                {
+                                @Required = "",
+                                @placeholder = "Address Line1",
+                                @autocomplete = "off",
+                                @id = "addressLine1",
+                                editable = false,
+                                @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789-,.')",
+                                @class = "form-control",
+                                @maxlength = "200"
+                                })
+
+
+                                    <span class="floating-text">
+                                        Address Line1
+                                        <span class="floating-text" style="color: red;">*</span>
+                                    </span>
+                        </label>
+                        </div>
+                        </div>
+                        <div class="col-12" rows="3">
+                        <div class="form-group mb-3">
+                        <label class="floating-label">
+                      
+                                    @Html.TextBoxFor(m => m.address2, new
+                                {
+                                @Required = "",
+                                @placeholder = "Address Line 2",
+                                @autocomplete = "off",
+                                @id = "addressLine2",
+                                editable = false,
+                                @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789-,.')",
+                                @class = "form-control",
+                                @maxlength = "200"
+                                })
+
+
+                                    <span class="floating-text">
+                                        Address Line2
+                                        <span class="floating-text" style="color: red;">*</span>
+                                    </span>
+                        </label>
+                        </div>
+                        </div> <div class="col-12">
+                        <div class="form-group mb-3">
+                                <label class="floating-label" rows="3">
+                    
+                         @Html.TextBoxFor(m => m.address3, new
+                                {
+                                @Required = "",
+                                @placeholder = "Address Line 3",
+                                @autocomplete = "off",
+                                @id = "addressLine3",
+                                editable = false,
+                                @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789-,.')",
+                                @class = "form-control",
+                                @maxlength = "200"
+                                })
+
+
+                                    <span class="floating-text">
+                                        Address Line 3
+                                        <span class="floating-text" style="color: red;">*</span>
+                                    </span>
+                        </label>
+                        </div>
+                        </div>
+                        <div class="col-6">
+                        <div class="form-group mb-3">
+                        <label class="floating-label">
+                                    @Html.TextBoxFor(m => m.city, new
+                                {
+                                @Required = "",
+                                @placeholder = "City",
+                                @autocomplete = "off",
+                                @id = "city",
+                                editable = false,
+                                @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')",
+                                @class = "form-control",
+                                @maxlength = "50"
+                                })
+
+
+                                    <span class="floating-text">
+                                        City
+                                        <span class="floating-text" style="color: red;">*</span>
+                                    </span>
+                        </label>
+                        </div>
+                        </div>
+                        <div class="col-6">
+                        <div class="form-group mb-3">
+                        <label class="floating-label">
+                                    @Html.TextBoxFor(m => m.pincode, new
+                                {
+                                @Required = "",
+                                @placeholder = "PinCode",
+                                @autocomplete = "off",
+                                @id = "pin",
+                                editable = false,
+                                @onkeypress = "return AllowCustomFormat(this.event,'0123456789')",
+                                @class = "form-control",
+                                @maxlength = "6",
+                                @minlength="6"
+                                })
+
+
+                                    <span class="floating-text">
+                                        PinCode
+                                        <span class="floating-text" style="color: red;">*</span>
+                                    </span>
+                        </label>
+                        </div>
+                        </div>
+                        <div class="col-6">
+                        <div class="form-group mb-3">
+                        <label class="floating-label">
+                                    @Html.TextBoxFor(m => m.state, new
+                                {
+                                @Required = "",
+                                @placeholder = "State",
+                                @autocomplete = "off",
+                                @id = "state",
+                                editable = false,
+                                @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')",
+                                @class = "form-control",
+                                @maxlength = "30",
+
+                                })
+
+
+                                    <span class="floating-text">
+                                        State
+                                        <span class="floating-text" style="color: red;">*</span>
+                                    </span>
+                        </label>
+                        </div>
+                        </div>
+                        <div class="col-6">
+                        <div class="form-group mb-3">
+                        <label class="floating-label">
+                         @Html.TextBoxFor(m => m.country, new
+                                {
+                                @Required = "",
+                                @placeholder = "Country",
+                                @autocomplete = "off",
+                                @id = "country",
+                                editable = false,
+                                @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')",
+                                @class = "form-control",
+                                @maxlength = "50",
+
+                                })
+
+
+                                    <span class="floating-text">
+                                        Country
+                                        <span class="floating-text" style="color: red;">*</span>
+                                    </span>
+
+                        </label>
+                        </div>
+                        </div>
+
+                        <div class="col-6">
+
+                            <div class="form-group mb-3">
+                                <label class="floating-label">
+                                     @Html.DropDownListFor(m => m.addressProofType, new List<SelectListItem>
+                                {
+                                new SelectListItem { Text = "Aadhaar Number", Value = "1" },
+                                new SelectListItem { Text = "Driving License", Value = "2"},
+                                new SelectListItem { Text = "Voter ID", Value = "3"},
+
+                                }, "Please select the type of proof", new {  @class = "form-control form-select border-left-primary", @id = "SelectProof", autocomplete = "off", onchange = "check(this);" })
+
+                                   
+
+                                    <span class="floating-text">
+                                        Address proof
+                                        @*<span class="floating-text" style="color: red;">*</span>*@
+                                    </span>
+
+
+
+                                </label>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-6 aaDH_ar" hidden>
+                            <div class="form-group mb-3">
+                            <label class="floating-label">
+                                @Html.TextBoxFor(m => m.aadhaarNo, new
+                            {
+                            // @Required = "",
+                            @placeholder = "Enter your Aadhaar Number",
+                            @autocomplete = "off",
+                            @id = "aadhaarNo",
+                            editable = false,
+                            @onkeypress = "return AllowCustomFormat(this.event,'0123456789')",
+                            @class = "form-control",
+                            @maxlength = "14"
+                            })
+
+
+
+                                <span class="floating-text">
+                                    Aadhaar Number
+                                    @*<span class="floating-text" style="color: red;">*</span>*@
+                                </span>
+
+
+
+                            </label>
+                        </div>
+                        </div>
+                        <div class="col-6 dri_VER" hidden>
+                            <div class="form-group mb-3">
+                            <label class="floating-label">
+                                @Html.TextBoxFor(m => m.drivingLicense , new
+                            {
+
+                            //It should be 16 characters long (including space or hyphen (-)).
+                            // @Required = "",
+                            @placeholder = "Enter your Driving License number",
+                            @autocomplete = "off",
+                            @id = "drivingLicense",
+                            editable = false,
+                            @onkeypress = "return AllowCustomFormat(this.event,'0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')",
+                            @class = "form-control",
+                            @maxlength = "16"
+                            })
+
+
+                                <span class="floating-text">
+                                    Driving License Number
+                                    @*<span class="floating-text" style="color: red;">*</span>*@
+                                </span>
+
+
+
+                            </label>
+                        </div>
+                        </div>
+                        <div class="col-6 Voting" hidden>
+                            <div class="form-group mb-3">
+                            <label class="floating-label">
+                                @Html.TextBoxFor(m => m.voterId , new
+                            {
+                            // @Required = "",
+                            @placeholder = "Enter your Voter ID number",
+                            @autocomplete = "off",
+                            @id = "voterId",
+                            editable = false,
+                            pattern="[a-z]{3}[0-9]{7}",
+                            @onkeypress = "return AllowCustomFormat(this.event,'0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')",
+                            @class = "form-control",
+                            @maxlength = "10"
+                            })
+
+
+                                <span class="floating-text">
+                                    Voter ID Number
+                                    @*<span class="floating-text" style="color: red;">*</span>*@
+                                </span>
+
+
+
+                            </label>
+                        </div>
+                        </div>
+
+                        @*    <div class="col-6">
+                        <div class="form-group mb-3">
+                        <label class="floating-label">
+                        <input type="text" class="form-control" placeholder="Enter Aadhaar Number" id="aadhaarNo">
+                        <span class="floating-text">Aadhaar Number <span class="mandatory">*</span></span>
+                        </label>
+                        </div>
+                        </div>
+                        <div class="col-6">
+                        <div class="form-group mb-3">
+                        <label class="floating-label">
+                        <input type="text" class="form-control" placeholder="Enter PAN Number" id="panNo">
+                        <span class="floating-text">PAN <span class="mandatory">*</span></span>
+                        </label>
+                        </div>
+                        </div>
+                        <div class="col-6">
+                        <div class="form-group mb-3">
+                        <label class="floating-label">
+                        <input type="text" class="form-control" placeholder="Enter GST Number" id="gstNo">
+                        <span class="floating-text">GST <span class="mandatory">*</span></span>
+                        </label>
+                        </div>
+                        </div>*@
+
+
+
+
+
+                        <div class="col-6">
+                        <div class="form-group mb-3">
+                        <label for="userType" class="floating-label">
+                        <input type="text" class="form-control" placeholder="UserType" id="userType">
+                        <span class="floating-text">UserType <span class="mandatory">*</span></span>
+                        </label>
+                        </div>
+                        </div>
+                       
+                      
+                        <div class="col-6">
+                            <div class="form-group mb-3">
+                                <label for="userType" class="floating-label">
+                               @Html.DropDownListFor(m => m.status, new List<SelectListItem>
+                                {
+                                new SelectListItem { Text = "Approve", Value = "1"},
+                                new SelectListItem { Text = "Reject", Value = "2"},
+                                new SelectListItem { Text = "Pending", Value = "0"},
+                                new SelectListItem { Text = "Block", Value = "3"},
+
+
+                                }, "Status", new { @Required = "", @class = "form-control form-select border-left-primary updatestatus", chck="@indexs", @id="UserStatus",  autocomplete = "off", onchange = "check(this);" })
+
+
+                                    <span class="floating-text">Status</span>
+                                </label>
+                            </div>
+                            <div class="col-6 texte">
+                               <label id="invalidsts" style="color:red"></label>
+                            </div>
+                          
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+
+
+            <div class="modal-footer">
+                @*<a chck="@indexs" id="btndataid_@indexs" data-value="@item.cus" class="update_data">
+                <i class="fa fa-lg fa-refresh" style="color: #2e3192; padding-left:10px"></i>
+                </a>*@
+                <button class="btn btn-primary btn-block" type="button" id="UpdateData" value="">Update</button>
+
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+<!-- password reset Modal-->
+<div class="modal side-modal  animate__animated animate__slideInRight" id="passwordReset" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold text-primary">Reset Password</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="32px" height="32px">
+                        <path d="M 38.982422 6.9707031 A 2.0002 2.0002 0 0 0 37.585938 7.5859375 L 24 21.171875 L 10.414062 7.5859375 A 2.0002 2.0002 0 0 0 8.9785156 6.9804688 A 2.0002 2.0002 0 0 0 7.5859375 10.414062 L 21.171875 24 L 7.5859375 37.585938 A 2.0002 2.0002 0 1 0 10.414062 40.414062 L 24 26.828125 L 37.585938 40.414062 A 2.0002 2.0002 0 1 0 40.414062 37.585938 L 26.828125 24 L 40.414062 10.414062 A 2.0002 2.0002 0 0 0 38.982422 6.9707031 z" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body pt-4">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group mb-3">
+                            <label class="floating-label">
+                                <input type="text" class="form-control" placeholder="Password">
+                                <span class="floating-text">Password <span class="mandatory">*</span></span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-checkbox small">
+                                <input type="checkbox" class="custom-control-input"
+                                       id="customCheck">
+                                <label class="custom-control-label pl-2 pt-2" for="customCheck">Send password reset link to Customer</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-block" type="button" data-dismiss="modal">Update Password</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Assign kit Modal-->
+<div class="modal side-modal  animate__animated animate__slideInRight" id="assignKits" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold text-primary">Assign Kits</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="32px" height="32px">
+                        <path d="M 38.982422 6.9707031 A 2.0002 2.0002 0 0 0 37.585938 7.5859375 L 24 21.171875 L 10.414062 7.5859375 A 2.0002 2.0002 0 0 0 8.9785156 6.9804688 A 2.0002 2.0002 0 0 0 7.5859375 10.414062 L 21.171875 24 L 7.5859375 37.585938 A 2.0002 2.0002 0 1 0 10.414062 40.414062 L 24 26.828125 L 37.585938 40.414062 A 2.0002 2.0002 0 1 0 40.414062 37.585938 L 26.828125 24 L 40.414062 10.414062 A 2.0002 2.0002 0 0 0 38.982422 6.9707031 z" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body pt-4">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group mb-3" id="CustID">
+                            <label for="kitNumber" class="floating-label">
+
+
+                                @Html.DropDownListFor(m => m.status, new List<SelectListItem>
+                                {
+
+                                }, "Select Merchants", new { id = "KitNumbers", @autocomplete = "off", @class = "form-control form-select  col-sm-12 ", @required = "" })
+
+
+
+                                @*  @Html.DropDownListFor(m => m.kitReferenceNumber, new List<SelectListItem>
+
+                                new { @required = "", @autocomplete = "off", id = "KitNumber",
+                                @class = "form-control form-select  col-sm-12",
+                                placeholder = "Select Super Distributors" })
+                                *@
+
+
+                                @*@Html.DropDownListFor(m => m., new List<SelectListItem>
+                                {
+                                new SelectListItem { Text = "Approve", Value = "1"},
+                                new SelectListItem { Text = "Reject", Value = "2"},
+                                new SelectListItem { Text = "Pending", Value = "0"},
+                                new SelectListItem { Text = "Block", Value = "3"},
+
+
+                                }, "Status", new { @Required = "", @class = "form-control form-select border-left-primary updatestatus", chck="@indexs", @id="UserStatus",  autocomplete = "off", onchange = "check(this);" })
+
+                                <select class="form-control" id="KitNumbers">
+
+                                <option>
+
+                                </option>
+
+
+                                </select>*@
+                                <span class="floating-text">Kit Number</span>
+                            </label>
+                        </div>
+                    </div>
+                 
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-block" type="button" id="SetKit" data-dismiss="modal">Update</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="successPopup" style="" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:auto;">
+        <div class="modal-content">
+            <div class="d-flex justify-content-center my-2">
+                <i class="fas fa-check-circle text-success" style="font-size:50px"></i>
+                @*<i class="fas fa-times-circle text-danger" style="font-size:72px"></i>*@
+            </div>
+            <div class="modal-body text-center" style="font-size:20px" id="success_content">User Creation Successfull</div>
+            <div class="modal-footer" style="padding:5px;">
+                <button class="btn btn-primary" type="button" data-dismiss="modal">Ok</button>
+                @*// <a class="btn btn-primary" onclick="ActivateCard();">OK</a>*@
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="failurePopup" style="" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:auto;">
+        <div class="modal-content">
+            <div class="d-flex justify-content-center my-2">
+                <i class="fas fa-times-circle text-danger" style="font-size:50px"></i>
+                @*<i class="fas fa-times-circle text-danger" style="font-size:72px"></i>*@
+            </div>
+            <div class="modal-body text-center" style="font-size:20px" id="failure_content"></div>
+            <div class="modal-footer" style="padding:5px;">
+                <button class="btn btn-primary" type="button" data-dismiss="modal">Ok</button>
+                @*// <a class="btn btn-primary" onclick="ActivateCard();">OK</a>*@
+            </div>
+        </div>
+    </div>
+</div>

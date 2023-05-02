@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\PPICards",
+    "\\PPICards\\Controllers",
+    "\\PPICards\\Models",
+    "\\PPICards\\Views",
+    "\\PPICards\\Views\\Home",
+    "\\PPICards\\wwwroot",
+    "\\PPICards\\wwwroot\\js"
+  ],
+  "SelectedNode": "\\PPICards\\Models\\UserKitDetails.cs",
+  "PreviewInSolutionExplorer": false
+}

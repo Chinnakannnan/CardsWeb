@@ -1,0 +1,283 @@
+﻿<script src="~/js/userdetails.js"></script>
+<script src="~/js/portal.js"></script>
+<script src="~/vendor/jquery/jquery.min.js"></script>
+@model PPICards.Models.LockUnlock
+<script>
+
+    $(document).ready(function () { 
+        LoadActivatedCardDetails();
+
+
+
+        $("#submitcontent").click(function () {
+
+            if ($("#cardNo").val() == "") {
+                $("#noReason").text("Please select card to proceed!").show().delay(5000).fadeOut();
+            }
+
+            else {
+                var cardno = $("#cardNo").val();
+
+                var flag = $("#reason").val();
+
+                if ($("#reason").val() == "UL") {
+                    var reason = $("#reissuereason").val();
+                    alert(reason, "reasonublk");
+                }
+                else {
+                    var reason = $("#reissue").val();
+                    alert(reason, "reasonloblo");
+                }
+
+
+
+                $.ajax(
+                    {
+                        type: 'POST',
+                        dataType: 'JSON',
+                        url: "/ManageCard/LockUnlockCard",
+                        contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                        data: { CardNo: cardno, Flag: flag, Reason: reason },
+                        success:
+                            function (data) {
+                                //  alert("success" + " " + JSON.stringify(data));
+                                if (data == "1") {
+                                    
+                                    $("#successPopup").modal('show');
+                                    $("#success_content").text("Your card has been locked successfully");
+                                }
+                                if (data == "2") {
+                                    
+                                    $("#successPopup").modal('show');
+                                    $("#success_content").text("your card has been unlocked successfully");
+                                }
+                                if (data == "3") {
+                                    
+                                    $("#SuccessPopup").modal('show');
+                                    $("#success_content").text("your card has been blocked successfully");
+                                }
+
+                            },
+                        error:
+                            function (response) {
+                                //alert("approve failed")
+                                $("#failurePopup").modal("show");
+                                $("#failure_content").text("Please try again!");
+                            }
+                    });
+            }
+
+        });
+
+
+        $("#reason").on('change', function () {
+            //  alert("change");
+            var value = $(this).val();
+            // alert("val", value);
+            if ($(this).val() == "L" || $(this).val() == "BL") {
+                // alert("1 or 3");
+                $("#value1").removeAttr("hidden");
+                $("#value2").attr("hidden", true);
+            }
+            if ($(this).val() == "UL") {
+                //alert("2");
+                $("#value2").removeAttr('hidden');
+                $("#value1").attr('hidden', true);
+
+            }
+            else if ($(this).val() == "") {
+
+                $("#value1").attr('hidden', true);
+                $("#value2").attr('hidden', true);
+            }
+        });
+
+
+
+    });
+
+</script>
+
+<div class="row justify-content-center" id="blockCard">
+
+    <div class="col-12">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-12">
+                <div class="card shadow mb-4">
+                    <div class="card-header bg-gradient-primary text-center py-3">
+                        <h6 class="m-0 font-weight-bold text-white">Lock / Unlock Card</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="col-12">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-8 col-12">
+                                    @using (Html.BeginForm("LockUnlockCard", "ManageCard", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <div class="form-group">
+                                            <label for="cardNo" class="floating-label">
+                                                @Html.DropDownListFor(m => m.cardReferenceId, new List<SelectListItem>
+                                            {new SelectListItem { Text = "cardnumber", Value = ""},
+                                            },"select card no", new { @Required = "",
+                                            @class = "form-control form-select border-left-primary", @id = "Active_Card", autocomplete = "off" })
+
+
+
+                                                <span class="floating-text">Card Number</span>
+                                            </label>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="reason" class="floating-label">
+                                                @Html.DropDownListFor(m => m.flag, new List<SelectListItem>
+                                            {
+
+                                            new SelectListItem { Text = "Lock", Value = "L"},
+                                            new SelectListItem { Text = "Unlock", Value = "UL"},
+                                            new SelectListItem { Text = "Permanent Block", Value = "BL"},
+
+                                            }, "Select Reason", new { @Required = "", @class = "form-control form-select border-left-primary", @id = "reason", autocomplete = "off", onchange = "check(this);" })
+
+                                                <span class="floating-text">Reason</span>
+                                            </label>
+                                        </div>
+
+                                        <div id="value1" hidden>
+                                            <label for="reissue" class="floating-label">
+                                                @Html.DropDownListFor(m => m.reason, new List<SelectListItem>
+                                            {
+
+                                            new SelectListItem { Text = "Lost", Value = "1"},
+                                            new SelectListItem { Text = "Stolen", Value = "2"},
+                                            new SelectListItem { Text = "Not Received", Value = "3"},
+
+                                            }, "Select Reason to lock / unlock card ", new { @Required = "", @class = "form-control form-select border-left-primary", @id = "reissue", autocomplete = "off", onchange = "check(this);" })
+
+                                                <span class="floating-text"> Reason to lock / unlock card </span>
+                                            </label>
+                                        </div>
+                                        <div id="value2" hidden>
+                                            <div class="form-group mb-3">
+                                                <label class="floating-label">
+                                                    @Html.TextBoxFor(m => m.reason, new
+                                                {
+                                                @Required = "",
+
+                                                @autocomplete = "off",
+                                                @id = "reissuereason",
+                                                editable = false,
+                                                @onkeypress = "return AllowCustomFormat(this.event,' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')",
+                                                @class = "form-control",
+                                                @maxlength = "50",
+
+                                                })
+                                                    <span class="floating-text"> Reason to lock / unlock card </span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="col-6 texte form-group mb-3">
+                                                <label id="noReason" style="color:red"></label>
+                                            </div>
+                                        </div>
+                                        <div class="text-center form-group">
+                                            <button class="btn btn-primary" id="submitcontent">
+                                                Submit
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="notes my-4 small">
+                                <h6 class="font-weight-bold">Note</h6>
+                                <ul>
+                                    <li class="text-danger mb-2">
+                                        It’s important to note ‘Permanent Block’ will permanently block the card
+                                        and you have to add new available card
+                                    </li>
+                                    <li class="mb-2">
+                                        Please contact customer care to assign new card customersupport@accupayd.com
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="modal fade" id="successPopup" style="" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:auto;">
+        <div class="modal-content">
+            <div class="d-flex justify-content-center my-2">
+                <i class="fas fa-check-circle text-success" style="font-size:50px"></i>
+                @*<i class="fas fa-times-circle text-danger" style="font-size:72px"></i>*@
+            </div>
+            <div class="modal-body text-center" style="font-size:20px" id="success_content"></div>
+            <div class="modal-footer" style="padding:5px;">
+                <button class="btn btn-primary" type="button" data-dismiss="modal">Ok</button>
+                @*// <a class="btn btn-primary" onclick="ActivateCard();">OK</a>*@
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="failurePopup" style="" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:auto;">
+        <div class="modal-content">
+            <div class="d-flex justify-content-center my-2">
+                <i class="fas fa-times-circle text-danger" style="font-size:50px"></i>
+                @*<i class="fas fa-times-circle text-danger" style="font-size:72px"></i>*@
+            </div>
+            <div class="modal-body text-center" style="font-size:20px" >Please Try again</div>
+            <div class="modal-footer" style="padding:5px;">
+                <button class="btn btn-primary" type="button" data-dismiss="modal">Ok</button>
+                @*// <a class="btn btn-primary" onclick="ActivateCard();">OK</a>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<div class="row justify-content-center" id="blockCardOTP" style="display:none">
+    <div class="col-lg-6 col-md-12 my-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="otpValidation">
+                    <form action="javascript: void(0)" class="otp-form" name="otp-form">
+
+                        <div class="text-center">
+                            <h4 class="h4 text-gray-900 font-weight-bold">OTP Verification</h4>
+                            <p class="text-primary">
+                                An otp has been sent to ********k876@gmail.com
+                            </p>
+                            <p class="text-danger">Please enter OTP to verify</p>
+                        </div>
+                        <div class="otp-input-fields">
+                            <input type="number" class="otp__digit otp__field__1">
+                            <input type="number" class="otp__digit otp__field__2">
+                            <input type="number" class="otp__digit otp__field__3">
+                            <input type="number" class="otp__digit otp__field__4">
+                            <input type="number" class="otp__digit otp__field__5">
+                            <input type="number" class="otp__digit otp__field__6">
+                        </div>
+                    </form>
+                    <a href="index.html" class="btn btn-primary btn-block bg-gradient-primary mt-4 btn-large">
+                        submit
+                    </a>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <a href="#">Recent OTP</a>
+                        <a href="#" onclick="showHideFlex('blockCard','blockCardOTP')">Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+

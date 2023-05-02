@@ -1,0 +1,306 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    ViewData["Title"] = "AddKitData";
+}
+@using static PPICards.Models.OnboardingModel;
+@model PPICards.Models.OnboardingModel.kycgetList
+@{
+    IList<PPICards.Models.OnboardingModel.KitDetails> objUserDtls = new List<PPICards.Models.OnboardingModel.KitDetails>();
+    objUserDtls = (IList<PPICards.Models.OnboardingModel.KitDetails>)TempData["UserDtls"]; 
+    int indexs = 0;
+}
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+
+<Script>
+    $(document).ready(function () {
+        $('#addkiddata').click(function () {
+            var kitReferenceNumber = $("#referencenumber").val();
+            var cardNo = $("#cardnumber").val();
+            var cardExpiryDate = $("#expirydate").val();
+            var cardType = $("#type").val();
+
+            if (kitReferenceNumber == '' || cardNo == '' || cardExpiryDate == '' || cardType == '') {
+                DispalyError("Please fill all values");          
+                return;
+            }
+            else if ((kitReferenceNumber.length) < '16') {
+                DispalyError("Invalid Kit Number (length Should be 16) ");
+                return;
+            }
+            else if ((cardNo.length) < '4') {
+                DispalyError("Invalid cardNo Number (length Should be 4) ");
+                return;
+            }
+            $.ajax({  
+                type: 'POST',
+                url: '/Admin/AddSingleKitData?KitReferenceNumber=' + kitReferenceNumber + "&CardNumber=" + cardNo + "&CardExpiryDate=" + cardExpiryDate + "&CardType=" + cardType,
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                success: function (result) { 
+                
+                    data = $.parseJSON(result);
+                     
+                    if (data.statuscode == '000') {
+                        DispalySuccess("Updated Successfully successfully !!!");
+                    }
+                    else { 
+                        DispalyError(data.statusdesc);
+                    }
+                }
+
+            });;
+        });
+
+
+        $('#upload-excel').click(function () {
+            alert("haida");
+            var files = $('#Excel_file')[0].files;
+            if (files.length > 0) {
+                var formData = new FormData();
+                for (var i = 0; i < files.length; i++) {
+                    formData.append('excelFiles[]', files[i]);
+                }
+                $.ajax({
+                    url: '/Admin/',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        // Handle successful upload
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle error
+                    }
+                });
+            }
+        });
+    });
+
+    function DispalyError(message) {
+        if (message != '') {
+            $('#displaydangermessage').text(message);
+            $('#alertPopup').modal('show');
+        }
+    }
+
+    function DispalySuccess(message) {
+        if (message != '') {
+            $('#displaysuccessmessage').text(message);
+            $('#SuccessPopup').modal('show');
+        }
+    }
+
+    function DisableSuccessPopup() {
+        var hrf = $("#btnSuccessok").attr("href");
+        if (hrf != '' && hrf != undefined && hrf != "undefined") {
+            window.location.href = hrf;
+        }
+        else {
+            $('#SuccessPopup').modal('hide');
+        }
+    }
+</Script>
+
+
+<div class="d-sm-flex align-items-center justify-content-between mt-4 mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Add Kit Data</h1>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <div class="col-12">
+
+                    <div class="d-md-flex d-sm-block align-items-center justify-content-end flex-sm-row mt-3">
+                        <button class="btn btn-primary px-3 ml-md-3" data-toggle="modal" data-target="#importKits">
+                            <i class="fas fa-upload"></i> Import Kits
+                        </button>
+                        <button class="btn btn-primary px-3 ml-md-3 position-relative">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <input type="file" class="file-in-btn"
+                                   accept=".csv">
+
+                        </button>
+                        <button class="btn btn-primary px-3 ml-md-3" data-toggle="modal" data-target="#addKitData">
+                            <i class="fas fa-plus mr-2"></i>Add New Kit
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    @if (objUserDtls != null)
+
+                    {
+                        <table class="table table-bordered customerTransactions w-100" id="transactionStatement"
+                           data-filter="false" data-page-length="10" data-length-change="false" data-info="false" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Created Date</th>
+                                    <th>Kit Number</th>
+                                    <th>Card Number</th>
+                                    <th>Card Expiry</th>
+                                    <th>Card Type</th>
+                                    <th>Is Active</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in objUserDtls)
+                                {
+
+                                    indexs = ++indexs;
+                                    <tr>
+                                        <td> @item.createdDate</td>
+                                        <td> @item.kitReferenceNumber </td>
+                                        <td> @item.cardNo</td>
+                                        <td> @item.cardExpiryDate</td>
+                                        <td> @item.cardType</td>
+                                        <td> @item.isActive</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- importKits modal-->
+<div class="modal side-modal animate__animated animate__slideInRight" id="importKits" tabindex="-1"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold text-primary">Import file</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="36px" height="36px">
+                        <path d="M 38.982422 6.9707031 A 2.0002 2.0002 0 0 0 37.585938 7.5859375 L 24 21.171875 L 10.414062 7.5859375 A 2.0002 2.0002 0 0 0 8.9785156 6.9804688 A 2.0002 2.0002 0 0 0 7.5859375 10.414062 L 21.171875 24 L 7.5859375 37.585938 A 2.0002 2.0002 0 1 0 10.414062 40.414062 L 24 26.828125 L 37.585938 40.414062 A 2.0002 2.0002 0 1 0 40.414062 37.585938 L 26.828125 24 L 40.414062 10.414062 A 2.0002 2.0002 0 0 0 38.982422 6.9707031 z" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group mb-3">
+                            <label for="customFile">Import file</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" accept=".csv,.xlsx" id="Excel_file">
+                                <div class="custom-file-label">Choose file</div>
+                            </div>
+                        </div>
+                        <div class="small">
+                            <ul>
+                                <strong>Lorem ipsum dolor sit amet,</strong>
+                                <li>
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum dolore tempore, similique omnis cumque repellat aliquid sunt quo temporibus excepturi deleniti minus eius assumenda sapiente consectetur praesentium quae reprehenderit consequuntur.
+                                </li>
+                                <li class="text-danger">
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum dolore tempore, similique omnis cumque repellat aliquid sunt quo temporibus excepturi deleniti minus eius assumenda sapiente consectetur praesentium quae reprehenderit consequuntur.
+
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-block" type="button" data-dismiss="modal" id="upload-excel">Import</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Add kit Modal-->
+<div class="modal side-modal animate__animated animate__slideInRight" id="addKitData" tabindex="-1"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold text-primary">Add kit data</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="36px" height="36px">
+                        <path d="M 38.982422 6.9707031 A 2.0002 2.0002 0 0 0 37.585938 7.5859375 L 24 21.171875 L 10.414062 7.5859375 A 2.0002 2.0002 0 0 0 8.9785156 6.9804688 A 2.0002 2.0002 0 0 0 7.5859375 10.414062 L 21.171875 24 L 7.5859375 37.585938 A 2.0002 2.0002 0 1 0 10.414062 40.414062 L 24 26.828125 L 37.585938 40.414062 A 2.0002 2.0002 0 1 0 40.414062 37.585938 L 26.828125 24 L 40.414062 10.414062 A 2.0002 2.0002 0 0 0 38.982422 6.9707031 z" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group mb-3">
+                            <label class="floating-label">
+                                <input type="text" class="form-control" placeholder="kit Reference Number" id="referencenumber" maxlength="16" size="16" autocomplete="off">
+                                <span class="floating-text">kit Reference Number</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group mb-3">
+                            <label class="floating-label">
+                                <input type="text" class="form-control" placeholder="Card Number" id="cardnumber" maxlength="4" size="4" autocomplete="off">
+                                <span class="floating-text">Card Number</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group mb-3">
+                            <label class="floating-label">
+                                <input type="text" class="form-control" placeholder="Card Expiry Date" id="expirydate" autocomplete="off">
+                                <span class="floating-text">Card Expiry Date</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group mb-3">
+                            <label class="floating-label">
+                                <input type="text" class="form-control" placeholder="Card Type" id="type">
+                                <span class="floating-text">Card Type</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+              @*  <a href=""  id="addkiddata"  class="btn btn-primary btn-block">Submit</a>*@
+                <button id="addkiddata" class="btn btn-primary btn-block" type="button" data-dismiss="modal">Submit</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- success Failure popup          -->
+ 
+<div class="modal fade" id="SuccessPopup" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="d-flex justify-content-center my-4">
+                <i class="fas fa-check-circle text-success" style="font-size:72px"></i>
+            </div>
+            <div id="displaysuccessmessage" class="modal-body text-center">
+            </div>
+            <div class="modal-footer align-self-center">
+                <button id="btnSuccessok" onclick="DisableSuccessPopup();" class="btn btn-secondary btn-lg" type="button">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="alertPopup" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="d-flex justify-content-center my-4">
+                <i class="fas fa-check-circle text-danger" style="font-size:72px"></i>
+            </div>
+            <div id="displaydangermessage" class="modal-body text-center"></div>
+            <div class="modal-footer align-self-center">
+                <button class="btn btn-secondary btn-lg" type="button" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>

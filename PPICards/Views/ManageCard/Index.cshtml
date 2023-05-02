@@ -1,0 +1,266 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor Accessor
+<script src="~/js/jquery.min.js"></script>
+<script src="~/js/useractivity.js"></script>
+<script src="~/js/portal.js"></script>
+<script src="~/js/CardManagement.js"></script> 
+
+<div class="d-sm-flex align-items-center justify-content-between mt-4 mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Manage Card</h1>
+</div>
+<div class="row">
+    <div class="col-12 col-lg-6">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Accordion -->
+            <a href="#domestic" class="d-block card-header py-3" data-toggle="collapse"
+               role="button" aria-expanded="true" aria-controls="domestic">
+                <h6 class="m-0 font-weight-bold text-primary">Domestic transaction</h6>
+            </a>
+            <!-- Card Content - Collapse -->
+            <div class="collapse show" id="domestic">
+                <div class="card-body">
+                    <div class="row d-flex">
+                        <div class="col-6">ATM Withdrawal</div>
+                        <div class="col-6 d-flex justify-content-between flex-md-row flex-column ">
+                            <label class="switch mr-2">
+                                <input type="hidden" id="flag1" value="ATM">
+                                <input type="checkbox" id="onoff1" @ViewBag.ATM>
+                                <span class="slider round"></span>
+                                <span class="labels" data-on="On" data-off="Off"></span>
+                            </label>
+                            <div class="form-group mt-md-0 mt-3">
+                                <label for="limit" class="floating-label" >
+                                    <input type="hidden" id="limitflag1" value="ATM">
+                                    <input type="text" class="form-control h-auto"
+                                           pattern="^[0-9]{4}$" placeholder="Enter Limit" id="limit1" value="0000">
+                                    <span class="floating-text">Limit</span>
+
+                                </label>
+                                <button class="btn btn-circle btn-primary btn-sm" id="limit1action">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row d-flex">
+                        <div class="col-6">Tap and Pay</div>
+                        <div class="col-6 d-flex justify-content-between flex-md-row flex-column ">
+                            <label class="switch mr-2">
+                                <input type="hidden" id="flag2" value="CONTACTLESS">
+                                <input type="checkbox" id="onoff2" value="false" @ViewBag.CONTACTLESS>
+                                <span class="slider round"></span>
+                                <span class="labels" data-on="On" data-off="Off"></span>
+                            </label>
+                            <div class="form-group mt-md-0 mt-3">
+                                <label for="limit" class="floating-label">
+                                    <input type="hidden" id="limitflag2" value="CONTACTLESS">
+                                    <input type="text" class="form-control h-auto"
+                                           pattern="^[0-9]{4}$" placeholder="Enter Limit" id="limit2" value="0000">
+                                    <span class="floating-text">Limit</span>
+
+                                </label>
+                                <button class="btn btn-circle btn-primary btn-sm" id="limit2action">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row d-flex">
+                        <div class="col-6">Merchant Outlet</div>
+                        <div class="col-6 d-flex justify-content-between flex-md-row flex-column ">
+                            <label class="switch mr-2">
+                                  <input type="hidden" id="flag3" value="POS">
+                                <input type="checkbox" id="onoff3" @ViewBag.POS>
+                                <span class="slider round"></span>
+                                <span class="labels" data-on="On" data-off="Off"></span>
+                            </label>
+                            <div class="form-group mt-md-0 mt-3">
+                                <label for="limit" class="floating-label">
+                                    <input type="hidden" id="limitflag3" value="POS">
+                                    <input type="text" class="form-control h-auto"
+                                           pattern="^[0-9]{4}$" placeholder="Enter Limit" id="limit3" value="0000">
+                                    <span class="floating-text">Limit</span>
+
+                                </label>
+                                <button class="btn btn-circle btn-primary btn-sm" id="limit3action">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row d-flex">
+                        <div class="col-6">Online</div>
+                        <div class="col-6 d-flex justify-content-between flex-md-row flex-column ">
+                            <label class="switch mr-2">
+                                <input type="hidden" id="flag4" value="ECOM">
+                                <input type="checkbox" id="onoff4" @ViewBag.ECOM>
+                                <span class="slider round"></span>
+                                <span class="labels" data-on="On" data-off="Off"></span>
+                            </label>
+                            <div class="form-group mt-md-0 mt-3">
+                                <label for="limit" class="floating-label">
+                                    <input type="hidden" id="limitflag4" value="ECOM" >
+                                    <input type="text" class="form-control h-auto"
+                                           pattern="^[0-9]{4}$" placeholder="Enter Limit" id="limit4" value="0000">
+                                    <span class="floating-text">Limit</span>
+
+                                </label>
+                                <button class="btn btn-circle btn-primary btn-sm" id="limit4action">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-6">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Accordion -->
+            <a href="#international" class="d-block card-header py-3" data-toggle="collapse"
+               role="button" aria-expanded="true" aria-controls="international">
+                <h6 class="m-0 font-weight-bold text-primary">International transaction</h6>
+            </a>
+            <!-- Card Content - Collapse -->
+            <div class="collapse show" id="international">
+                <div class="card-body">
+                    <div class="row d-flex align-items-start">
+                        <div class="col-6">ATM Withdrawal</div>
+                        <div class="col-6 d-flex justify-content-between flex-md-row flex-column ">
+                            <label class="switch mr-2">
+                                <input type="checkbox" checked>
+                                <span class="slider round"></span>
+                                <span class="labels" data-on="On" data-off="Off"></span>
+                            </label>
+                            <div class="form-group mt-md-0 mt-3">
+                                <label for="limit" class="floating-label">
+                                    <input type="text" class="form-control h-auto"
+                                           pattern="^[0-9]{4}$" placeholder="Enter Limit" id="limit" value="10000">
+                                    <span class="floating-text">Limit</span>
+
+                                </label>
+                                <button class="btn btn-circle btn-primary btn-sm">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row d-flex">
+                        <div class="col-6">Tap and Pay</div>
+                        <div class="col-6 d-flex justify-content-between flex-md-row flex-column">
+                            <label class="switch mr-2">
+                                <input type="checkbox" checked>
+                                <span class="slider round"></span>
+                                <span class="labels" data-on="On" data-off="Off"></span>
+                            </label>
+                            <div class="form-group mt-md-0 mt-3">
+                                <label for="limit" class="floating-label">
+                                    <input type="text" class="form-control h-auto"
+                                           pattern="^[0-9]{4}$" placeholder="Enter Limit" id="limit" value="10000" disabled>
+                                    <span class="floating-text">Limit</span>
+
+                                </label>
+                                <button class="btn btn-circle btn-primary btn-sm" style="display:none;">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row d-flex">
+                        <div class="col-6">Merchant Outlet</div>
+                        <div class="col-6 d-flex justify-content-between flex-md-row flex-column ">
+                            <label class="switch mr-2">
+                                <input type="checkbox" checked>
+                                <span class="slider round"></span>
+                                <span class="labels" data-on="On" data-off="Off"></span>
+                            </label>
+                            <div class="form-group mt-md-0 mt-3">
+                                <label for="limit" class="floating-label">
+                                    <input type="text" class="form-control h-auto"
+                                           pattern="^[0-9]{4}$" placeholder="Enter Limit" id="limit" value="10000" disabled>
+                                    <span class="floating-text">Limit</span>
+
+                                </label>
+                                <button class="btn btn-circle btn-primary btn-sm" style="display:none;">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row d-flex">
+                        <div class="col-6">Online</div>
+                        <div class="col-6 d-flex justify-content-between flex-md-row flex-column ">
+                            <label class="switch mr-2">
+                                <input type="checkbox" checked>
+                                <span class="slider round"></span>
+                                <span class="labels" data-on="On" data-off="Off"></span>
+                            </label>
+                            <div class="form-group mt-md-0 mt-3">
+                                <label for="limit" class="floating-label">
+                                    <input type="text" class="form-control h-auto"
+                                           pattern="^[0-9]{4}$" placeholder="Enter Limit" id="limit" value="10000" disabled>
+                                    <span class="floating-text">Limit</span>
+
+                                </label>
+                                <button class="btn btn-circle btn-primary btn-sm" style="display:none;">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- success Failure popup          -->
+<div class="modal fade" id="successFailurePopup" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="d-flex justify-content-center my-4">
+                <i class="fas fa-check-circle text-success" style="font-size:72px"></i>
+                <i class="fas fa-times-circle text-danger" style="font-size:72px"></i>
+            </div>
+            <div class="modal-body text-center">Card Activated Sucessfully</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Ok</button>
+                <a class="btn btn-primary" onclick="ActivateCard();">OK</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="SuccessPopup" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="d-flex justify-content-center my-4">
+                <i class="fas fa-check-circle text-success" style="font-size:72px"></i>
+            </div>
+            <div id="displaysuccessmessage" class="modal-body text-center">
+
+
+            </div>
+            <div class="modal-footer align-self-center">
+                <button id="btnSuccessok" onclick="DisableSuccessPopup();" class="btn btn-secondary btn-lg" type="button">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="alertPopup" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="d-flex justify-content-center my-4">
+                <i class="fas fa-check-circle text-danger" style="font-size:72px"></i>
+            </div>
+            <div id="displaydangermessage" class="modal-body text-center"></div>
+            <div class="modal-footer align-self-center">
+                <button class="btn btn-secondary btn-lg" type="button" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>

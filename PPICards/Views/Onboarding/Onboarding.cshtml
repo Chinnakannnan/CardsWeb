@@ -1,0 +1,2472 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+
+@model PPICards.Models.OnboardingModel.kyc
+@{
+    ViewBag.Title = "Onboarding";
+}
+
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+@*<link href="~/BankCards/Content/css/onboardstylesheet.css" rel="stylesheet" />
+<script src="~/BankCards/Content/jquery/jquery-ui.min.js"></script>
+
+<script src="~/BankCards/Content/jquery/jquery.min.js"></script>
+<script src="~/BankCards/Content/js/onboardcomjs.js"></script>
+<script src="~/BankCards/Content/js/onboardjquery2.js"></script>*@
+@*<script src="~/Content/assets/js/onboardjquery2.js"></script>
+<script src="~/Co"></script>
+<script src="~/Content/assets/js/onboardcomjs.js"></script>
+<script src="~/Content/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="~/Content/bower_components/jquery-ui/jquery-ui.min.js"></script>
+
+<link href="~/Content/assets/css/onboardtheme.css" rel="stylesheet" />
+<link href="~/Content/assets/css/onboardstylesheet.css" rel="stylesheet" />*@
+
+<link href="~/lib/assets/css/onboardstylesheet.css" rel="stylesheet" />
+<script src="~/lib/bower_components/jquery/dist/jquery.js"></script>
+<script src="~/lib/bower_components/jquery-ui/jquery-ui.min.js"></script>
+
+<script src="~/lib/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/assets/js/onboardcomjs.js"></script>
+
+
+<style>
+    .btn {
+        font-size: 14px;
+        margin-top: 22px;
+        border-radius: 5px;
+    }
+
+    .btn1 {
+        font-size: 14px;
+        margin-top: 1px;
+        border-radius: 5px;
+        display: inline-block;
+        font-weight: 400;
+        line-height: 1.5;
+    }
+</style>
+
+
+@*function check(e) {
+
+        if (e.value == "4") {
+            $('#Mandatorysh').prop('required', true);
+            $('#nonMandatorysh').prop('required', true);
+            $('#req').show();
+            $('#req1').show();
+
+        }
+        else {
+            $('#Mandatorysh').prop('required', false);
+            $('#nonMandatorysh').prop('required', false);
+            $('#req').hide();
+            $('#req1').hide();
+
+        }
+
+    }*@
+
+<script>
+
+
+    $(document).ready(function () {
+       $('#s_d_m').css('display', 'none');
+        $('#d_m').css('display', 'none');
+        $('#spd1').css('display', 'none');
+        $("#success5").css('display', 'none');
+        $("#failure5").css('display', 'none');
+        $('#opnx').css('display', 'none');
+        var EMailOTP = "";
+        var MobileOTP = "";
+        var A_Flag = 0;
+        var G_Flag = 0;
+        var P_Flag = 0;
+        var Request_Id = "";
+        $(".btn-close").click(function () {
+            console.log("close")
+            $(".erroralert").hide();
+            $(".successalert").hide();
+            $(".successalert5").hide();
+            $("#successalert").hide();
+            $("#erroralert").hide();
+            $(".erroralert1").hide();
+            $(".successalert1").hide();
+            $("#successalert1").hide();
+            $("#erroralert1").hide();
+            $("#success1").hide();
+            $("#success_close").hide();
+            $("#failure1").hide();
+            $("#failure_close").hide();
+            $("#success3").hide();
+            $("#failure3").hide();
+            $("#erroralert2").hide();
+            $("#erroralert3").hide();
+
+        });
+
+
+
+
+
+        $(".erroralert").hide();
+        $(".successalert").hide();
+        $(".successalert5").hide();
+        $("#successalert5").hide();
+        $("#successalert").hide();
+        $("#erroralert").hide();
+        $(".erroralert1").hide();
+        $(".successalert1").hide();
+        $("#successalert1").hide();
+        $("#erroralert1").hide();
+        $("#erroralert2").hide();
+        $("#erroralert3").hide();
+
+
+
+
+        //common declarations
+
+        var interval;
+        function CountdownTimer(value) {
+            var timer2 = "15:00";
+            interval = setInterval(function () {
+              //  console.log("sasfad", value);
+                var timer = timer2.split(':');
+
+                var minutes = parseInt(timer[0], 10);
+                var seconds = parseInt(timer[1], 10);
+                --seconds;
+                minutes = (seconds < 0) ? --minutes : minutes;
+                seconds = (seconds < 0) ? 59 : seconds;
+                seconds = (seconds < 10) ? '0' + seconds : seconds;
+
+                if (value == "1") {
+                    $("#timer").html(minutes.toString() + ':' + seconds.toString());
+                }
+                else if (value == "2") {
+                    $("#Mobtimer").html(minutes.toString() + ':' + seconds.toString());
+                }
+
+                if (minutes < 0) clearInterval(interval);
+                //check if both minutes and seconds are 0
+                if ((seconds == "00") && (minutes == "00")) clearInterval(interval);
+                timer2 = minutes + ':' + seconds;
+
+
+            }, 1000);
+        }
+
+        function gettoken()
+        {
+            console.log('Tcame into tokeb');
+            var token = '@Html.AntiForgeryToken()';
+            console.log('Token token');
+                    token = $(token).val();
+                    return token;
+                }
+
+
+
+        $("#MailOTP").on("keyup change", function () {
+            if ($(this).val().length == 6) {
+                $("#timer").hide();
+                console.log('The text box really changed this time');
+            } else if ($(this).val().length != 6){
+                $("#timer").show();
+            }
+        });
+        $("#MobOTP").on("keyup change", function () {
+            if ($(this).val().length == 6) {
+                $("#Mobtimer").hide();
+                console.log('The text box really changed this time');
+            }
+            else if ($(this).val().length != 6)
+            {
+                $("#Mobtimer").show();
+            }
+        });
+
+
+
+        //goto ref ID
+        $("#goref").click(function () {
+            console.log('ref function');
+            var RefId = $("#referenceId").val();
+
+            if ($("#referenceId").val().length == 0) {
+
+                $("#invalidref").text("Please enter Reference ID").show().delay(5000).fadeOut();
+
+            }
+            else if ($("#referenceId").val().length != 10) {
+
+                $("#invalidref").text("Please enter valid Reference ID").show().delay(5000).fadeOut();
+
+            }
+            else {
+
+                $.ajax(
+                    {
+                        type: 'POST',
+                        dataType: 'JSON',
+
+                                url: '@Url.Action("GetbyRefId", "OnBoarding")',
+                        contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                        data: { __RequestVerificationToken: gettoken(), refId: RefId },
+                        success:
+                            function (data) {
+
+                                console.log("data", data);
+                                $('#loader').addClass('hidden')
+                                if (data == 0) {
+                                    $(".erroralert").show().show().delay(5000).fadeOut();
+                                    $("#errortext").text("Please try again").show().delay(5000).fadeOut();
+                                }
+                                else if (data == 1) {
+                                    $(".erroralert").show().show().delay(5000).fadeOut();
+                                    $("#errortext").text("Enter Valid RefId").show().delay(5000).fadeOut();
+                                }
+                                else if (data.flag == "0") {
+                                    if (data.emailId == null) {
+                                        $(".erroralert").show().show().delay(5000).fadeOut();
+                                        $("#errortext").text("Please validate your Email ID to continue!").show().delay(5000).fadeOut();
+                                        $("#goref").show();
+                                        $("#nextBt1").hide();
+                                        $("#fetch").hide();
+                                        $("#submitw").show();
+                                    }
+                                    else {
+                                        console.log("came to fill 2nd tab successfully");
+                                        $('#MailOTP').prop('required', false);
+                                        $('#inputi').prop('required', false);
+                                        $('#hdnEmailId').prop('required', false);
+                                        $('#aadharOTP').prop('required', false);
+                                       // $("#fetch").prop("disabled", true);
+                                        $("#fetch").attr("disabled", true);
+                                        $("#fetchbtn").attr("disabled", true);
+                                        $("#nextBt1").trigger("click");
+                                        $(".erroralert").hide();
+                                        $(".successalert1").show().show().delay(5000).fadeOut();
+                                        $("#successtext1").text("Fill the rest and proceed!").show().delay(5000).fadeOut();
+
+
+                                        $("#hdnEmailId").attr("readonly", "readonly");
+                                        $("#fetch").hide();
+                                        $("#hidepart1").hide();
+                                        $("#hidepart2").hide();
+                                        $("#submitw").hide();
+                                    }
+
+
+                                    // $("#goref").hide();
+                                    // $("#nextBt1").removeAttr('hidden');
+                                    //$("#submitw").show();
+                                    $("#inputi").attr("readonly", "readonly");
+                                   // $("#aadharOTP").attr("readonly", "readonly");
+                                    $("#referenceId").attr("readonly", "readonly");
+                                    console.log("flag value is set to 0");
+                                    //console.log("data", data.result.name);
+                                    console.log("country", data.result.user_address.country);
+                                    console.log("city", JSON.stringify(data.result.user_address.dist));
+                                    console.log("state", JSON.stringify(data.result.user_address.state));
+                                    console.log("name", JSON.stringify(data.result.user_full_name));
+                                    console.log("pin", JSON.stringify(data.result.address_zip));
+                                    console.log("dataw", data.aadhaarNo);
+                                    console.log("pan number", data.pancardNo);
+                                    console.log("gst num", data.gstNo);
+                                    console.log("datar", data.emailId);
+
+
+                                    $("#address1").val(data.result.user_address.house + " " + data.result.user_address.street + " " + data.result.user_address.loc + " " + data.result.user_address.po);
+                                    $("#city1").val(data.result.user_address.dist);
+                                    $("#state1").val(data.result.user_address.state);
+                                    $("#name1").val(data.result.user_full_name);
+                                    $("#pincode1").val(data.result.address_zip);
+                                    $("#country1").val(data.result.user_address.country);
+
+
+
+
+
+
+                                    $("#inputi").val(data.aadhaarNo);
+                                    $("#panno").val(data.pancardNo);
+                                    $("#gstno").val(data.gstNo);
+                                    $("#hdnEmailId").val(data.emailId);
+                                    $("#address1").attr("readonly", "readonly");
+                                    $("#city1").attr("readonly", "readonly");
+                                    $("#state1").attr("readonly", "readonly");
+                                    $("#name1").attr("readonly", "readonly");
+                                    $("#pincode1").attr("readonly", "readonly");
+                                    $("#country1").attr("readonly", "readonly");
+                                    $("#inputi").attr("readonly", "readonly");
+
+
+                                    if (data.aadhaarNo != null) {
+                                        A_Flag = 1;
+                                        console.log("retrieved aadhar flag", A_Flag);
+
+                                        /* $("#subbtn").removeAttr('disabled');*/
+                                    }
+
+                                    if (data.pancardNo != null) {
+                                        P_Flag = 1;
+                                        console.log("retrieved pan flag", P_Flag);
+                                        console.log("datapannnum", data.pancardNo);
+                                        $("#panfetch").attr("disabled", true);
+                                        /* $("#subbtn").removeAttr('disabled');*/
+                                    }
+                                    if (data.gstNo != null) {
+                                        G_Flag = 1;
+                                        console.log("retrieved gst flag", G_Flag);
+                                        console.log("gst num", data.gstNo);
+                                        $("#gstfetch").attr("disabled", true);
+                                        /* $("#subbtn").removeAttr('disabled');*/
+                                    }
+
+                                    else {
+                                        // console.log("pan number", data.result.pancardNo);
+                                        // $("#subbtn").disabled;
+                                    }
+
+
+                                }
+
+                                else if (data.flag == "1") {
+                                    $(".successalert").show();
+                                    $("#successtext").text("Please wait for Admin's approval");
+
+                                }
+
+
+                            },
+                        error:
+                            function (response) {
+                                $(".erroralert").show().show().delay(5000).fadeOut();
+                                $("#errortext").text("Enter Valid Reference Id").show().delay(5000).fadeOut();
+                            }
+                    });
+                return false
+            }
+        });
+
+
+
+
+          $("#Mailotp1").click(function (e) {
+
+            clearInterval(interval);
+            console.log('set value', $('#timer').val());
+            console.log('set value', $("#hdnEmailId").val());
+            if ($("#hdnEmailId").val() == "") {
+                $("#invalidmail").text("Enter Email Id").show().delay(5000).fadeOut();
+            }
+            else {
+                var Mail = $("#hdnEmailId").val();
+                function validateEmail(Mail) {
+                    var regex = /^([a-zA-Z0-9_.+-])+\@@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+                    var result = regex.test(Mail);
+                    return result;
+                    console.log("mail ID is", result);
+                }
+                console.log("valmail", validateEmail(Mail));
+
+                if (validateEmail(Mail) == false) {
+                    $("#invalidmail").text("Enter valid Email Id").show().delay(5000).fadeOut();
+                }
+
+                else if (validateEmail(Mail) == true) {
+
+                    var value = $("#Mailotp1").val();
+
+                    $(this).text('Resend OTP');
+                    new CountdownTimer(value);
+                    const fewSeconds = 5
+
+                    e.target.disabled = true
+                    setTimeout(() => {
+                        e.target.disabled = false
+                    }, fewSeconds * 1000)
+
+                    console.log("timer value", $("#Mailotp1").val());
+                    console.log("token value", gettoken());
+                    $.ajax(
+                        {
+                            type: 'POST',
+                            dataType: 'JSON',
+                          //  url: "/OnBoarding/EmailOTP",
+                                url: '@Url.Action("EmailOTP", "OnBoarding")',
+                           contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                            data: { __RequestVerificationToken: gettoken(), emailId: Mail },
+                            success:
+                                function (data) {
+
+
+
+                                    console.log("requestbodycontent", data.mailOTP);
+                                    console.log("requestbodycontent", data.emailId);
+                                   // console.log("requestbodycontent time", data.mailTime);
+                                    EMailOTP = data.mailOTP;
+                                   // EMailTime = data.mailTime;
+
+
+
+                                    //$("#Sentmail").text(data).show().delay(8000).fadeOut();
+                                    $("#Sentmail").text("OTP has been sent to "+ data.emailId).show().delay(8000).fadeOut();
+
+                                },
+                            error:
+                                function (response) {
+                                    $("#invalidmail").text("Enter valid Email Id").show().delay(5000).fadeOut();
+                                }
+                        });
+                    return false
+                }
+            }
+
+
+          });
+
+
+        //var Mail = $("#hdnEmailId").val();
+
+
+        //send otp and timer..
+
+        //$("#Mailotp1").click(function (e) {
+
+        //    clearInterval(interval);
+        //    console.log('set value', $('#timer').val());
+        //    console.log('set value', $("#hdnEmailId").val());
+        //    if ($("#hdnEmailId").val() == "") {
+        //        $("#invalidmail").text("Enter Email Id").show().delay(5000).fadeOut();
+        //    }
+        //    else {
+        //        var Mail = $("#hdnEmailId").val();
+        //        function validateEmail(Mail) {
+        //            var regex = /^([a-zA-Z0-9_.+-])+\@@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        //            var result = regex.test(Mail);
+        //            return result;
+        //            console.log("mail ID is", result);
+        //        }
+        //        console.log("valmail", validateEmail(Mail));
+
+        //        if (validateEmail(Mail) == false) {
+        //            $("#invalidmail").text("Enter valid Email Id").show().delay(5000).fadeOut();
+        //        }
+
+        //        else if (validateEmail(Mail) == true) {
+
+        //            var value = $("#Mailotp1").val();
+
+        //            $(this).text('Resend OTP');
+        //            new CountdownTimer(value);
+        //            const fewSeconds = 5
+
+        //            e.target.disabled = true
+        //            setTimeout(() => {
+        //                e.target.disabled = false
+        //            }, fewSeconds * 1000)
+
+        //            console.log("timer value", $("#Mailotp1").val());
+        //            $.ajax(
+        //                {
+        //                    type: 'POST',
+        //                    dataType: 'JSON',
+        //                    url: "/OnBoarding/EmailOTP",
+        //                    contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+        //                    data: { __RequestVerificationToken: gettoken(), emailId: Mail },
+        //                    success:
+        //                        function (data) {
+
+
+
+        //                            console.log("requestbodycontent", data.mailOTP);
+        //                            console.log("requestbodycontent", data.emailId);
+        //                           // console.log("requestbodycontent time", data.mailTime);
+        //                            EMailOTP = data.mailOTP;
+        //                           // EMailTime = data.mailTime;
+
+
+
+        //                            //$("#Sentmail").text(data).show().delay(8000).fadeOut();
+        //                            $("#Sentmail").text("OTP has been sent to "+ data.emailId).show().delay(8000).fadeOut();
+
+        //                        },
+        //                    error:
+        //                        function (response) {
+        //                            $("#invalidmail").text("Enter valid Email Id").show().delay(5000).fadeOut();
+        //                        }
+        //                });
+        //            return false
+        //        }
+        //    }
+
+        //});
+
+
+
+
+        //aadhaar validation
+
+        document.getElementById('inputi').addEventListener('input', function (e) {
+            e.target.value = e.target.value.replace(/[^\dA-Z]/g, '').replace(/(.{4})/g, '$1 ').trim();
+        });
+
+        $("#fetch").click(function () {
+            console.log('set value', $("#inputi").val());
+            if ($("#inputi").val().length == 0) {
+                // $(".erroralert").show();
+                // $("#errortext").text("Enter Aadhar No");
+                $("#aadhvali1").text("Enter Aadhar No").show().delay(5000).fadeOut();
+            }
+            else if ($("#inputi").val().length != 14) {
+                $("#aadhvali1").text("Invalid Aadhar No").show().delay(5000).fadeOut();
+            }
+            else {
+                console.log("token value", gettoken());
+                var aadhNo = $("#inputi").val();
+                console.log("adhno", aadhNo);
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+
+                     url: '@Url.Action("AadhaarValidation", "OnBoarding")',
+                   contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                    data: { __RequestVerificationToken: gettoken(), aadhaarNo:aadhNo},
+
+
+
+
+                    success: function (data) {
+                        console.log("data", data);
+
+                        if (data == 0) {
+
+                            $(".erroralert").show().show().delay(8000).fadeOut();
+                            $("#errortext").text("Invalid Aadhar No").show().delay(8000).fadeOut();
+
+
+                        }
+                        else {
+                            $(".erroralert").hide();
+
+                            $("#aadhvali").text("OTP sent to aadhaar linked mobile number.");
+                            console.log(" reqId", data.request_id);
+                            Request_Id = data.request_id;
+
+                            $("#fetchOTP").removeAttr('hidden');
+                            $("#verifybtn").removeAttr('hidden');
+                            $("#fetch").hide();
+
+
+
+
+
+                        }
+                    },
+                    error:
+                        function (response) {
+                            console.log("response", response);
+                        }
+                });
+                return false
+            }
+
+        });
+
+
+        $("#fetchbtn").click(function () {
+            console.log('set value', $("#inputi").val());
+            if ($("#aadharOTP").val().length == 0) {
+                // $(".erroralert").show();
+                // $("#errortext").text("Enter Aadhar No");
+                $("#aadhvali1OTP").text("Enter OTP").show().delay(5000).fadeOut();
+            }
+            else if ($("#aadharOTP").val().length != 6) {
+                $("#aadhvali1OTP").text("Invalid OTP").show().delay(5000).fadeOut();
+            }
+            else {
+
+
+                $('#loader').removeClass('hidden')
+                var timer1 = setInterval(function () {
+
+                        console.log("clse");
+
+
+                    console.log("token value222", gettoken());
+                        //myWindow.close();
+                    $.ajax({
+
+                        type: 'POST',
+                        dataType: 'JSON',
+
+                         url: '@Url.Action("GetAadhaar", "OnBoarding")',
+                        contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+
+                        data: { __RequestVerificationToken: gettoken(),requestId: Request_Id, OTP: $("#aadharOTP").val(), emailId: $("#hdnEmailId").val() },
+
+
+                            success: function (data) {
+                                console.log("data", data);
+                                $('#loader').addClass('hidden')
+                                if (data == 0) {
+                                    clearInterval(timer1);
+                                    $(".erroralert").show().delay(8000).fadeOut();
+                                    $("#errortext").text("Invalid Aadhar No").show().delay(8000).fadeOut();
+
+
+                                }
+                                else if (data == 1) {
+                                    clearInterval(timer1);
+                                    $(".erroralert").show().delay(8000).fadeOut();
+                                    $("#errortext").text("Given Aadhar No is Mismatched").show().delay(8000).fadeOut();
+                                }
+                                else {
+                                    clearInterval(timer1);
+                                    $(".erroralert").hide();
+                                    $("#aadhvali").text("Aadhaar Validation Successfull.");
+                                    //$("#submitw").removeAttr('disabled');
+                                    $("#fetch").attr("disabled", true);
+                                    $("#fetchbtn").attr("disabled", true);
+                                    $("#inputi").attr("readonly", "readonly");
+                                    $("#aadharOTP").attr("readonly", "readonly");
+                                    $("#address1").attr("readonly", "readonly");
+                                    $("#city1").attr("readonly", "readonly");
+                                    $("#state1").attr("readonly", "readonly");
+                                    $("#name1").attr("readonly", "readonly");
+                                    $("#pincode1").attr("readonly", "readonly");
+                                    $("#country1").attr("readonly", "readonly");
+                                    //console.log("data", data.result.name);
+                                    //console.log("data1", data.result.address);
+                                    console.log("house", JSON.stringify(data.result.user_address.house));
+                                    console.log("street", JSON.stringify(data.result.user_address.street));
+                                    console.log("nasme", JSON.stringify(data.result.user_full_name));
+                                    console.log("pincode", JSON.stringify(data.result.address_zip));
+
+                                    $("#address1").val(data.result.user_address.house +" " + data.result.user_address.street +" "+ data.result.user_address.loc+ " "+ data.result.user_address.po);
+                                    $("#city1").val(data.result.user_address.dist);
+                                    $("#state1").val(data.result.user_address.state);
+                                    $("#name1").val(data.result.user_full_name);
+                                    $("#pincode1").val(data.result.address_zip);
+                                    $("#country1").val(data.result.user_address.country);
+                                    A_Flag = 1;
+                                }
+                                return false
+                            },
+                            error:
+                                function (response) {
+                                    clearInterval(timer1);
+                                    console.log("response", response);
+                                }
+                        });
+                    return false
+
+                }, 10000);
+
+            }
+           return false
+        });
+
+
+        //$("#fetch").click(function () {
+        //    console.log('set value', $("#inputi").val());
+        //    if ($("#inputi").val().length == 0) {
+        //        // $(".erroralert").show();
+        //        // $("#errortext").text("Enter Aadhar No");
+        //        $("#aadhvali1").text("Enter Aadhar No").show().delay(5000).fadeOut();
+        //    }
+        //    else if ($("#inputi").val().length != 14) {
+        //        $("#aadhvali1").text("Invalid Aadhar No").show().delay(5000).fadeOut();
+        //    }
+        //    else {
+        //        $.ajax({
+        //            url: "/OnBoarding/AadhaarValidation",
+        //            dataType: "json",
+        //            contentType: "application/json; charset=utf-8",
+        //            success: function (data) {
+        //                console.log("data", data);
+
+        //                if (data == 0) {
+
+        //                    $(".erroralert").show().show().delay(8000).fadeOut();
+        //                    $("#errortext").text("Invalid Aadhar No").show().delay(8000).fadeOut();
+
+
+        //                }
+        //                else {
+        //                    $(".erroralert").hide();
+
+        //                    console.log("URL", data.responseContent.url);
+
+        //                    const myWindow = window.open(data.responseContent.url, "_blank", "width=600, height=700,modal=yes,alwaysRaised=yes");                            //myWindow.onbeforeunload = "saan";
+        //                    $('#loader').removeClass('hidden')
+        //                    var timer1 = setInterval(function () {
+        //                        if (myWindow.closed) {
+        //                            console.log("clse");
+        //                            clearInterval(timer1);
+
+
+        //                            //myWindow.close();
+        //                            $.ajax({
+        //                                url: "/OnBoarding/GetAadhaar",
+        //                                dataType: "json",
+        //                                data: { requestId: data.responseContent.requestId, authId: data.authuid, userId: data.userId, aadhaarNo: $("#inputi").val(), emailId: $("#hdnEmailId").val() },
+
+        //                                contentType: "application/json; charset=utf-8",
+        //                                success: function (data) {
+        //                                    console.log("data", data);
+        //                                    $('#loader').addClass('hidden')
+        //                                    if (data == 0) {
+        //                                        $(".erroralert").show().delay(8000).fadeOut();
+        //                                        $("#errortext").text("Invalid Aadhar No").show().delay(8000).fadeOut();
+
+
+        //                                    }
+        //                                    else if (data == 1) {
+        //                                        $(".erroralert").show().delay(8000).fadeOut();
+        //                                        $("#errortext").text("Given Aadhar No is Mismatched").show().delay(8000).fadeOut();
+        //                                    }
+        //                                    else {
+
+        //                                        $(".erroralert").hide();
+        //                                        $("#aadhvali").text("Aadhaar Validation Successfull.");
+        //                                        $("#submitw").removeAttr('disabled');
+        //                                        $("#fetch").prop("disabled", true);
+        //                                        $("#inputi").attr("readonly", "readonly");
+        //                                        $("#address1").attr("readonly", "readonly");
+        //                                        $("#city1").attr("readonly", "readonly");
+        //                                        $("#state1").attr("readonly", "readonly");
+        //                                        $("#name1").attr("readonly", "readonly");
+        //                                        $("#pincode1").attr("readonly", "readonly");
+        //                                        $("#country1").attr("readonly", "readonly");
+        //                                        console.log("data", data.result.name);
+        //                                        console.log("data1", data.result.address);
+        //                                        console.log("data12", JSON.stringify(data.result.splitAddress.country[0]));
+        //                                        console.log("data132", JSON.stringify(data.result.splitAddress.city[0]));
+        //                                        console.log("data112", JSON.stringify(data.result.splitAddress.state[0][0]));
+        //                                        console.log("data11", JSON.stringify(data.result.splitAddress.pincode));
+
+        //                                        $("#address1").val(data.result.address);
+        //                                        $("#city1").val(data.result.splitAddress.city[0]);
+        //                                        $("#state1").val(data.result.splitAddress.state[0][0]);
+        //                                        $("#name1").val(data.result.name);
+        //                                        $("#pincode1").val(data.result.splitAddress.pincode);
+        //                                        $("#country1").val(data.result.splitAddress.country[0]);
+        //                                        A_Flag = 1;
+        //                                    }
+        //                                },
+        //                                error:
+        //                                    function (response) {
+        //                                        console.log("response", response);
+        //                                    }
+        //                            });
+        //                        }
+        //                    }, 10000);
+
+        //                }
+        //            },
+        //            error:
+        //                function (response) {
+        //                    console.log("response", response);
+        //                }
+        //        });
+        //        return false
+        //    }
+
+        //});
+
+        //$(window).on('mouseout', (function () {
+        //    console.log("wwwwwwwww")
+        //    window.onbeforeunload = ConfirmLeave;
+        //}));
+
+        //$(window).bind("beforeunload", function () {
+        //    console.log("test22")
+        //    return confirm("Do you really want to close?");
+        //});
+
+        //$("#secondbtn").click(function () {
+        //    $("#submitw").css('display', 'block');
+        //    $("#secondbtn").css('display', 'none');
+        //})
+        $("#secondbtn").click(function () {
+
+            $("#secondbtn").prop("disabled", true);
+            $("#submitw").removeAttr('disabled');
+            $("#secondbtn").hide();
+        })
+
+        //submit tab 1 values through this
+        $("#submitw").click(function () {
+            console.log('set value');
+            console.log("a flag", A_Flag);
+            //$("#submitw").removeClass("nextBtn");
+            $(".erroralert").hide();
+            $(".successalert").hide();
+            //if ($("#inputi").val().length == 0 || $("#inputi").val().length != 14) {
+            //    $(".erroralert").show().delay(8000).fadeOut();
+            //    $("#errortext").text("Please fill out each field! Enter valid aadhar number").show().delay(8000).fadeOut();
+
+            //}
+            //else if ($("#MailOTP").val().length == 0 || $("#MailOTP").val().length != 6) {
+            //    $(".erroralert").show().delay(8000).fadeOut();
+            //    $("#errortext").text("Please fill out each field! Enter valid Email OTP").show().delay(8000).fadeOut();
+
+            //}
+
+            //else if ($("#hdnEmailId").val().length == "") {
+            //    $(".erroralert").show().delay(8000).fadeOut();
+            //    $("#errortext").text("Please fill out each field! Enter Email ID").show().delay(8000).fadeOut();
+
+            //}
+            //else {
+            if (A_Flag!=0)
+            {
+                $('#aadharOTP').prop('required', false);
+                var Mail = $("#hdnEmailId").val();
+                function validateEmail(Mail) {
+                    var regex = /^([a-zA-Z0-9_.+-])+\@@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+                    var result = regex.test(Mail);
+                    return result;
+                    console.log("da", result);
+                }
+                console.log("valmail", validateEmail(Mail));
+
+                if (validateEmail(Mail) == false) {
+                    $("#invalidmail").text("Enter valid Email Id").show().delay(8000).fadeOut();
+                }
+
+                else if (validateEmail(Mail) == true) {
+
+
+                    var Mail = $("#hdnEmailId").val();
+                    var mailotp = $("#MailOTP").val();
+                    var aadharno = $("#inputi").val();
+                    console.log("otp value of mail is ", EMailOTP);
+                    $.ajax(
+                        {
+                            type: 'POST',
+                            dataType: 'JSON',
+                          //  url: "/OnBoarding/",
+                             url: '@Url.Action("NewReg", "OnBoarding")',
+                            contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                            data: { __RequestVerificationToken: gettoken(),emailId: Mail, mailOTP: mailotp, aadhaarNo: aadharno, lstrMailOtp: EMailOTP },
+                            success:
+                                function (data) {
+
+                                    if (data == 0) {
+                                        //$("#submitw").removeClass("nextBtn");
+
+                                        $(".erroralert").show().delay(8000).fadeOut();
+                                        $("#errortext").text("Enter valid OTP").show().delay(8000).fadeOut();
+
+                                        /*  $("#submitw").disabled();*/
+                                        return false;
+
+
+                                    }
+                                    else if (data == 1) {
+                                        $(".successalert").show().delay(8000).fadeOut();
+                                        $("#successtext").text("Validation success").show().delay(8000).fadeOut();
+                                        $("#Sentmail").hide();
+                                        $("#timer").hide();
+
+                                        $("#submitw").prop("disabled", true);
+                                        $("#secondbtn").removeAttr('disabled');
+                                        console.log("hellooooooooo");
+                                        //  $("#secondbtn").show();
+                                        $("#secondbtn").trigger("click");
+
+
+                                        //$("#submitw").css('display', 'none');
+                                        //$("#secondbtn").css('display', 'block');
+
+
+
+
+                                    }
+
+                                },
+                            error:
+                                function (response) {
+                                    $(".erroralert").show().delay(8000).fadeOut();
+                                    $("#errortext").text("Please try again!").show().delay(8000).fadeOut();
+                                }
+                        });
+                    return false
+
+                }
+                else {
+
+                }
+            }
+
+                else if (A_Flag == 0) {
+                    console.log("aflag is 0");
+                    $(".erroralert").show().delay(8000).fadeOut();
+                    $("#errortext").text("Please validate your Aadhaar number!").show().delay(8000).fadeOut();
+                    return false
+                }
+                else {
+                    $(".erroralert").show().delay(8000).fadeOut();
+                    $("#errortext").text("Please enter valid details!").show().delay(8000).fadeOut();
+                }
+
+        });
+
+
+
+        //now tab 2..
+        //we go with pan validation and gst validation
+
+        $("#panfetch").click(function () {
+            console.log('set here');
+
+            console.log('pan value', $("#panno").val());
+            if ($("#panno").val().length == 0) {
+
+                $("#panvali1").text("Enter PAN Number").show().delay(5000).fadeOut();
+            }
+
+            else if ($("#panno").val().length != 10) {
+
+                $("#panvali1").text("Invalid PAN Number").show().delay(5000).fadeOut();
+            }
+
+            else {
+                $(".successalert").hide();
+                var panNo = $("#panno").val();
+
+                var referenceId = $("#referenceId").val();
+                $.ajax(
+                    {
+                        type: 'POST',
+                        dataType: 'JSON',
+                        //url: "/OnBoarding/",
+                         url: '@Url.Action("PanValidation", "OnBoarding")',
+                        contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                        data: { __RequestVerificationToken: gettoken(), pancardNo: panNo, ReferenceId: referenceId },
+                        success: function (data) {
+                            console.log("data", data);
+
+                            if (data == 0) {
+                                $(".erroralert1").show().delay(8000).fadeOut();
+                                $("#errortext1").text("Invalid PAN No").show().delay(8000).fadeOut();
+
+
+                            }
+                            else if (data == 1) {
+                                $(".erroralert1").hide();
+                                $("#panvali").text("PAN Validation Successfull.").show().delay(8000).fadeOut();
+                                $("#panfetch").prop("disabled", true);
+                                $("#subbtn").removeAttr('disabled');
+                                $("#panno").attr("readonly", "readonly");
+                                P_Flag = 1;
+                            }
+
+                        },
+                        error:
+                            function (response) {
+                                console.log("response", response);
+                                $(".erroralert1").show().delay(8000).fadeOut();
+                                $("#errortext1").text("Please try again PAN validation Failed!").show().delay(8000).fadeOut();
+                            }
+
+                    });
+                return false
+            }
+        });
+
+
+        $("#gstfetch").click(function () {
+            console.log('set here');
+
+            console.log('gst value', $("#gstno").val());
+            if ($("#gstno").val().length == 0) {
+
+                $("#gstvali1").text("Enter GST Number").show().delay(8000).fadeOut();
+            }
+            else if ($("#gstno").val().length != 15) {
+
+                $("#gstvali1").text("Invalid GST Number").show().delay(8000).fadeOut();
+            }
+
+            else {
+
+                var GSTNo = $("#gstno").val();
+
+                var referenceId = $("#referenceId").val();
+                $.ajax(
+                    {
+                        type: 'POST',
+                        dataType: 'JSON',
+                     //   url: "/OnBoarding/",
+                         url: '@Url.Action("GSTValidation", "OnBoarding")',
+                        contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                        data: { __RequestVerificationToken: gettoken(), gstNo: GSTNo, referenceId: referenceId },
+                        success: function (data) {
+                            console.log("data", data);
+
+                            if (data == 0) {
+
+                                $(".erroralert1").show().delay(8000).fadeOut();
+                                $("#errortext1").text("Given GST number is Mismatched").show().delay(8000).fadeOut();
+
+                            }
+                            else if (data == 1) {
+                                $(".erroralert1").hide();
+                                $("#gstvali").text("GST Validation Successfull.").show().delay(8000).fadeOut();
+                                $("#gstfetch").prop("disabled", true);
+                                $("#gstno").attr("readonly", "readonly");
+                                G_Flag=1;
+                            }
+
+                        },
+                        error:
+                            function (response) {
+                                console.log("response", response);
+                                $(".erroralert").show().delay(8000).fadeOut();
+                                $("#errortext").text("Please try again GST validation failed!").show().delay(8000).fadeOut();
+                            }
+
+                    });
+                return false
+            }
+        });
+
+
+
+        //image size validation
+
+        var uploadField = $('#gst').get(0);
+        //2097152
+        uploadField.onchange = function () {
+            if (this.files[0].size > 1000000) {
+                $(".gsrerror").text("File size exceeds 1MB!").show().delay(5000).fadeOut();
+
+                this.value = "";
+            };
+        };
+        var uploadField = $('#pan').get(0);
+
+        uploadField.onchange = function () {
+            if (this.files[0].size > 1000000) {
+                $(".panerror").text("File size exceeds 1MB!").show().delay(5000).fadeOut();
+                this.value = "";
+            };
+            console.log("getting in here2")
+
+        };
+        var uploadField = $('#adf').get(0);
+
+        uploadField.onchange = function () {
+            if (this.files[0].size > 1000000) {
+                $(".aferror").text("File size exceeds 1MB!").show().delay(5000).fadeOut();
+                this.value = "";
+            };
+        };
+        var uploadField = $('#adb').get(0);
+
+        uploadField.onchange = function () {
+            if (this.files[0].size > 1000000) {
+                $(".aberror").text("File size exceeds 1MB!").show().delay(5000).fadeOut();
+                this.value = "";
+            };
+        };
+
+
+
+        //mobile number validation
+        $("#Mobotp").click(function (e) {
+
+            clearInterval(interval);
+            console.log('set value');
+
+            if ($("#hdnMob").val().length == 0) {
+                $("#invalidnum").text("Enter Mobile Number").show().delay(8000).fadeOut();
+            }
+            else if ($("#hdnMob").val().length != 10) {
+                $("#invalidnum").text("Enter valid Mobile Number").show().delay(8000).fadeOut();
+            }
+            else {
+                var Mobile = $("#hdnMob").val();
+                var value = $("#Mobotp").val();
+                new CountdownTimer(value);
+                $(this).text('Resend OTP');
+                const fewSeconds = 5
+
+                e.target.disabled = true
+                setTimeout(() => {
+                    e.target.disabled = false
+                }, fewSeconds * 1000)
+
+
+                $.ajax(
+                    {
+                        type: 'POST',
+                        dataType: 'JSON',
+                        //url: "/OnBoarding/",
+                         url: '@Url.Action("MobileOTP", "OnBoarding")',
+                        contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                        data: { __RequestVerificationToken: gettoken(), mobileNo: Mobile},
+                        success:
+                            function (data) {
+
+
+                                console.log("requestbodycontent", data.mobileNo);
+                                console.log("requestbodycontent", data.mobOTP);
+                                // console.log("requestbodycontent time", data.mailTime);
+                                MobileOTP = data.mobOTP;
+
+
+
+
+
+                                $("#Sentmob").text("OTP has been sent to " + data.mobileNo).show().delay(8000).fadeOut();
+
+
+                            },
+                        error:
+                            function (response) {
+                                $(".erroralert").show().delay(8000).fadeOut();
+                                $("#errortext").text("Please try again!").show().delay(8000).fadeOut();
+                            }
+                    });
+                return false
+            }
+        });
+
+        //$("#MailOTP").onchange(function ()
+        //{
+        //    if ($("#MailOTP").val().length == 6) {
+
+        //        $("#timer").hide();
+        //    }
+        //    else {
+        //        $("#timer").show();
+        //    }
+        //}
+
+
+
+        //now finally here comes submit total data
+
+
+        $("#secsubbtn").click(function () {
+
+            $("#secsubbtn").prop("disabled", true);
+            $("#subbtn").removeAttr('disabled');
+            $("#secsubbtn").hide();
+        })
+
+
+        $("#subbtn").click(function () {
+
+            console.log('address value', $("#address1").val());
+
+            $(".erroralert1").hide();
+            $(".successalert1").hide();
+            if ($("#selectuser").val() == "") {
+                $(".erroralert1").show().delay(8000).fadeOut();
+                $("#errortext1").text("Please fill out mandatory fields! Enter valid Details").show().delay(8000).fadeOut();
+
+            }
+
+            else {
+                console.log("we came for pan flag", P_Flag);
+                $.getJSON('https://api.db-ip.com/v2/free/self', function (ipaddress) {
+
+
+                    console.log("IP address", JSON.stringify(ipaddress.ipAddress));
+
+                    ipAddress = (ipaddress.ipAddress);
+                    console.log("tokenkey", ipAddress);
+                    //"ipAddress": "136.185.6.203",
+
+                    //if ($("#panno").val().length != 0 && P_Flag == 1) {
+                    //    console.log("came to 1st if");
+                    //    console.log("we came for gst flag", G_Flag);
+                    //    if (($("#gstno").val().length != 0 && G_Flag == 0) || $("#gstno").val().length == 1) {
+                            console.log("came to 2st if to collect data");
+
+                    //var data = new FormData();
+                    //data.append("name", $("#name1").val())
+                    //data.append("shopNumber", $("#Mandatorysh").val());
+                    //data.append("shopName", $("#nonMandatorysh").val());
+                    //data.append("__RequestVerificationToken", gettoken());
+
+
+                    var data = {
+
+                                name: $("#name1").val(),
+                                shopNumber: $("#Mandatorysh").val(),
+                                shopName: $("#nonMandatorysh").val(),
+                                addressLine1: $("#address1").val(),
+                                addressLine2: $("#address2").val(),
+                                city: $("#city1").val(),
+                                state: $("#state1").val(),
+                                pincode: $("#pincode1").val(),
+                                country: $("#country1").val(),
+                                gstNo: $("#gstno").val(),
+                                pancardNo: $("#panno").val(),
+                                mobileNo: $("#hdnMob").val(),
+                                mobile2: $("#hdnMob1").val(),
+                                mobOTP: $("#MobOTP").val(),
+                                usertype: $("#selectuser").val(),
+                               refId: $("#referenceId").val(),
+                                //mobileOtp: MobileOTP,
+                                //ipAddress: ipAddress
+
+                    }
+                    console.log("formdata", JSON.stringify(data))
+                            //var userType = $("#selectuser").val()
+                            //console.log('usertype', userType);
+                            var formData = new FormData();
+
+                            formData.append("data", JSON.stringify(data));
+
+
+                            formData.append("__RequestVerificationToken", gettoken());
+
+                            var panFiles = $("#pan").get(0).size;//this is working $("#pan").prop("files")[0].size
+                            console.log("pan valu ", panFiles)
+                            for (var i = 0; i < panFiles; i++) {
+                                var Pan = $("#pan").prop("files")[0];
+                                formData.append("PanSoftcopy", Pan);
+                            }
+                            var gstFiles = $("#gst").get(0).size;//this is not working $("#gst").files.length get(0).size
+                            console.log("gst valu ", gstFiles)
+                            for (var i = 0; i < gstFiles; i++) {
+                                var gst = $("#gst").prop("files")[0];
+                                formData.append("gstSoftcopy", gst);
+                            }
+                            var adfFiles = $("#adf").get(0).size;
+                            console.log("aadhar front valu ", adfFiles)
+                            for (var i = 0; i < adfFiles; i++) {
+                                var adf = $("#adf").prop("files")[0];
+                                formData.append("aadhaarfrontSoftcopy", adf);
+                            }
+                            var adbFiles = $("#adb").get(0).size;
+                            console.log("aadhar back valu ", adbFiles)
+                            for (var i = 0; i < adbFiles; i++) {
+                                var adb = $("#adb").prop("files")[0];
+                                formData.append("aadharbackSoftcopy", adb);
+                            }
+                            //if (userType != "" && $("#hdnMob").val().length == 10 && $("#name1").val() != "" &&
+                            //    $('#MobOTP').val().length == 6 && (userType == 4 && $("#Mandatorysh").val() != "" && $("#nonMandatorysh").val() != "" || userType != 4)) {
+                                console.log("mobnum", $("#hdnMob").val());
+
+
+                              console.log("came into if condition for submit");
+                    console.log("name of the person", $("#name1").val());
+
+                                $.ajax({
+                                      type: "POST",
+                                     dataType: 'JSON',
+                                    url: '@Url.Action("NewRegistration", "OnBoarding")',
+
+                                    data: data,
+                            //            __RequestVerificationToken: gettoken(),
+
+                            //     name: $("#name1").val(),
+                            //    shopNumber: $("#Mandatorysh").val(),
+                            //    shopName: $("#nonMandatorysh").val(),
+                            //    addressLine1: $("#address1").val(),
+                            //    addressLine2: $("#address2").val(),
+                            //    city: $("#city1").val(),
+                            //    state: $("#state1").val(),
+                            //    pincode: $("#pincode1").val(),
+                            //    country: $("#country1").val(),
+                            //    gstNo: $("#gstno").val(),
+                            //    pancardNo: $("#panno").val(),
+                            //    mobileNo: $("#hdnMob").val(),
+                            //    mobile2: $("#hdnMob1").val(),
+                            //mobOTP: $("#MobOTP").val(),
+                            // usertype: $("#selectuser").val(),
+                            //   refId: $("#referenceId").val(),
+                            // //mobileOtp: MobileOTP,
+                            // //   ipAddress: ipAddress
+                            //        },
+
+                                    contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                                    //contentType: false,
+                                    processData: false,
+                                    //data: data,
+
+
+
+
+                                   // data: { __RequestVerificationToken: gettoken(), formDataa },
+
+
+
+
+                                    //cache: false,
+
+
+                                      success: function (data) {
+                                        console.log("came into ajax for success");
+
+                                    if (($('#nonMandatorysh').val() != "") || ($('#Mandatorysh').val() != "")) {
+
+
+                                        $('#shopname2').text("Shop Name-" + ($('#nonMandatorysh').val()));
+                                        if ($("#selectuser").val() == "2") {
+                                            $('#UserVle1').text("Super Distributor-" + ($('#Mandatorysh').val()));
+                                        } else if ($("#selectuser").val() == "3") {
+                                            $('#UserVle1').text("Distributor-" + ($('#Mandatorysh').val()));
+                                        } else if ($("#selectuser").val() == "4") {
+                                            $('#UserVle1').text("Agent-" + ($('#Mandatorysh').val()));
+                                        }
+                                    }
+                                    else {
+                                        $('#shopname2').remove();
+                                        $('#UserVle1').remove();
+
+                                    }
+                                    if (data == 0) {
+                                        $("#success5").css('display', 'none');
+                                        $("#failure5").css('display', 'block');
+                                        $(".erroralert1").show().delay(8000).fadeOut();
+                                        $("#errortext1").text("Please try again. Enter valid OTP").show().delay(8000).fadeOut();
+
+
+
+                                    }
+                                    else if (data == 11) {
+                                        $(".erroralert1").show().delay(8000).fadeOut();
+                                        $("#errortext1").text("Enter Valid OTP").show().delay(8000).fadeOut();
+                                    }
+                                    else if (data == 1) {
+                                        console.log("came into success");
+                                        $(".erroralert1").hide();
+                                        $(".successalert1").show().delay(8000).fadeOut();
+                                        $("#successtext1").text("User creation Successful").show().delay(8000).fadeOut();
+                                        $("#hdnMob").attr("readonly", "readonly");
+                                        $("#Sentmob").hide();
+                                        $("#Mobtimer").hide();
+
+
+                                        // $("#subbtn").prop("disabled", true);
+                                        $("#secsubbtn").removeAttr('disabled');
+                                        console.log("hellooooooooo THIS IS SECOND SUBMIT BUTTON");
+                                        //  $("#secsubbtn").show();
+                                        $("#secsubbtn").trigger("click");
+
+                                        $("#success5").css('display', 'block');
+                                        $("#failure5").css('display', 'none');
+
+                                        $.ajax({
+                                            type: "POST",
+                                            dataType: "json",
+                                            //url: "/OnBoarding/",
+                                             url: '@Url.Action("UserRoleMap", "OnBoarding")',
+                                            success: function (data) {
+                                                $('.exampleid').empty();
+                                                $.each(data, function (i, item) {
+                                                    console.log("item")
+                                                    console.log("item2")
+                                                    var rows = "<tr>"
+                                                    if (item.status) {
+                                                        item.opt1 = "YES"
+                                                        item.opt2 = "NO"
+                                                    }
+                                                    console.log("ENTER");
+                                                    $('.exampleid').append("<tr>\
+                                          <td>"+ item.FeatureName + "</td>\
+                                            <td>"+
+
+                                                        "<select class ='form-control form-select border-left- primary' id='status_" + i + "'s><option value = 1 >YES</option><option value = 0>NO</option></select>"
+                                                        + "</td>\
+                                             <td>"+ "<button id='btndataid_" + i + "' chck='" + i + "' data-value3='" + i + "'data-value0='" + item.FeatureName + "' data-value1='" + item.CustomerId + "' data-value2='" + item.UserType + "'class='btn1 btn-primary  btn-flat btn-sm'><i class='fa fa-pencil fa-fw'></i>UPDATE</button>"
+                                                        + "</td>\
+                                              </tr > ");
+                                                    /* + "<td>" + $("#statusid").append('<option value="' + item.status + '">' + item.status + '</option>') + "</td>"*/
+
+                                                });
+                                                /*  $('#basic-btn tbody').append(rows);*/
+                                            },
+                                        });
+                                    }
+                                },
+                                error: function (error) {
+                                    $(".erroralert1").show().delay(8000).fadeOut();
+                                    $("#errortext1").text("Please try again!").show().delay(8000).fadeOut();
+                                }
+                            });
+                            return false
+                        //}
+                        //else {
+
+                        //    $(".erroralert1").show().delay(8000).fadeOut();
+                        //    $("#errortext1").text("Please fill Mandatory fields").show().delay(8000).fadeOut();
+                        //}
+                        return false
+                //    }
+                //    else {
+                //        $(".erroralert1").show().delay(20000).fadeOut();
+                //        $("#errortext1").text("Please validate your GST number").show().delay(20000).fadeOut();
+                //    }
+                //    return false
+                //}
+                //else if (P_Flag == 0) {
+                //    $(".erroralert1").show().delay(20000).fadeOut();
+                //    $("#errortext1").text("Please validate your PAN number").show().delay(20000).fadeOut();
+                //}
+
+            });
+            }//here else ends
+            return false
+
+        });
+
+
+
+
+
+
+
+
+
+            $('#selectuser').change(function () {
+            console.log("homework");
+
+
+
+
+
+            //'@ViewBag.Usertype'="3";
+                if ($(this).val() == "3") {
+                    $('#Mandatorysh').prop('required', false);
+                    $('#nonMandatorysh').prop('required', false);
+                    $('#req').hide();
+                    $('#req1').hide();
+                    $('#RadioButton').css('display', 'none');
+                    $('#RadioButton1').css('display', 'none');
+                    $('#RadioButon0').css('display', 'block');
+                    $('#s_d_m').css('display', 'none');
+                    $('#d_m').css('display', 'none');
+                    $('#spd1').css('display', 'block');
+                    $("#erroralert3").css('display', 'none');
+                    $("#erroralert2").css('display', 'none');
+                    $("#erroralert23").css('display', 'none');
+                    $("#erroralert1").css('display', 'none');
+                    $("#movenxt").css('display', 'block');
+                    $("#btnSubmitbtn").css('display', 'block');
+                    $("#onlynxt").css('display', 'none');
+                    $("#success1").css('display', 'none');
+                    $("#GroupName").val("");
+
+                    $('#opnx').css('display', 'none');
+                    $("#btnSubmit1").css('display', 'block');
+                }
+                else if ($(this).val() == "4") {
+                    $('#Mandatorysh').prop('required', true);
+                    $('#nonMandatorysh').prop('required', true);
+                    $('#req').show();
+                    $('#req1').show();
+
+                    $('#RadioButton').css('display', 'block');
+                    $('#RadioButton1').css('display', 'block');
+                    $('#RadioButon0').css('display', 'block');
+                    $('#s_d_m').css('display', 'none');
+                    $('#d_m').css('display', 'none');
+                    $("#erroralert23").css('display', 'none');
+
+                    $('#spd1').css('display', 'block');
+                    $("#erroralert3").css('display', 'none');
+                    $("#erroralert2").css('display', 'none');
+                    $("#erroralert1").css('display', 'none');
+
+                    $('#opnx').css('display', 'none');
+                    $("#btnSubmit1").css('display', 'block');
+                }
+                else if ($(this).val() == "2") {
+                    $('#Mandatorysh').prop('required', false);
+                    $('#nonMandatorysh').prop('required', false);
+                    $('#req').hide();
+                    $('#req1').hide();
+                    $('#RadioButton').css('display', 'none');
+                    $('#RadioButton1').css('display', 'none');
+                    $('#s_d_m').css('display', 'none');
+                    $('#d_m').css('display', 'none');
+                    $('#spd1').css('display', 'none');
+                    $('#RadioButon0').css('display', 'none');
+                    $("#movenxt").css('display', 'none');
+                    $("#btnSubmitbtn").css('display', 'none');
+                    $("#onlynxt").css('display', 'block');
+                    $("#erroralert3").css('display', 'block');
+                    $("#erroralert2").css('display', 'none');
+                    $("#erroralert23").css('display', 'block');
+                    $("#erroralert1").css('display', 'none');
+                    $("#success1").css('display', 'none');
+                    $("#GroupName").val("");
+
+                    $('#opnx').css('display', 'block');
+                    $("#btnSubmit1").css('display', 'none');
+
+
+                        //$.ajax({
+                        //    url: "/OnBoarding/sprdisgrp",
+                        //    data: { },
+                        //    dataType: "json",
+                        //    contentType: "application/json; charset=utf-8",
+
+                        //    success: function (data) {
+                        //        if (data != 0) {
+                        //            console.log("data", JSON.stringify(data));
+                        //            var option = '';
+                        //            $('#GroupName option').remove();
+                        //            option += '<option value="">Select Group</option>';
+                        //            if (data.length != 0) {
+                        //                $.map(data, function (item) {
+
+
+
+                        //                    option += '<option value="' + item.GroupName + '">' + item.GroupName + '</option>';
+                        //                })
+                        //            }
+                        //            $('#GroupName').append(option);
+                        //        }
+                        //        else {
+                        //            //var option = '';
+                        //            $('#GroupName option').remove();
+                        //            //$('#multi_user option').remove();
+
+                        //            option += '<option value="">Select Group</option>';
+                        //            $('#GroupName').append(option);
+
+                        //        }
+
+                        //    }
+
+
+                        //});
+
+
+
+              }
+
+
+            //$.ajax({
+            //    url: "/OnBoarding/MapUser",
+            //    data: { UserType: $(this).val() },
+            //    dataType: "json",
+            //    contentType: "application/json; charset=utf-8",
+            //    //beforeSend: function () { // Before we send the request, remove the .hidden class from the spinner and default to inline-block.
+            //    //    $('#loader').removeClass('hidden')
+            //    //},
+            //    success: function (data) {
+            //        if (data != 0) {
+            //            //console.log("mapping", JSON.stringify(data));
+            //            //console.log("SuperDistributors", JSON.stringify(data.SuperDistributors));
+
+
+            //            //var option = '';
+            //            //$('#SuperDistributors1 option').remove();
+
+            //            //////$('#multi_user option').remove();
+
+            //            //option += '<option value="">Select users</option>';
+            //            //if (data.length != 0) {
+
+            //            //    $.map(data.SuperDistributors, function (item) {
+            //            //        console.log("item.value", item.value);
+
+
+
+            //            //        option += '<option value="' + item.value + '">' + item.Text +'</option>';
+            //            //      })
+
+            //            $('#SuperDistributors1').append(option);
+
+            //            //$('#multi_user').append(option);
+            //        }
+            //        else {
+            //            //$('#SuperDistributors1 option').remove();
+            //            ////$('#multi_user option').remove();
+
+            //            //option += '<option value="">Select users</option>';
+            //            //$('#SuperDistributors1').append(option);
+
+            //        }
+
+            //    },
+            //    complete: function () { // Set our complete callback, adding the .hidden class and hiding the spinner.
+
+            //    }
+            //})
+
+
+            });
+
+        //when the user complete the total procedure
+
+        $("#finished").click(function () {
+
+
+            //$('#mytab a[href="#step-2"]').tab('show');
+           // $('#mytab a[href="#step - 2"]').tabs().show();
+               // $("#message").trigger("click");
+
+            $(".successalert5").show();
+            $("#successtext5").text("Completed Onboarding successfully").show();
+                setTimeout(function () {
+                    location.reload();
+                }, 3000)
+
+            });
+
+
+      //  $("#message").click(function () {
+
+
+
+           // });
+
+
+
+
+
+    });
+
+</script>
+<style>
+    .textss {
+        white-space: nowrap;
+    }
+
+    .blink-hard {
+        animation: blinker 1s step-end infinite;
+    }
+
+    @@-webkit-keyframes blinker {
+        50% {
+            opacity: 0;
+        }
+    }
+
+
+    .lds-dual-ring.hidden {
+        display: none;
+    }
+
+    .lds-dual-ring {
+        display: inline-block;
+        width: 60px;
+        height: 60px;
+    }
+
+        .lds-dual-ring:after {
+            content: " ";
+            display: block;
+            width: 50px;
+            height: 50px;
+            margin: 5% auto;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-left-color: #01a9ac;
+            border-right-color: #01a9ac;
+            animation: lds-dual-ring 1.2s linear infinite;
+        }
+
+    .overlay {
+        position: fixed;
+        top: 85px;
+        left: 75px;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0,0,0,.8);
+        z-index: 999;
+        opacity: 1;
+        transition: all 0.5s;
+    }
+
+    @@keyframes lds-dual-ring {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+
+<div id="loader" class="lds-dual-ring hidden overlay"></div>
+
+<div class="pcoded-content">
+    <div class="pcoded-inner-content">
+        <!-- Main-body start -->
+        <div class="main-body">
+            <div class="page-wrapper">
+                <!-- Page-header start -->
+                <div class="page-header">
+                    <div class="row align-items-end">
+                        <div class="col-lg-8">
+                            <div class="page-header-title">
+                                <i class="fa fa-external-link" style="color: black;"></i>
+                                <div class="d-inline heading">
+                                    <h4>Welcome Onboarding</h4>
+                                    <h6 class="heading-1">Register or Login Here</h6>
+                                </div>
+
+                            </div>
+                        </div><br /><br />
+                        <!-- Page-header end -->
+                        @*@if (ViewBag.data != null)
+                            {
+                                string lstrdata = ViewBag.data;
+                                string[] lstrSplit = lstrdata.Split('|');
+                                if (lstrSplit[0].ToString() == "000")
+                                {
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-12 col-xl-12">
+                                            <div class="alert alert-dismissible alert-primary background-primary">
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                <i class="icofont icofont-check-circled"></i>
+                                                <strong>@lstrSplit[1].ToString()</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                if (lstrSplit[0].ToString() != "000")
+                                {
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-12 col-xl-12">
+                                            <div class="alert alert-dismissible alert-danger background-danger">
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                <i class="icofont icofont-warning"></i>
+                                                <strong>@lstrSplit[1].ToString()</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }*@
+                        @*<div class="row successalert">
+                                <div class="col-sm-12 col-md-12 col-xl-12">
+                                    <div class="alert alert-dismissible alert-primary background-primary">
+                                        <button type="button" class="btn-close" aria-label="Close"></button>
+                                        <i class="icofont icofont-check-circled"></i>
+                                        <strong id="successtextfin"></strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row erroralert">
+                                <div class="col-sm-12 col-md-12 col-xl-12">
+                                    <div class="alert alert-dismissible alert-danger background-danger">
+                                        <button type="button" class="btn-close" aria-label="Close"></button>
+                                        <i class="icofont icofont-warning"></i>
+                                        <strong id="errortextfin"></strong>
+                                    </div>
+                                </div>
+                            </div>*@
+                       
+                        <div class="container">
+
+                            <div class="setup-panel row align-items-center" id="mytab">
+
+
+
+
+
+                                <div class="col-6 col-xl col stepwizard-step">
+
+
+
+
+
+
+                                    <a id="example-advanced-form-t-0" href="#step-1" type="button" class="btn btn-primary btn-circle" aria-controls="example-advanced-form-p-0">
+                                        <span class="current-info audible"></span>
+                                        <span class="number">1.</span> Aadhaar Verification
+                                    </a>
+
+
+
+
+                                </div>
+
+
+
+
+                                <div class="col-6 col-xl col stepwizard-step">
+
+
+
+
+
+
+                                    <a id="example-advanced-form-t-1" href="#step-2" type="button" class=" btn btn-warning1 btn-circle " aria-controls="example-advanced-form-p-1">
+
+                                        <span class="number">2.</span>  OnBoarding
+                                    </a>
+
+
+
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <br />
+                <div class="row setup-content" id="step-1">
+                    <div class="col-xs-12">
+                        <div class="col-md-12">
+                            <div class="row successalert">
+                                <div class="col-sm-12 col-md-12 col-xl-12">
+                                    <div class="alert alert-dismissible alert-primary background-primary">
+                                        <button type="button" class="btn-close" aria-label="Close"></button>
+                                        <i class="icofont icofont-check-circled"></i>
+                                        <strong id="successtext"></strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row erroralert">
+                                <div class="col-sm-12 col-md-12 col-xl-12">
+                                    <div class="alert alert-dismissible alert-danger background-danger">
+                                        <button type="button" class="btn-close" aria-label="Close"></button>
+                                        <i class="icofont icofont-warning"></i>
+                                        <strong id="errortext"></strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5> Already a user? Use your Reference ID Here.</h5>
+
+                                    <hr />
+                                </div>
+                                <div class="card-block">
+                                    <div class="form-group row">
+                                        <div class=' col-sm-4'>
+                                            <div><label>Enter your Reference Id</label></div>
+                                            @Html.TextBoxFor(m => m.refId, new
+                                       {
+
+                                           @placeholder = "",
+                                           @autocomplete = "off",
+                                           @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890 ')",
+                                           @id = "referenceId",
+                                           @class = "form-control ",
+                                           @maxlength = 12
+                                       })
+                                            <div class="col-md-6 col-sm-6 col-xs-12 textss ">
+
+                                                <label id="validref" style="color:green"></label>
+                                                <label id="invalidref" style="color:red"></label>
+                                            </div>
+                                        </div>
+                                        <div class='col-sm-4'>
+                                            <button type="submit" id="goref" class="btn btn-primary btn-flat "><i class="fa fa-arrow-right fa-fw"></i>Go</button>
+                                            <button class="btn btn-primary nextBtn btn-lg" id="nextBt1" @*disabled*@ hidden type="button">Next</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>New User? Register Here.</h5>
+
+                                    <hr />
+                                </div>
+                                <div class="card-block">
+
+                                    @using (Html.BeginForm("NewReg", "OnBoarding", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+
+
+
+                                        <div>
+
+
+                                            <div class="form-group row">
+
+
+                                                <div class=' col-sm-4'>
+                                                    <div id="txtName"><label for='ff_1_email'>Email ID</label><span class="messages" style="color: red;"> *</span> </div>
+                                                    @Html.TextBoxFor(m => m.emailId, new
+                                               {
+                                                   @required = "",
+                                                   pattern = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$",
+                                                   @autocomplete = "off",
+                                                   @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.@_-')",
+                                                   @class = "form-control",
+                                                   @maxlength = "35",
+                                                   placeholder = "Email Id",
+                                                   id = "hdnEmailId",
+                                                   name = "EmailId",
+                                                   @Value = "cynthia@accupaydtech.com"
+                                               })
+                                                    <div class="col-md-6 col-sm-6 col-xs-12 textss">
+
+                                                        @*<label id="validmail" style="color:green"></label>*@
+                                                        <label id="invalidmail" style="color:red"></label>
+                                                        <label id="Sentmail" style="color:green"></label>
+                                                    </div>
+                                                </div>
+                                                <div class=' col-sm-4'>
+                                                    <div><label>Click Send OTP</label><span class="messages" style="color: red;"> *</span></div>
+                                                    <div>
+                                                        @Html.TextBoxFor(m => m.mailOTP, new { @Required = "", id = "MailOTP", @placeholder = "Enter your Mail OTP here", @autocomplete = "off", @onkeypress = "return AllowCustomFormat(this.event,'0123456789')", @class = "form-control", @maxlength = "6", @pattern = "[0-9]{6,6}", @title = "Please enter exactly 6 digit OTP sent to your mobile." })
+
+                                                    </div>
+
+                                                </div>
+
+                                                <div class=' form-group col-sm-4'>
+                                                    <button id="Mailotp1" class="ff-btn ff-btn-submit ff-btn-sm ff_btn_style btn btn-primary  btn-flat" type="button" value="1">
+                                                        Send OTP
+                                                    </button>
+
+
+                                                    <div id="timer" style="color:red"></div>
+
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class=' col-sm-4'>
+                                                <div><label>Aadhar Number </label> <span class="messages" style="color: red;"> *</span></div>
+                                                @Html.TextBoxFor(m => m.aadhaarNo, new
+                                                {
+                                                    @id = "inputi",
+                                                    @Required = "",
+                                               @placeholder = "",
+                                                    @autocomplete = "cc-number",
+                                                    @onkeypress = "return AllowCustomFormat(this.event,' 0123456789')",
+                                                    @class = "form-control",
+                                                    @maxlength = "14",
+                                                    @pattern = "[0-9 ]{14,14}",
+                                                    @title = "Please enter 12 digit valid Aadhaar number"
+                                                })
+                                                <div class="col-md-6 col-sm-6 col-xs-12 textss">
+                                                    <label id="aadhvali" style="color:green"></label>
+                                                    <label id="aadhvali1" style="color:red"></label>
+                                                </div>
+                                            </div>
+
+
+                                            <div class=' col-sm-4' id="fetch">
+                                                <button type="button" id="fetch" class="btn btn-primary btn-flat"><i class="fa fa-list fa-fw"></i>SendOTP</button>
+
+                                            </div>
+
+
+                                            <div class=' col-sm-4' id="fetchOTP" hidden>
+                                                <div><label>Enter the received OTP</label><span class="messages" style="color: red;"> *</span></div>
+                                                <div>
+                                                    @Html.TextBoxFor(m => m.aadhaarOTP, new { @Required = "", id = "aadharOTP", @placeholder = "Enter your Aadhaar OTP here", @autocomplete = "off", @onkeypress = "return AllowCustomFormat(this.event,'0123456789')", @class = "form-control", @maxlength = "6", @pattern = "[0-9]{6,6}", @title = "Please enter exactly 6 digit OTP sent to your mobile." })
+                                                    <div class="col-md-6 col-sm-6 col-xs-12 textss">
+                                                        <label id="aadhvali" style="color:green">@*  *@</label>
+                                                        <label id="aadhvali1OTP" style="color:red"></label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class=' col-sm-4' id="verifybtn" hidden>
+                                                <button type="button" id="fetchbtn" class="btn btn-primary btn-flat"><i class="fa fa-list fa-fw"></i>Verify</button>
+
+                                            </div>
+
+
+                                        </div>
+
+
+
+                                        <div class="form-group col-md-12 col-sm-12 text-center">
+                                            <div class="form-group row">
+                                                <div class="col-md-offset-2 col-md-10">
+                                                    <button type="submit" id="submitw" class="btn btn-primary   btn-flat pull-right "><i class="fa fa-list fa-fw"></i>Save and Next</button>
+                                                    <button type="button" id="secondbtn" class="btn btn-primary nextBtn  btn-flat pull-right " disabled hidden @*style="display:none"*@><i class="fa fa-list fa-fw"></i>Save and Continue</button>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row setup-content" id="step-2">
+                    <div class="col-xs-12">
+                        <div class="col-md-12">
+
+
+                            <div class="row successalert1">
+                                <div class="col-sm-12 col-md-12 col-xl-12">
+                                    <div class="alert alert-dismissible alert-primary background-primary">
+                                        <button type="button" class="btn-close" aria-label="Close"></button>
+                                        <i class="icofont icofont-check-circled"></i>
+                                        <strong id="successtext1"></strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row erroralert1">
+                                <div class="col-sm-12 col-md-12 col-xl-12">
+                                    <div class="alert alert-dismissible alert-danger background-danger">
+                                        <button type="button" class="btn-close" aria-label="Close"></button>
+                                        <i class="icofont icofont-warning"></i>
+                                        <strong id="errortext1"></strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Enroll your details here.</h5>
+
+                                    <hr />
+                                </div>
+                                <div class="card-block">
+                                    @using (Html.BeginForm("NewRegistration", "OnBoarding", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                    {
+
+
+                                        @Html.AntiForgeryToken()
+                                        <div class="form-group row">
+                                            <div class=' col-sm-6'>
+                                                <div> <label>User Type</label><span class="messages" style="color: red;"> *</span></div>
+
+                                                @Html.DropDownListFor(m => m.usertype, new List<SelectListItem>
+                                                 {
+                                                     new SelectListItem { Text = "Super Distributor", Value = "2"},
+                                                     new SelectListItem { Text = "Distributor", Value = "3"},
+                                                     new SelectListItem { Text = "Retailer", Value = "4"},
+
+                                         }, "Select User Type", new { @Required = "", @class = "form-control form-select border-left-primary", @id = "selectuser", autocomplete = "off", onchange = "check(this);" })
+
+                                            </div>
+                                            <div class=' col-sm-6'>
+                                                <div>
+                                                    <div class=' col-sm-12'>
+                                                        <br />
+                                                        <span class="messages blink-hard" style="color: red">For uploading Image / PDF maximum size is less than 1MB</span>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <div class=' col-sm-6'>
+                                                <div><label>Name</label> <span class="messages" style="color: red;"> *</span></div>
+                                                <div>
+
+                                                    @Html.TextBoxFor(m => m.name, new
+                                               {
+                                                   @Required = "",
+                                                   @placeholder = "",
+                                                   @autocomplete = "off",
+                                                   @id = "name1",
+                                                   editable = false,
+                                                   @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789')",
+                                                   @class = "form-control",
+                                                   @maxlength = "50"
+                                               })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class=' col-sm-6'>
+                                                <div><label>Shop Number</label> <span class="messages" id="req" style="color: red;">*</span></div>
+                                                @Html.TextBoxFor(m => m.shopNumber, new
+                                                {
+                                                    @placeholder = "",
+                                                @autocomplete = "off",
+                                                @onkeypress = "return AllowCustomFormat(this.event,'0123456789')",
+                                                @ID = "Mandatorysh",
+                                                @class = "form-control",
+                                                @maxlength = "10"
+                                            })
+                                            </div>
+                                            <div class='col-sm-6'>
+                                                <div><label>Shop/Bussiness</label> <span class="messages" id="req1" style="color: red;"> *</span></div>
+                                                @Html.TextBoxFor(m => m.shopName, new
+                                                {
+                                                    @placeholder = "",
+                                                @autocomplete = "off",
+                                                @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ')",
+                                                @ID = "nonMandatorysh",
+                                                @class = "form-control",
+                                                @maxlength = "20"
+                                            })
+                                            </div>
+
+
+                                        </div>
+
+
+
+
+                                        <div>
+                                            <div>
+                                                <div>
+
+
+
+                                                    <div class="form-group row">
+                                                        <div class=' col-sm-6'>
+                                                            <div><label>Address Line 1</label> <span class="messages" style="color: red;"> *</span></div>
+                                                            <div>
+
+                                                                @Html.TextBoxFor(m => m.addressLine1, new
+                                                           {
+                                                               @Required = "",
+                                                               @placeholder = "",
+                                                               @autocomplete = "off",
+                                                               @id = "address1",
+                                                               editable = false,
+                                                               @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789')",
+                                                               @class = "form-control",
+                                                               @maxlength = "50"
+                                                           })
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class='col-sm-6'>
+                                                            <div><label>Address Line 2</label> </div>
+                                                            <div>
+
+                                                                @Html.TextBoxFor(m => m.addressLine2, new
+                                                                {
+                                                                    @placeholder = "",
+                                                                    @id = "address2",
+                                                               @autocomplete = "off",
+                                                                    @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789')",
+                                                                    @class = "form-control",
+                                                                    @maxlength = "50"
+                                                                })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div>
+                                                        <div class="form-group row">
+                                                            <div class=' col-sm-6'>
+                                                                <div><label>City</label><span class="messages" style="color: red;"> *</span> </div>
+                                                                @Html.TextBoxFor(m => m.city, new
+                                                           {
+                                                               @Required = "",
+                                                               @placeholder = "",
+                                                               @autocomplete = "off",
+                                                               @id = "city1",
+                                                               editable = false,
+                                                               @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')",
+                                                               @class = "form-control",
+                                                               @maxlength = "20"
+                                                           })
+                                                            </div>
+
+
+                                                            <div class='col-sm-6'>
+                                                                <div><label>State</label><span class="messages" style="color: red;"> *</span> </div>
+                                                                @Html.TextBoxFor(m => m.state, new
+                                                           {
+                                                               @Required = "",
+                                                               @placeholder = "",
+                                                               @autocomplete = "off",
+                                                               @id = "state1",
+                                                               editable = false,
+                                                               @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')",
+                                                               @class = "form-control",
+                                                               @maxlength = "15"
+                                                           })
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="form-group row">
+
+                                                            <div class=' col-sm-6'>
+                                                                <div><label>PIN Code</label><span class="messages" style="color: red;"> *</span> </div>
+                                                                @Html.TextBoxFor(m => m.pincode, new
+                                                                {
+                                                                    @Required = "",
+                                                                    @placeholder = "",
+                                                                    editable = false,
+                                                                    @autocomplete = "off",
+                                                               @id = "pincode1",
+                                                                    @onkeypress = "return AllowCustomFormat(this.event,'0123456789')",
+                                                                    @class = "form-control",
+                                                                    @maxlength = "6",
+                                                                    @pattern = "[0-9]{6,6}",
+                                                                    @title = "Please enter 6 digit valid Pincode"
+                                                                })
+                                                            </div>
+
+
+
+
+                                                            <div class=' col-sm-6'>
+                                                                <div>
+                                                                    <label>Country</label><span class="messages" style="color: red;"> *</span>
+                                                                    <div class=' col-sm-12'>
+                                                                        @Html.TextBoxFor(m => m.country, new
+                                                                        {
+                                                                            @Required = "",
+                                                                            @placeholder = "",
+                                                                            editable = false,
+                                                                       @autocomplete = "off",
+                                                                            @id = "country1",
+                                                                            @onkeypress = "return AllowCustomFormat(this.event,'0123456789')",
+                                                                            @class = "form-control"
+                                                                   })
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div>
+                                            <div class="form-group row">
+                                                <div class='col-sm-4'>
+                                                    <div><label>PAN card Number</label> <span class="messages" style="color: red;"> *</span></div>
+                                                    @Html.TextBoxFor(m => m.pancardNo, new { @Required = "", @placeholder = "", @id = "panno", @autocomplete = "off", @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789')", @class = "form-control", @maxlength = "10", @pattern = ".{10}", @title = "Please enter 10 digit valid PAN number" })
+                                                    <div class="col-md-6 col-sm-6 col-xs-12 textss">
+                                                        <label id="panvali" style="color:green"></label>
+                                                        <label id="panvali1" style="color:red"></label>
+                                                    </div>
+                                                </div>
+
+                                                <div class=' col-sm-2'>
+                                                    <button type="button" id="panfetch" class="btn btn-primary  btn-flat"><i class="fa fa-list fa-fw"></i>Validate</button>
+
+                                                </div>
+
+                                                <div class=' col-sm-6'>
+                                                    <div id="imgTest"><label>PAN Upload</label> <div class="panerror" style="color:red"></div></div>
+                                                    @Html.TextBoxFor(m => m.panSoftcopy, null, new
+                                               {
+
+                                                   enctype = "multipart/form-data",
+                                                   accept = "image/pdf",
+                                                   @id = "pan",
+                                                   type = "file",
+                                                   @class = "form-control border-left-primary ",
+                                                   onchange = "loadFile(event)"
+                                               })
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="form-group row">
+                                                <div class=' col-sm-4'>
+                                                    <div><label>GST Number</label></div>
+                                                    @Html.TextBoxFor(m => m.gstNo, new
+                                                    {
+                                                        @placeholder = "",
+                                                        @id = "gstno",
+                                                        @autocomplete = "off",
+                                                   @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789')",
+                                                        @class = "form-control",
+                                                        @maxlength = "15",
+                                                        @pattern = ".{15}",
+                                                        @title = "Please enter 15 digit valid GST number"
+                                                    })
+                                                    <div class="col-md-6 col-sm-6 col-xs-12 textss">
+                                                        <label id="gstvali" style="color:green"></label>
+                                                        <label id="gstvali1" style="color:red"></label>
+                                                    </div>
+                                                </div>
+
+                                                <br />
+                                                <div class=' col-sm-2'>
+                                                    <button type="button" id="gstfetch" class="btn btn-primary  btn-flat"><i class="fa fa-list fa-fw"></i>Validate</button>
+
+                                                </div>
+
+                                                <div class=' col-sm-6'>
+
+                                                    <div><label>GST Upload</label><div class="gsrerror" style="color:red"></div></div>
+                                                    @Html.TextBoxFor(m => m.gstSoftcopy, null, new
+                                                    {
+                                                        enctype = "multipart/form-data",
+                                                   accept = "image/pdf",
+                                                        @id = "gst",
+                                                        type = "file",
+                                                        @class = "form-control border-left-primary ",
+                                                        onchange = "loadFile(event)"
+                                                    })
+
+                                                </div>
+
+
+
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+
+                                            <div class=' col-sm-6'>
+                                                <div><label>Aadhar Front</label><div class="aferror" style="color:red"></div></div>
+                                                @Html.TextBoxFor(m => m.aadhaarfrontSoftcopy, null, new
+                                           {
+                                               //@Required = "",
+                                               enctype = "multipart/form-data",
+                                               @id = "adf",
+                                               accept = "image/pdf",
+                                               type = "file",
+                                               @class = "form-control border-left-primary ",
+                                               onchange = "loadFile(event)"
+                                           })
+
+                                            </div>
+
+                                            <div class='col-sm-6'>
+                                                <div><label>Aadhar Back</label><div class="aberror" style="color:red"></div></div>
+                                                @Html.TextBoxFor(m => m.aadharbackSoftcopy, null, new
+                                           {
+                                               //@Required = "",
+                                               enctype = "multipart/form-data",
+                                               @id = "adb",
+                                               accept = "image/pdf",
+                                               type = "file",
+                                               @class = "form-control border-left-primary ",
+                                               onchange = "loadFile(event)"
+                                           })
+
+                                            </div>
+                                        </div>
+
+
+
+
+
+
+                                        <div>
+                                            <div class="form-group row">
+                                                <div class=' col-sm-4'>
+                                                    <div><label>Mobile Number 1</label><span class="messages" style="color: red;"> *</span> </div>
+                                                    <div>
+                                                        @Html.TextBoxFor(m => m.mobileNo, new { @Required = "", @placeholder = "", id = "hdnMob", @autocomplete = "off", @Value = 9994185541, @onkeypress = "return AllowCustomFormat(this.event,'0123456789')", @class = "form-control", @maxlength = "10", @pattern = "[0-9]{10,10}", @title = "Please enter exactly 10 digit Mobile Number" })
+                                                        <div class="col-md-6 col-sm-6 col-xs-12 textss">
+                                                            <label id="Sentmob" style="color:green"></label>
+                                                            <label id="invalidnum" style="color:red"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class=' col-sm-4'>
+                                                    <div><label>Click Send OTP</label><span class="messages" style="color: red;"> *</span> </div>
+                                                    <div>
+                                                        @Html.TextBoxFor(m => m.mobOTP, new { @Required = "", id = "MobOTP", @placeholder = "Enter your Mobile OTP here", @autocomplete = "off", @onkeypress = "return AllowCustomFormat(this.event,'0123456789')", @class = "form-control", @maxlength = "6", @pattern = "[0-9]{6,6}", @title = "Please enter exactly 6 digit OTP sent to your mobile." })
+
+
+                                                    </div>
+                                                </div>
+
+                                                <div class=' col-sm-4'>
+                                                    <button id="Mobotp" class="ff-btn ff-btn-submit ff-btn-sm ff_btn_style btn btn-primary  btn-flat" value="2" type="button" name="custom_submit_button-1_1"
+                                                            data-name="custom_submit_button-1_1">
+                                                        Send OTP
+                                                    </button>
+                                                    <div> <span id="Mobtimer" style="color:red"></span></div>
+
+                                                </div>
+                                                <div class=' col-sm-4'>
+                                                    <div><label>Mobile Number 2</label> </div>
+                                                    <div>
+
+                                                        @Html.TextBoxFor(m => m.mobile2, new { @placeholder = "", id = "hdnMob1", @autocomplete = "off", @onkeypress = "return AllowCustomFormat(this.event,'0123456789')", @class = "form-control", @maxlength = "10", @pattern = "[0-9]{10,10}", @title = "Please enter exactly 10 digit Mobile Number" })
+                                                    </div>
+                                                </div>
+
+
+
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group col-md-12 col-sm-12 text-center">
+                                            <div>
+                                                <div class="col-md-12  ">
+
+                                                    <button class="btn btn-primary  nextBtn btn-lg pull-right" id="nextBt2" disabled hidden type="button">Save and Next</button>
+                                                    @*<button class="btn btn-success  btn-lg pull-right" id="message" disabled hidden type="button">Save and Next</button>*@
+
+                                                    <button type="submit" id="subbtn" class="btn btn-primary    btn-flat pull-right "><i class="fa fa-list fa-fw"></i>Save and Next</button>
+                                                    <button type="button" id="secsubbtn" class="btn btn-primary  nextBtn  btn-flat pull-right " disabled hidden @*style="display:none"*@><i class="fa fa-list fa-fw"></i>Save and Next</button>
+                                                    @*<button class="btn btn-success  btn-lg " id="trychecj" type="button">try</button>*@
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                    }
+                                    <button class="btn btn-primary  previousBtn btn-lg pull-left" type="button">previous</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

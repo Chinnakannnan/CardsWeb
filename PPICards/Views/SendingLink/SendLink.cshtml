@@ -1,0 +1,442 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model PPICards.Models.OnboardingModel.sendLink
+
+@{
+    ViewBag.Title = "SendLink";
+@*    Layout = "~/Views/Shared/_Layout.cshtml";*@
+}
+@if (ViewBag.data != null)
+{
+    string lstrdata = ViewBag.data;
+    string[] lstrSplit = lstrdata.Split('|');
+    @if (lstrSplit[0].ToString() == "000")
+    {
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-xl-12">
+                <div class="alert alert-dismissible alert-success background-primary">
+                    @*<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>*@
+                    <i class="fa fa-check-circle"></i>
+                    <strong>@lstrSplit[1].ToString()</strong>
+                </div>
+            </div>
+        </div>
+    }
+    @if (lstrSplit[0].ToString() != "000")
+    {
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-xl-12">
+                <div class="alert alert-dismissible alert-warning background-danger">
+                    @*<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>*@
+                    <i class="fa fa-warning"></i>
+                    <strong>@lstrSplit[1].ToString()</strong>
+                </div>
+            </div>
+        </div>
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Sending Link</title>
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+    <link href="css/portal.css" rel="stylesheet">
+        <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+</head>
+
+<body id="page-top">
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="d-sm-flex align-items-center justify-content-between mt-4 mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Send Link to Onboard Users</h1>
+                    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm text-uppercase">
+                        <i class="fas fa-rupee-sign fa-sm text-white-50 "></i> Add Money
+                    </a>
+                </div>
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-8 col-12 ">
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <div class="card-block">
+
+                    @using (Html.BeginForm("SendLink", "SendingLink", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+
+                     
+                        <div class="form-group mb-3">
+                          
+                                <label class="floating-label">
+                                @Html.TextBoxFor(m => m.firstName, new
+                            {
+                            @Required = "",
+                            @placeholder = "First Name",
+                            @autocomplete = "off",
+                            @id = "name1",
+                            editable = false,
+                            @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')",
+                            @class = "form-control",
+                            @maxlength = "50"
+                            })
+                        
+                            
+                                <span class="floating-text">
+                                    Firstname
+                                    <span class="floating-text" style="color: red;">*</span>
+                                </span>
+                                </label>
+                                
+                             </div>
+                        <div class="form-group mb-3">
+                                <label class="floating-label">
+                                @Html.TextBoxFor(m => m.lastName, new
+                            {
+                            @Required = "",
+                            @placeholder = "Last Name",
+                            @autocomplete = "off",
+                            @id = "name1",
+                            editable = false,
+                            @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')",
+                            @class = "form-control",
+                            @maxlength = "50"
+                            })
+                        
+                            
+                                <span class="floating-text">
+                                   Last Name
+                                    <span class="floating-text" style="color: red;">*</span>
+                                </span>
+
+
+
+                                </label>
+                        </div>
+                         <div class="form-group mb-3">
+
+                        <label class="floating-label">
+
+                                @Html.TextBoxFor(m => m.mobileNumber, new
+                            {
+                            @required = "",
+                            @placeholder = "Mobile Number",
+                            @autocomplete = "off",
+                            @onkeypress = "return AllowCustomFormat(this.event,'0123456789')",
+                            @ID = "Mandatorysh",
+                            @class = "form-control",
+                            @maxlength = "10",
+                            @pattern = "[0-9]{10,10}",
+                            @title = "Please enter exactly 10 digit Mobile Number"
+                            })
+                            
+                                <span class="floating-text">
+                                Mobile Number
+                                    <span class="floating-text" style="color: red;">*</span>
+                                </span>
+                                </label>
+                        
+                           
+                                 </div>
+                        <div class="form-group mb-3">
+                                 
+                                 <label class="floating-label">
+
+                            @Html.TextBoxFor(m => m.emailId, new
+                            {
+                            @required = "",
+                            pattern = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$",
+                            @autocomplete = "off",
+                            @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.@_-')",
+                            @class = "form-control",
+                            @maxlength = "35",
+                            placeholder = "Email Id",
+                            id = "hdnEmailId",
+                            name = "EmailId",
+                            @Value = "cynthia@accupaydtech.com",
+                            @title = "For ex: xyz@gmail.com"
+                            })
+                            
+                                <span class="floating-text">
+                                 Email ID
+                                    <span class="floating-text" style="color: red;">*</span>
+                                </span>
+                                </label>
+                        
+                                
+                            </div>
+                      
+
+                             <div>
+
+                            <button type="submit" id="submit" class="btn btn-primary btn-block bg-gradient-primary btn-large ">Submit</button>
+
+                                
+                            </div>
+                      
+                    }
+
+                </div>
+
+
+
+
+
+
+
+
+                
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Footer -->
+    <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+                <span>Copyright &copy; Your Website 2023</span>
+            </div>
+        </div>
+    </footer>
+    <!-- End of Footer -->
+    </div>
+    <!-- End of Content Wrapper -->
+    </div>
+    <!-- End of Page Wrapper -->
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--  Core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="js/portal.js"></script>
+
+
+</body>
+
+</html>
+
+@*<div class="pcoded-content">
+    <div class="pcoded-inner-content">
+        <!-- Main-body start -->
+        <div class="main-body">
+            <div class="page-wrapper">
+                <!-- Page-header start -->
+                <div class="page-header">
+                    <div class="row align-items-end">
+                        <div class="col-lg-8">
+                            <div class="page-header-title">
+                                <i class="fa fa-external-link" style="color: black;"></i>
+                                <div class="d-inline heading">
+                                    <h4>Welcome Onboarding</h4>
+
+                                </div>
+
+                            </div>
+                        </div><br /><br />
+                    </div>
+                </div>
+
+                @if (ViewBag.data != null)
+                {
+                    string lstrdata = ViewBag.data;
+                    string[] lstrSplit = lstrdata.Split('|');
+                    if (lstrSplit[0].ToString() == "000")
+                    {
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-xl-12">
+                                <div class="alert alert-dismissible alert-primary background-primary">
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    <i class="icofont icofont-check-circled"></i>
+                                    <strong>@lstrSplit[1].ToString()</strong>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    if (lstrSplit[0].ToString() != "000")
+                    {
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-xl-12">
+                                <div class="alert alert-dismissible alert-danger background-danger">
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    <i class="icofont icofont-warning"></i>
+                                    <strong>@lstrSplit[1].ToString()</strong>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Please enter valid details to get started!</h5>
+
+                        <hr />
+                    </div>
+                    <div class="card-block">
+
+                        @using (Html.BeginForm("SendLink", "SendingLink", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+
+                            <div class="form-group mb-3">
+                                <label class="floating-label">
+                                    <input type="text" class="form-control"
+                                       placeholder="Enter your user id/card number">
+                                    <span class="floating-text">User ID/Card Number</span>
+                                </label>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class=' col-sm-4'>
+                                    <div><label>First Name</label> <span class="messages" style="color: red;"> *</span></div>
+                                    @Html.TextBoxFor(m => m.firstName, new
+                                {
+                                @Required = "",
+                                @placeholder = "",
+                                @autocomplete = "off",
+                                @id = "name1",
+                                editable = false,
+                                @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')",
+                                @class = "form-control",
+                                @maxlength = "50"
+                                })
+                                </div>
+
+
+
+                                <div class=' col-sm-4'>
+                                    <div><label>Last Name</label> <span class="messages" style="color: red;"> *</span></div>
+                                    <div>
+
+                                        @Html.TextBoxFor(m => m.lastName, new
+                                    {
+                                    @Required = "",
+                                    @placeholder = "",
+                                    @autocomplete = "off",
+                                    @id = "name1",
+                                    editable = false,
+                                    @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')",
+                                    @class = "form-control",
+                                    @maxlength = "50"
+                                    })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class=' col-sm-4'>
+                                    <div><label>Mobile Number</label> <span class="messages" id="req" style="color: red;">*</span></div>
+                                    @Html.TextBoxFor(m => m.mobileNumber, new
+                                {
+                                @required = "",
+                                @placeholder = "",
+                                @autocomplete = "off",
+                                @onkeypress = "return AllowCustomFormat(this.event,'0123456789')",
+                                @ID = "Mandatorysh",
+                                @class = "form-control",
+                                @maxlength = "10",
+                                @pattern = "[0-9]{10,10}",
+                                @title = "Please enter exactly 10 digit Mobile Number"
+                                })
+                                </div>
+
+                                <div class=' col-sm-4'>
+                                    <div id="txtName"><label for='ff_1_email'>Email ID</label><span class="messages" style="color: red;"> *</span> </div>
+                                    @Html.TextBoxFor(m => m.emailId, new
+                                {
+                                @required = "",
+                                pattern = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$",
+                                @autocomplete = "off",
+                                @onkeypress = "return AllowCustomFormat(this.event,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.@_-')",
+                                @class = "form-control",
+                                @maxlength = "35",
+                                placeholder = "Email Id",
+                                id = "hdnEmailId",
+                                name = "EmailId",
+                                @Value = "cynthia@accupaydtech.com",
+                                @title = "For ex: xyz@gmail.com"
+                                })
+                                    <div class="col-md-6 col-sm-6 col-xs-12 textss">
+
+
+                                        <label id="invalidmail" style="color:red"></label>
+                                        <label id="Sentmail" style="color:green"></label>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <button type="submit" id="submit" class="btn btn-success btn-flat pull-right "><i class="fa fa-list fa-fw"></i>Submit</button>
+
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>*@

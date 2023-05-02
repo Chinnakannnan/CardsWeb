@@ -1,0 +1,157 @@
+﻿<div class="row justify-content-center" id="blockCard">
+    <div class="col-lg-5 col-12">
+        <div class="card border-0  bg-gradient-primary-light-reverse mt-4 mb-2">
+            <div class="card-body">
+                <h6 class="font-weight-bold mb-3">Showing transaction details for</h6>
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1" class="floating-label">
+                        <select class="form-control" id="exampleFormControlSelect1">
+                            <option>378282246310005</option>
+                            <option selected>371449635398431</option>
+                            <option>5610591081018250</option>
+                            <option>4111111111111111</option>
+                        </select>
+                        <span class="floating-text">Card Number</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-12">
+                <div class="card shadow mb-4">
+                    <div class="card-header bg-gradient-primary text-center py-3">
+                        <h6 class="m-0 font-weight-bold text-white">Reset PIN </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="col-12">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-8 col-12">
+                                    <div class="form-group">
+                                        <label for="cardNo" class="floating-label">
+                                            <select class="form-control" id="cardNo">
+                                                <option>378282246310005</option>
+                                                <option selected>371449635398431</option>
+                                                <option>5610591081018250</option>
+                                                <option>4111111111111111</option>
+                                            </select>
+                                            <span class="floating-text">Card Number</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="newPIN" class="floating-label">
+                                            <input type="password" class="form-control" maxlength="4"
+                                                   pattern="^[0-9]{4}$" placeholder="Enter new PIN" id="newPIN">
+                                            <span class="floating-text">Enter new PIN</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="confirmNewPIN" class="floating-label">
+                                            <input type="password" class="form-control" pattern="^[0-9]{4}$"
+                                                   maxlength="4" placeholder="Confirm new PIN" id="confirmNewPIN">
+                                            <span class="floating-text">Confirm new PIN</span>
+                                        </label>
+                                    </div>
+                                    <div class="text-center">
+                                        <button class="btn btn-primary"
+                                                onclick="showHideFlex('blockCardOTP','blockCard')">
+                                            Generate OTP
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="notes my-4 small">
+                                <h6 class="font-weight-bold">Note</h6>
+                                <ul>
+                                    <li class="text-danger mb-2">
+                                        Lorem ipsum dolor sit amet consectetur adipisicing
+                                        elit. Quis sequi, aliquam laboriosam illum eaque libero molestias rem possimus
+                                        maiores. Iste rem, sequi dolor voluptates unde beatae voluptatibus? Fugit, quasi
+                                        quos?
+                                    </li>
+                                    <li class="mb-2">
+                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis
+                                        sequi, aliquam laboriosam illum eaque libero molestias rem possimus maiores.
+                                        Iste rem, sequi dolor voluptates unde beatae voluptatibus? Fugit, quasi quos?
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="row justify-content-center" id="blockCardOTP" style="display:none">
+    <div class="col-lg-6 col-md-12 my-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="otpValidation">
+                    <form action="javascript: void(0)" class="otp-form" name="otp-form">
+
+                        <div class="text-center">
+                            <h4 class="h4 text-gray-900 font-weight-bold">OTP Verification</h4>
+                            <p class="text-primary">
+                                An otp has been sent to ********k876@gmail.com
+                            </p>
+                            <p class="text-danger">Please enter OTP to verify</p>
+                        </div>
+                        <div class="otp-input-fields">
+                            <input type="number" class="otp__digit otp__field__1">
+                            <input type="number" class="otp__digit otp__field__2">
+                            <input type="number" class="otp__digit otp__field__3">
+                            <input type="number" class="otp__digit otp__field__4">
+                            <input type="number" class="otp__digit otp__field__5">
+                            <input type="number" class="otp__digit otp__field__6">
+                        </div>
+                    </form>
+                    <a href="index.html" class="btn btn-primary btn-block bg-gradient-primary mt-4 btn-large">
+                        submit
+                    </a>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <a href="#">Recent OTP</a>
+                        <a href="#" onclick="showHideFlex('blockCard','blockCardOTP')">Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="successPopup" style="" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:auto;">
+        <div class="modal-content">
+            <div class="d-flex justify-content-center my-2">
+                <i class="fas fa-check-circle text-success" style="font-size:50px"></i>
+                @*<i class="fas fa-times-circle text-danger" style="font-size:72px"></i>*@
+            </div>
+            <div class="modal-body text-center" style="font-size:20px" id="con_tent"></div>
+            <div class="modal-footer" style="padding:5px;">
+                <button class="btn btn-primary" type="button" data-dismiss="modal">Ok</button>
+                @*// <a class="btn btn-primary" onclick="ActivateCard();">OK</a>*@
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="failurePopup" style="" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:auto;">
+        <div class="modal-content">
+            <div class="d-flex justify-content-center my-2">
+                <i class="fas fa-times-circle text-danger" style="font-size:50px"></i>
+                @*<i class="fas fa-times-circle text-danger" style="font-size:72px"></i>*@
+            </div>
+            <div class="modal-body text-center" style="font-size:20px">Please Try again</div>
+            <div class="modal-footer" style="padding:5px;">
+                <button class="btn btn-primary" type="button" data-dismiss="modal">Ok</button>
+                @*// <a class="btn btn-primary" onclick="ActivateCard();">OK</a>*@
+            </div>
+        </div>
+    </div>
+</div>

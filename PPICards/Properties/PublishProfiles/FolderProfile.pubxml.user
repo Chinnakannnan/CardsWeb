@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\App\Accupayd\projects\publish_CoreWebApp</_PublishTargetUrl>
+    <History>True|2023-04-28T08:55:34.1995135Z;True|2023-04-28T13:40:03.2954729+05:30;True|2023-04-28T12:42:25.6849754+05:30;True|2023-04-28T12:10:22.3395108+05:30;True|2023-04-27T19:30:32.9140179+05:30;True|2023-04-27T17:36:17.2763847+05:30;True|2023-04-27T14:03:30.1762969+05:30;True|2023-04-20T18:11:39.5992848+05:30;True|2023-04-17T22:15:00.4344631+05:30;True|2023-04-10T18:16:40.3491295+05:30;True|2023-04-08T20:02:26.6975830+05:30;True|2023-04-06T23:34:02.2303214+05:30;True|2023-03-04T21:47:24.8295546+05:30;True|2023-03-04T18:56:25.1131734+05:30;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>

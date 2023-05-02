@@ -1,0 +1,376 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor Accessor
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    @*<meta name="viewport" content="width=device-width, initial-scale=1.0" />*@
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>portal - Dashboard</title>
+    <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/portal.css" rel="stylesheet" />
+    <link href="~/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/useractivity.js"></script>
+    <link rel="icon" href="~/img/icon.ico" type="image/x-icon">
+    <!-- Custom scripts for all pages-->
+    <script src="~/js/site.js"></script>
+    <script src="~/js/cardactivity.js"></script>
+
+</head>
+<body onload="loaderFn()">
+
+    <div class="support" data-toggle="modal" data-target="#supportPopup">
+        <img src="~/img/customer-support.png" />
+    </div>
+
+   <div id="loader"></div>
+    <div class="top-header">
+        <div class="d-flex align-items-start justify-content-start">
+            <a class="header-logo" href=@Url.Action("Index", "Home")>
+                <img class="header-logo-img" src="~/img/logo.png" />
+            </a>
+        </div>
+    </div>
+    <!-- Topbar -->
+    <nav class="navbar navbar-expand navbar-light bg-white topbar static-top shadow">
+
+        <!-- Sidebar Toggle (Topbar) -->
+        <button id="sidebarToggleTop" class="btn btn-link rounded-circle mr-3">
+            <i class="fa fa-bars"></i>
+        </button>
+
+        <!-- Topbar Search -->
+        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+            <div class="input-group">
+                <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                       aria-label="Search" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="button">
+                        <i class="fas fa-search fa-sm"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Topbar Navbar -->
+        <ul class="navbar-nav ml-auto">
+
+            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+            <li class="nav-item dropdown no-arrow d-sm-none">
+                <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-search fa-fw"></i>
+                </a>
+                <!-- Dropdown - Messages -->
+                <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                     aria-labelledby="searchDropdown">
+                    <form class="form-inline mr-auto w-100 navbar-search">
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                                   aria-label="Search" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </li>
+
+            <li class="nav-item mx-1">
+                <a class="nav-link dropdown-toggle px-1" href="#" title="Terms and Conditions & Private Policy"
+                   data-toggle="modal" data-target="#privatepolicy">
+                    <img src="~/img/tc.png" style="width: 24px;" />
+                </a>
+            </li>
+            <li class="nav-item mx-1">
+                <a class="nav-link dropdown-toggle px-1" href="#" title="Support"
+                   data-toggle="modal" data-target="#supportPopup">
+                    <img src="~/img/support.png" style="width: 24px;" />
+                </a>
+            </li>
+
+            <div class="topbar-divider d-none d-sm-block"></div>
+
+            <!-- Nav Item - User Information -->
+            <li class="nav-item dropdown no-arrow">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">@Accessor.HttpContext.Session.GetString(ConstValues.LoginName)</span>
+                    <img class="img-profile rounded-circle" src="~/img/undraw_profile.svg">
+                </a>
+                <!-- Dropdown - User Information -->
+                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                    <a class="dropdown-item" href="@Url.Action("ProfilePage", "ProfilePage")">
+                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                        Profile
+                    </a>
+                    <a class="dropdown-item" href="#">
+                        <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                        Settings
+                    </a>
+                    <a class="dropdown-item" href="#">
+                        <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                        Activity Log
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                        Logout
+                    </a>
+                </div>
+            </li>
+
+        </ul>
+
+    </nav>
+    <!-- End of Topbar -->
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <li class="nav-item active">
+                <a class="nav-link" href=@Url.Action("Index", "Home")>
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>My Card</span>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link" href=@Url.Action("Index", "ManageCard")>
+                    <i class="fas fa-fw fa-credit-card"></i>
+                    <span>Manage Card</span>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link" href=@Url.Action("BlockCard", "ManageCard")>
+                    <i class="fas fa-fw fa-credit-card"></i>
+                    <span>Lock / Unlock</span>
+                </a>
+            </li>
+            <li style="cursor:pointer" class="nav-item ">
+                <a style="cursor:pointer" class="nav-link" onclick="LoadData(2);">
+                    <i style="cursor:pointer" class="fas fa-fw fa-credit-card"></i>
+                    <span style="cursor:pointer">view Card</span>
+                </a>
+            </li>
+            <li style="cursor:pointer" class="nav-item ">
+                <a style="cursor:pointer" class="nav-link" onclick="LoadData(1);">
+                    <i style="cursor:pointer" class="fas fa-fw fa-credit-card"></i>
+                    <span style="cursor:pointer">Change PIN</span>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link" href=@Url.Action("ReplacementCard", "ManageCard")>
+                    <i class="fas fa-fw fa-credit-card"></i>
+                    <span>Replacement Card</span>
+                </a>
+            </li>
+
+            <li class="nav-item active">
+                <a class="nav-link" href=@Url.Action("Index", "Transaction")>
+                    <i class="fas fa-fw fa-file-invoice"></i>
+                    <span>Transaction</span>
+                </a>
+            </li>
+            <!-- Nav Item - Pages Collapse Menu -->
+            @*<li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+            aria-expanded="true" aria-controls="collapsePages">
+            <i class="fas fa-fw fa-folder"></i>
+            <span>Pages</span>
+            </a>
+            <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">Login Screens:</h6>
+            <a class="collapse-item" href="login.html">Login</a>
+            <a class="collapse-item" href="register.html">Register</a>
+            <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
+            <div class="collapse-divider"></div>
+            <h6 class="collapse-header">Other Pages:</h6>
+            <a class="collapse-item" href="404.html">404 Page</a>
+            <a class="collapse-item" href="blank.html">Blank Page</a>
+            <a class="collapse-item" href="tables.html">Tables</a>
+            <a class="collapse-item" href="cards.html">Cards</a>
+            <a class="collapse-item" href="buttons">Tables</a>
+            </div>
+            </div>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="#">
+            <i class="fas fa-fw fa-chart-area"></i>
+            <span>link 2</span></a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="#">
+            <i class="fas fa-fw fa-chart-area"></i>
+            <span>link 3</span></a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="#">
+            <i class="fas fa-fw fa-chart-area"></i>
+            <span>link 4</span></a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="#">
+            <i class="fas fa-fw fa-chart-area"></i>
+            <span>link 5</span></a>
+            </li>*@
+
+        </ul>
+
+        <main role="main" class="container-fluid pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" onclick="LoadLogout()">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Support Modal-->
+    <div class="modal side-modal animate__animated animate__slideInRight" id="supportPopup" tabindex="-1"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold text-primary">Contact us</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="36px" height="36px">
+                            <path d="M 38.982422 6.9707031 A 2.0002 2.0002 0 0 0 37.585938 7.5859375 L 24 21.171875 L 10.414062 7.5859375 A 2.0002 2.0002 0 0 0 8.9785156 6.9804688 A 2.0002 2.0002 0 0 0 7.5859375 10.414062 L 21.171875 24 L 7.5859375 37.585938 A 2.0002 2.0002 0 1 0 10.414062 40.414062 L 24 26.828125 L 37.585938 40.414062 A 2.0002 2.0002 0 1 0 40.414062 37.585938 L 26.828125 24 L 40.414062 10.414062 A 2.0002 2.0002 0 0 0 38.982422 6.9707031 z" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <p class="text-gray-600 text-center">Just send us your questions, concerns, card , payment and transaction related issues, we will give you the support you need.</p>
+                            <div class="row">
+                                <div class="col-md-6 col-12 text-center p-2">
+                                    <span class="btn btn-primary btn-sm btn-circle">
+                                        <i class="fas fa-phone-alt"></i>
+                                    </span>
+                                    <a class="" href="tel:+919282829292"> +91 8447928988</a>
+                                </div>
+                                <div class="col-md-6 col-12 text-center p-2">
+                                    <span class="btn btn-primary btn-sm btn-circle">
+                                        <i class="fas fa-envelope"></i>
+                                    </span>
+                                    <a class="" href="mailto:support@accupayd.com"> support@accupayd.com</a>
+                                </div>
+                            </div>
+
+                            <div class="separator">
+                                <div class="line"></div>
+                                <span>or</span>
+                                <div class="line"></div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group my-3">
+                                <label class="floating-label">
+                                    <input type="text" class="form-control" placeholder="Enter Subject" id="complaintsubject">
+                                    <span class="floating-text">Subject</span>
+                                </label>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label class="floating-label">
+                                    <textarea class="form-control" name="comments" placeholder="Comments" rows="3" id="complaintcommand"
+                                              value="" required></textarea>
+                                    <span class="floating-text">
+                                        Comments<span class="mandatory">*</span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary btn-block" id="complaintsubmit" type="button" data-dismiss="modal">Submit</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+      <div class="modal side-modal animate__animated animate__slideInRight" id="privatepolicy" tabindex="-1"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold text-primary">Terms & Conditions  -  Private Policy</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="36px" height="36px">
+                            <path d="M 38.982422 6.9707031 A 2.0002 2.0002 0 0 0 37.585938 7.5859375 L 24 21.171875 L 10.414062 7.5859375 A 2.0002 2.0002 0 0 0 8.9785156 6.9804688 A 2.0002 2.0002 0 0 0 7.5859375 10.414062 L 21.171875 24 L 7.5859375 37.585938 A 2.0002 2.0002 0 1 0 10.414062 40.414062 L 24 26.828125 L 37.585938 40.414062 A 2.0002 2.0002 0 1 0 40.414062 37.585938 L 26.828125 24 L 40.414062 10.414062 A 2.0002 2.0002 0 0 0 38.982422 6.9707031 z" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <p class="text-gray-600 text-center">Just send us your questions, concerns, card , payment and transaction related issues, we will give you the support you need.</p>
+                            <div class="row">
+                                <div class="col-md-6 col-12 text-center p-2">
+                                    <span class="btn btn-primary btn-sm btn-circle">
+                                        <i class="fas fa-phone-alt"></i>
+                                    </span>
+                                    <a class="" href="tel:+919282829292"> +91 8447928988</a>
+                                </div>
+                                <div class="col-md-6 col-12 text-center p-2">
+                                    <span class="btn btn-primary btn-sm btn-circle">
+                                        <i class="fas fa-envelope"></i>
+                                    </span>
+                                    <a class="" href="mailto:support@accupayd.com"> support@accupayd.com</a>
+                                </div>
+                            </div>
+
+                            <div class="separator">
+                                <div class="line"></div>
+                                <span>or</span>
+                                <div class="line"></div>
+                            </div>
+                        </div>
+                      
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="~/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <script src="~/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+
+    <script src="~/js/portal.js"></script>
+
+</body>
+</html>

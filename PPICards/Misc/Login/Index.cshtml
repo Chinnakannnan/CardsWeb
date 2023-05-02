@@ -1,0 +1,182 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>portal - Login</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="~/css/portal.css" rel="stylesheet">
+    
+
+</head>
+
+<body>
+    <div class="top-header shadow">
+        <div class="container">
+            <div class="d-flex align-items-start justify-content-start">
+                <a class="header-logo" href="index.html">
+                    <img class="header-logo-img" src="~/img/logo.png" />
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="login_container">
+        <div class="login_banner">
+            <div class="container">
+                <div class="row justify-content-start">
+                    <div class="col-xl-7 col-lg-7 col-md-12 text-light login_banner_content">
+                        <img src="./img/card.png" />
+                        <h2>MyPay Prepaid Card</h2>
+                        <p>Why bother with cash when you have the safety of a card?</p>
+                        <a href="index.html" class="btn btn-danger btn-user">
+                            View all cards
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="login_form container">
+            <div class="row justify-content-end">
+                <div class=" col-xl-5 col-lg-5 col-md-12">
+                    <div class="card o-hidden border-0 shadow-lg login_card">
+                        <div class="card-body p-0">
+                            <!-- Nested Row within Card Body -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="pt-5 pr-5 pl-5 pb-2" id="login">
+                                        <div class="text-center">
+                                            <h4 class="text-gray-900 font-weight-bold">Account Login </h4>
+                                            <p class="small">
+                                                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                                            </p>
+                                        </div>
+                                        <form class="login">
+                                            <div class="form-group mb-3">
+                                                <label class="floating-label">
+                                                    <input type="text" class="form-control"
+                                                           placeholder="Enter your user id/card number">
+                                                    <span class="floating-text">User ID/Card Number</span>
+                                                </label>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label class="floating-label show_hide_password">
+                                                    <input type="password" class="form-control form-control-user"
+                                                           placeholder="Enter your password">
+                                                    <span class="floating-text">
+                                                        Password <span class="mandatory">*</span>
+                                                    </span>
+                                                    <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                                                </label>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="custom-control custom-checkbox small">
+                                                    <input type="checkbox" class="custom-control-input"
+                                                           id="customCheck">
+                                                    <label class="custom-control-label" for="customCheck">
+                                                        Remember
+                                                        Me
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                        <button class="btn btn-primary btn-block bg-gradient-primary btn-large"
+                                                onclick="showHide('otp','login')">
+                                            Login
+                                        </button>
+                                        <hr>
+                                        <div class="d-flex justify-content-between">
+                                            <a class="small" href="forgot-password.html">Forgot User ID?</a>
+                                            <a class="small" href="forgot-password.html">Forgot Password?</a>
+                                        </div>
+                                    </div>
+                                    <div class="pt-5 pr-5 pl-5 pb-2 otpValidation" style="display:none" id="otp">
+                                        <form action="javascript: void(0)" class="otp-form" name="otp-form">
+
+                                            <div class="text-center">
+                                                <h4 class="h4 text-gray-900 font-weight-bold">OTP Verification</h4>
+                                                <p class="text-primary">
+                                                    An otp has been sent to ********k876@gmail.com
+                                                </p>
+                                                <p class="text-danger">Please enter OTP to verify</p>
+                                            </div>
+                                            <div class="otp-input-fields">
+                                                <input type="number" class="otp__digit otp__field__1">
+                                                <input type="number" class="otp__digit otp__field__2">
+                                                <input type="number" class="otp__digit otp__field__3">
+                                                <input type="number" class="otp__digit otp__field__4">
+                                                <input type="number" class="otp__digit otp__field__5">
+                                                <input type="number" class="otp__digit otp__field__6">
+                                            </div>
+                                        </form>
+                                        <a href="index.html"
+                                           class="btn btn-primary btn-block bg-gradient-primary mt-4 btn-large">
+                                            submit
+                                        </a>
+                                        <hr>
+                                        <div class="d-flex justify-content-between">
+                                            <a class="small" href="#">Recent OTP</a>
+                                            <a class="small" href="#">Back</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body rounded-top bg-gradient-primary">
+
+                            <div class="small text-light">
+                                <strong>First Time Users Please Note:</strong>
+                                <ul>
+                                    <li>User ID - Use Card Number</li>
+                                    <li>Password - Use IPIN provided in the kit</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="welcome_text my-5">
+        <div class="container">
+            <h3 class="text-primary">Welcome to the world of Prepaid Cards from HDFC Bank</h3>
+            <p>As the name suggests, our Prepaid Cards provide you control and security in an increasingly cash-less world! Our ForexPlus Card is a prepaid Travel Card that allows you to safely manage your overseas expenses without carrying cash or TC's, and the GiftPlus Card is a prepaid Gift Card designed to give your loved ones the freedom to buy the gift of their choice.</p>
+        </div>
+    </div>
+
+
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="~/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="~/js/portal.js"></script>
+
+</body>
+
+</html>

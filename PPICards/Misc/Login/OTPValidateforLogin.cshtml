@@ -1,0 +1,113 @@
+﻿@{
+    Layout = null;
+}
+
+<style>
+    body{
+  background:#eee;
+}
+
+.bgWhite{
+  background:white;
+  box-shadow:0px 3px 6px 0px #cacaca;
+}
+
+.title{
+  font-weight:600;
+  margin-top:20px;
+  font-size:24px
+}
+
+.customBtn{
+  border-radius:0px;
+  padding:10px;
+}
+
+form input{
+  display:inline-block;
+  width:50px;
+  height:50px;
+  text-align:center;
+}
+</style>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>portal - Login</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="~/css/portal.css" rel="stylesheet">
+    <script src="~/js/portal.js"></script>
+</head>
+
+<body class="bg-gradient-primary">
+
+    <div class="container">
+  <div class="row justify-content-md-center">
+      <div class="col-md-4 text-center">
+        <div class="row">
+          <div class="col-sm-12 mt-5 bgWhite">
+            <div class="title">
+              Verify OTP
+            </div>
+            
+            <form action="" class="mt-5">
+              <input class="otp" type="text" oninput='digitValidate(this)' onkeyup='tabChange(1)' maxlength=1 >
+              <input class="otp" type="text" oninput='digitValidate(this)' onkeyup='tabChange(2)' maxlength=1 >
+              <input class="otp" type="text" oninput='digitValidate(this)' onkeyup='tabChange(3)' maxlength=1 >
+              <input class="otp" type="text" oninput='digitValidate(this)' onkeyup='tabChange(4)' maxlength=1 >
+              <input class="otp" type="text" oninput='digitValidate(this)' onkeyup='tabChange(5)' maxlength=1 >
+              <input class="otp" type="text" oninput='digitValidate(this)' onkeyup='tabChange(6)' maxlength=1 >
+            </form>
+            <hr class="mt-4">
+                        <button onclick="location.href='@Url.Action("Index", "Home")'" class='btn btn-primary btn-block mt-4 mb-4 customBtn'>Verify</button>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/portal.js"></script>
+
+</body>
+
+</html>
+<script>
+    let digitValidate = function(ele){
+  console.log(ele.value);
+  ele.value = ele.value.replace(/[^0-9]/g,'');
+}
+
+let tabChange = function(val){
+    let ele = document.querySelectorAll('input');
+    if(ele[val-1].value != ''){
+      ele[val].focus()
+    }else if(ele[val-1].value == ''){
+      ele[val-2].focus()
+    }   
+ }
+
+
+</script>

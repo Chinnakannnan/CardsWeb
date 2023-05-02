@@ -1,0 +1,257 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model PPICards.Models.OnboardingModel.kycgetList
+@{
+    IList<PPICards.Models.OnboardingModel.OnboardKycEkycModel> objUserDtls = new List<PPICards.Models.OnboardingModel.OnboardKycEkycModel>();
+    objUserDtls = (IList<PPICards.Models.OnboardingModel.OnboardKycEkycModel>)TempData["UserDtls"];
+
+    int indexs = 0;
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+@*@if (ViewBag.data != null)
+{
+    string lstrdata = ViewBag.data;
+    string[] lstrSplit = lstrdata.Split('|');
+    @if (lstrSplit[0].ToString() == "000")
+    {
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-xl-12">
+                <div class="alert alert-dismissible alert-success background-primary">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <i class="fa fa-check-circle"></i>
+                    <strong>@lstrSplit[1].ToString()</strong>
+                </div>
+            </div>
+        </div>
+    }
+    @if (lstrSplit[0].ToString() != "000")
+    {
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-xl-12">
+                <div class="alert alert-dismissible alert-warning background-danger">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <i class="fa fa-warning"></i>
+                    <strong>@lstrSplit[1].ToString()</strong>
+                </div>
+            </div>
+        </div>
+    }
+}
+*@
+
+    @*    <div class="row">
+            <div class="col-sm-12 col-md-12 col-xl-12">
+                <div class="alert alert-dismissible alert-success ">
+        
+                    <i class="fa fa-check-circle"></i>
+            <i class="fa-sharp fa-solid fa-circle-check"></i>
+                    <strong>I am cynthia</strong>
+                </div>
+            </div>
+        </div>
+  
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-xl-12">
+        <div class="alert alert-dismissible alert-danger">
+                  
+         
+            <i class="&#f057"></i>
+           
+            <strong>I am cynthia</strong>
+                </div>
+            </div>
+        </div>*@
+
+<script>
+     $(document).ready(function ()
+     {
+        
+         //alert("test");
+
+
+        function gettoken() {
+            var token = '@Html.AntiForgeryToken()';
+            token = $(token).val();
+            return token;
+        }
+        $(".updatestatus").on("keyup change", function () {
+           console.log('came into keyup');
+            //alert($(this).val())
+            var i = $(this).attr("chck");
+            var status = $(this).val();
+            var customerId = $(this).attr("value");
+            //alert(customerId)
+            $.ajax(
+                 {
+                type: 'POST',
+                dataType: 'JSON',
+                        url: "/Admin/UpdateStatus",
+                        contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                data: { __RequestVerificationToken: gettoken(), Status: status ,CustomerId:customerId},
+                success:
+                    function (data) 
+                    {
+                            alert("Approved" + customerId + "Successfully")
+                       $("#Sentmob").text("OTP has been sent to " + data.mobileNo).show().delay(8000).fadeOut();
+                      },
+                error:
+                    function (response) {
+                            alert("approve failed")
+                        $(".erroralert").show().delay(8000).fadeOut();
+                        $("#errortext").text("Please try again!").show().delay(8000).fadeOut();
+                    }
+            });
+  
+                console.log('came into rejecvt user');
+            
+           // return false
+          });
+      });
+
+  
+</script>
+
+<div class="card mb-4 border-0">
+    <div class="card-body card-body">
+        <h5 class="font-weight-bold">
+            Recently Registered Users</h5>
+            <div class="recent-transaction table-responsive">
+                @if (objUserDtls != null)
+                {
+                  
+
+                    <table class="table table-borderless">
+                        <thead class="text-gray-600">
+                            <tr>
+                                <th width="20%">Name</th>
+                                <th width="20%">Customer ID</th>
+                                <th width="20%">Mobile Number</th>
+                                <th width="20%">Aadhaar Number</th>
+                                <th width="20%">PAN number</th>
+                                <th width="20%">GST number</th>
+                                <th width="20%">Status</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in objUserDtls)
+                            {
+                                indexs = 0;
+                                indexs = ++indexs;
+                    
+
+                              
+                            <tr>
+                                <td scope="row">
+                                    <div class="contactDetails d-flex">
+                                        <div class="contactInitial">
+                                                @(new string(@item.name.Split(' ').Select(x => x[0]).ToArray()))
+                                            </div>
+                                        <div class="contactInfo">
+                                            <div class="contactName">@item.name</div>
+                                            <div class="contactRef small">
+                                               CITY : <span class="contactRefNo strong">@item.city</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                             
+                                <td>
+                                    <div class="transactionDetails">
+                                        <div class="transactionAmount">
+                                         @item.mobileNo
+                                        </div>
+                                       @* <div class="transactionDate small">Aug 23, 2022</div>*@
+                                    </div>
+                                </td>
+                                <td>
+                                      
+                                        <div id="customerId"class="transactionAmount">
+                                            @item.customerId
+                                        </div>
+                                        
+                                </td>
+                                    <td>
+                                        <div class="transactionDetails">
+                                            <div class="transactionAmount">
+                                                @item.aadhaarNo
+                                            </div>
+                                            @* <div class="transactionDate small">Aug 23, 2022</div>*@
+                                        </div>
+                                    </td>
+                                      <td>
+                                    <div class="transactionDetails">
+                                        <div class="transactionAmount">
+                                         @item.pancardNo
+                                        </div>
+                                       @* <div class="transactionDate small">Aug 23, 2022</div>*@
+                                    </div>
+                                </td>
+                                  <td>
+                                    <div class="transactionDetails">
+                                        <div class="transactionAmount">
+                                         @item.gstNo
+                                        </div>
+                                       @* <div class="transactionDate small">Aug 23, 2022</div>*@
+                                    </div>
+                                </td>       <td>
+                                    <div class="transactionDetails">
+                                        <div class="transactionAmount">
+
+
+                                                <label class="floating-label">
+                                                        @Html.DropDownListFor(m => m.Status, new List<SelectListItem>
+                                                {
+                                                new SelectListItem { Text = "Approve", Value = "1"},
+                                                new SelectListItem { Text = "Reject", Value = "2"},
+
+
+                                            }, "Status", new { @Required = "", @class = "form-control form-select border-left-primary updatestatus", chck="@indexs", @id="Statuschange_@indexs", @value=item.customerId,  autocomplete = "off", onchange = "check(this);" })
+
+
+
+                                                        <span class="floating-text">
+                                                          Select Status
+                                                            <span class="floating-text" style="color: red;">*</span>
+                                                        </span>
+                                                    </label>
+                                              
+                                        </div>
+                                       @* <div class="transactionDate small">Aug 23, 2022</div>*@
+                                    </div>
+                                </td>
+                                   
+                            </tr>
+                        
+                           
+                            }
+                        </tbody>
+                    </table>
+                }
+
+            </div>
+
+    </div>
+</div>
+
+
+@*<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+
+<!-- Bootstrap core JavaScript-->
+<script src="~/vendor/jquery/jquery.min.js"></script>
+<script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="~/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="~/js/portal.js"></script>*@

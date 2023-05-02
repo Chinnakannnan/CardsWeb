@@ -1,0 +1,105 @@
+﻿@model PPICards.Models.TransactionModel
+@{
+    ViewData["Title"] = "Transactions";
+}
+@{
+    IList<PPICards.Models.PayoutHistoryDetails> objUserDtls = new List<PPICards.Models.PayoutHistoryDetails>();
+    objUserDtls = (IList<PPICards.Models.PayoutHistoryDetails>)TempData["GetTransactionDetails"];
+
+    int indexs = 0;
+}
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="row">
+          
+            <div class="col-lg-8 col-12">
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                    
+                        @using (Html.BeginForm("PPITransactionReport", "Transaction", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                          {
+                            @Html.AntiForgeryToken()
+                         
+                                <!-- Base Style table start -->
+                            <div class="col-12">
+                                <h5 class="text-primary font-weight-bold">Transaction Details </h5>
+                                <div class="d-md-flex d-sm-block align-items-center justify-content-end flex-sm-row mt-3">
+
+                                 <div class="form-group mb-md-0">
+                                       <label class="floating-label ">
+                                            @Html.TextBoxFor(m => m.fromdate, DateTime.Now.ToString("yyyy-MM-dd"), new { @required = "", @autocomplete = "off",@class="form-control h-auto",  @id = "form_date", @type = "date", @maxlength = "50", placeholder = "From Date" })
+                                                     <span class="floating-text">From Date</span>
+                                                 </label>
+                                   </div>
+                                        @*<div class="px-2 d-md-block d-none">-</div>*@
+                                       <div class="form-group mb-md-0">
+                                                 <label class="floating-label ">
+                                            @Html.TextBoxFor(m => m.todate, DateTime.Now.ToString("yyyy-MM-dd"), new { @required = "", @autocomplete = "off", @id = "to_date",@class="form-control h-auto", @type = "date", @maxlength = "50", placeholder = "To Date" })
+                                                     <span class="floating-text">To Date</span>
+                                                 </label>
+                                     </div>
+                                 <button type="submit" class="btn btn-primary px-3 ml-md-3">Submit</button>
+
+                                </div>
+                            </div>
+                    
+                                }
+                    
+                 
+                        @if (objUserDtls != null)
+
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-bordered customerTransactions w-100" id="transactionStatement"
+                                   data-filter="false" data-page-length="10" data-length-change="false" data-info="false" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Customer Id</th>
+                                            <th>Transaction Date</th>
+                                            <th>Description</th>
+                                            <th style="min-width: 90px;">Credits</th>
+                                            <th style="min-width: 90px;">Debits</th>
+                                            <th style="min-width: 90px;">Balance</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in objUserDtls)
+                                        {
+                                            indexs = ++indexs;
+                                            <tr>
+                                                <td>@item.customerId</td>
+                                                <td>@item.cdatetime</td>
+                                                <td class="text-gray-600 small">
+                                                    @item.description
+                                                </td>
+                                                <td>
+                                                    <i class="fas fa-rupee-sign"></i>    @item.credit
+
+                                                </td>
+                                                <td><i class="fas fa-rupee-sign"></i> @item.debit</td>
+                                                <td><i class="fas fa-rupee-sign"></i><span>@item.balance</span></td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+
+                    
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+

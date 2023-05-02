@@ -1,0 +1,149 @@
+is_global = true
+build_property.TargetFramework = net6.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = PPICards
+build_property.RootNamespace = PPICards
+build_property.ProjectDir = E:\latest cards\PPI_Web_App\PPICards\
+build_property.RazorLangVersion = 6.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = true
+build_property.MSBuildProjectDirectory = E:\latest cards\PPI_Web_App\PPICards
+build_property._RazorSourceGeneratorDebug = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Misc/Login/ForgotPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = TWlzY1xMb2dpblxGb3Jnb3RQYXNzd29yZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Misc/Login/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = TWlzY1xMb2dpblxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Misc/Login/OTPValidateforLogin.cshtml]
+build_metadata.AdditionalFiles.TargetPath = TWlzY1xMb2dpblxPVFBWYWxpZGF0ZWZvckxvZ2luLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/Admin/AddKitData.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQWRkS2l0RGF0YS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/Admin/AdminView.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQWRtaW5WaWV3LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/Admin/CardDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQ2FyZERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/Admin/Fund.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRnVuZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/Admin/FundReversal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRnVuZFJldmVyc2FsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/Admin/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/Admin/PaymentRequest.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUGF5bWVudFJlcXVlc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/Admin/Transactions.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVHJhbnNhY3Rpb25zLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/Admin/UserDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVXNlckRldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/Login/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cTG9naW4uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/ManageCard/BlockCard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFuYWdlQ2FyZFxCbG9ja0NhcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/ManageCard/ChangePIN.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFuYWdlQ2FyZFxDaGFuZ2VQSU4uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/ManageCard/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFuYWdlQ2FyZFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/ManageCard/ReplacementCard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFuYWdlQ2FyZFxSZXBsYWNlbWVudENhcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/OnboardingKycEkyc/KycEkyc.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT25ib2FyZGluZ0t5Y0VreWNcS3ljRWt5Yy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/Onboarding/Onboarding.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT25ib2FyZGluZ1xPbmJvYXJkaW5nLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/ProfilePage/ProfilePage.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVBhZ2VcUHJvZmlsZVBhZ2UuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/SendingLink/SendLink.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VuZGluZ0xpbmtcU2VuZExpbmsuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/Shared/_AdminLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BZG1pbkxheW91dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/Transaction/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhbnNhY3Rpb25cSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/Transaction/Refund.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhbnNhY3Rpb25cUmVmdW5kLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/Transaction/Topup.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhbnNhY3Rpb25cVG9wdXAuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/UserRegistration/UserRegistrationView.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclJlZ2lzdHJhdGlvblxVc2VyUmVnaXN0cmF0aW9uVmlldy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/latest cards/PPI_Web_App/PPICards/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-wkvf1lzhy6

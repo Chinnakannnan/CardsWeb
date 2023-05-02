@@ -1,0 +1,216 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>portal - Login</title>
+    <link rel="icon" href="~/img/icon.ico" type="image/x-icon">
+    <!-- Custom fonts for this template-->
+    <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="~/css/portal.css" rel="stylesheet">
+    <script src="~/js/site.js"></script>
+
+
+</head>
+
+<body>
+    <div class="top-header shadow">
+        <div class="container">
+            <div class="d-flex align-items-start justify-content-start">
+                <a class="header-logo" href="index.html">
+                    <img class="header-logo-img" src="~/img/logo.png" />
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="login_container">
+        <div class="login_banner">
+            <div class="container">
+                <div class="row justify-content-start">
+                    <div class="col-xl-7 col-lg-7 col-md-12 text-light login_banner_content">
+                        <img src="./img/card_1.png" />
+                        <h2>MyPay Prepaid Card</h2>
+                        <p>Why bother with cash when you have the safety of a card?</p>
+                            <a href="@Url.Action("Index", "Home")" class="btn btn-warning btn-user" style="color: black">
+                            View all cards
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+
+        <div class="login_form container">
+            <div class="row justify-content-end">
+                <div class=" col-xl-5 col-lg-5 col-md-12">
+                    <div class="card o-hidden border-0 shadow-lg login_card">
+                        <div class="card-body p-0">
+                            <!-- Nested Row within Card Body -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="pt-5 pr-5 pl-5 pb-2"   id="login">
+                                        <div class="text-center">
+                                            <h4 class="text-gray-900 font-weight-bold">Account Login </h4>
+                                            <p class="small">
+                                                login with your email / card no
+                                            </p>
+                                        </div>
+                                        <form  id="loginForm"  class="login">
+                                            <div class="form-group mb-3">
+                                                <label class="floating-label">
+                                                    <input type="text" class="form-control" id="txtUserName" name="UserName"
+                                                           placeholder="Enter your user id/card number" autocomplete="off">
+                                                    <span class="floating-text">User ID/Card Number</span>
+                                                </label>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label class="floating-label show_hide_password">
+                                                    <input type="password" class="form-control form-control-user" id="txtPassword" name="Password"
+                                                           placeholder="Enter your password" autocomplete="off">
+                                                    <span class="floating-text">
+                                                        Password <span class="mandatory">*</span>
+                                                    </span>
+                                                    <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                                                </label>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="custom-control custom-checkbox small">
+                                                    <input type="checkbox" class="custom-control-input"
+                                                           id="customCheck">
+                                                    @*<label class="custom-control-label pl-2 pt-1" for="customCheck">
+                                                        Remember
+                                                        Me
+                                                    </label>*@
+                                                </div>
+                                            </div>
+                                      @*            <button  class="btn btn-primary btn-block bg-gradient-primary btn-large"
+                                                onclick="submitLogin()">
+                                            Login
+                                        </button>*@
+                                        </form>
+                                        <button  class="btn btn-primary btn-block bg-gradient-primary btn-large"
+                                                onclick="showLoginHide('otp','login')">
+                                            Login
+                                        </button> 
+                                        <hr>
+                                        <div class="d-flex justify-content-between">
+                                            <a class="small" href="mailto: support@accupayd.com"> call 8447928988 / support@accupayd.com if fascing  login issues </a>
+                                           @* <a class="small" href="forgot-password.html">Forgot Password?</a>*@
+                                        </div>
+                                    </div>
+                                    <div class="pt-5 pr-5 pl-5 pb-2 otpValidation" style="display:none" id="otp">
+                                        <form action="javascript: void(0)" class="otp-form" name="otp-form" id="otpform">
+
+                                            <div class="text-center">
+                                                <h4 class="h4 text-gray-900 font-weight-bold">OTP Verification</h4>
+                                                <p class="text-primary">
+                                                    An otp has been sent to your registed mail id and mobile number @ViewBag.Mobile
+                                                </p>
+                                                <p class="text-danger">Please enter OTP to verify</p>
+                                            </div>
+                                        @*    <div class="otp-input-fields">
+                                                <input type="password" id="otp1" name="otp1" class="otp__digit otp__field__1" autocomplete="off">
+                                                <input type="password" id="otp2" name="otp2" class="otp__digit otp__field__2" autocomplete="off">
+                                                <input type="password" id="otp3" name="otp3" class="otp__digit otp__field__3" autocomplete="off">
+                                                <input type="password" id="otp4" name="otp4" class="otp__digit otp__field__4" autocomplete="off">
+                                                <input type="password" id="otp5" name="otp5" class="otp__digit otp__field__5" autocomplete="off">
+                                                <input type="password" id="otp6" name="otp6" class="otp__digit otp__field__6" autocomplete="off">
+                                            </div>*@
+                                            <div class="form-group mb-3">
+                                                <label class="floating-label show_hide_password">
+                                                    <input type="password" class="form-control form-control-user" id="otp" name="otp"
+                                                           placeholder="Enter OTP here" autocomplete="off">
+                                                    <span class="floating-text">
+                                                        Enter OTP here @*<span class="mandatory">*</span>*@
+                                                    </span>
+                                                    <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                                                </label>
+                                            </div>
+
+                                            <Span>OTP Expire in (seconds) : </Span> <Span id="timer" style="color:red">60</Span>  <a class="small" href="#" id="resendotp"><B>&nbsp;&nbsp;&nbsp;Resent OTP</B></a>
+                                        </form>
+                                            <button  class="btn btn-primary btn-block bg-gradient-primary mt-4 btn-large"
+                                                onclick="submitLogin()">
+                                            Login
+                                        </button>
+                               
+                                        <hr>
+                                        <div class="d-flex justify-content-between">
+                                          
+                                            <a class="small" href="/Login">Back</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body rounded-top bg-gradient-primary">
+
+                            <div class="small text-light">
+                                <strong>First Time Users Please Note:</strong>
+                                <ul>
+                                    <li>Check your registered Email for user name and password </li>
+                                    @*<li>Password - Use IPIN provided in the kit</li>*@
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="welcome_text my-5">
+        <div class="container">
+            <h3 class="text-primary">Welcome to the world of Prepaid Cards from Accupayd</h3>
+            <p>Vyabari's Prepaid card is a Single-Multi wallet card used for multiple benefits which includes Meal, Gift, Rewards, Travel, Fuel, Telecom etc. It is accepted across all the online food portals, service providers, PoS and shopping sites. Our standards are enriched to make sure our customers are able to make transactions online safely to protect their personal and financial data.</p>
+        </div>
+    </div>
+
+    <div class="modal fade" id="alertPopup" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="d-flex justify-content-center my-4">
+                <i class="fas fa-check-circle text-danger" style="font-size:72px"></i>
+            </div>
+            <div id="displaydangermessage" class="modal-body text-center"></div>
+            <div class="modal-footer align-self-center">
+                <button class="btn btn-secondary btn-lg" type="button" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="~/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="~/js/portal.js"></script>
+
+      <!-- Custom scripts for all pages-->
+    <script src="~/js/login.js"></script>
+
+</body>
+
+</html>
