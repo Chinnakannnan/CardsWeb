@@ -11,6 +11,7 @@
         }
     });
 
+   
 
 });
 
@@ -95,6 +96,8 @@ function GenerateOTP() {
                     var mail = split[split.length - 2];
                     $("#emailId").text("An otp has been sent to ********" + mail.substr(mail.length - 3) + "@" + split[split.length - 1]);
                     showHideFlex('otp', 'addcard');
+                    $("#otpSubmit").show();
+                    $("#otpgenarte").hide();
                 }
                 else {
                     DispalyError("OTP generation failed !!!")

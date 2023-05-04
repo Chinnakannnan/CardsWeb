@@ -23,91 +23,97 @@ namespace PPICards.Controllers
 {
     public class LoginController : Controller
     {
+        public const string errorFolder = "Login";
         private readonly IAPIClient _clientService;
         public LoginController(IAPIClient clientServiceInstance) => (_clientService) = (clientServiceInstance);
         public IActionResult Login() => View("Login");
+        public IActionResult OTPValidateforLogin() => View();
+        public IActionResult ForgotPassword() => View();
         static bool HasExpired(DateTime creationTime)
         {
             TimeSpan timeSinceCreation = DateTime.Now - creationTime;
             return timeSinceCreation.TotalMinutes >= 1;
-        }
-       
+        }       
         [HttpPost]
         public async Task<JsonResult> LoginView(string UserName, string Password)
         {
             LoginResponseModel loginResp = new LoginResponseModel();
-
-            if (String.IsNullOrEmpty(HttpContext.Session.GetString(ConstValues.LoginAttempt)))
+            try
             {
-            HttpContext.Session.SetString(ConstValues.LoginAttempt, "0");
-            }
-            if (HttpContext.Session.GetString(ConstValues.LoginAttempt) == "3")
-            {
-                LoginModel Values = new LoginModel();
-                Values.UserName = UserName;
-
-                using (HttpResponseMessage responseMessages = _clientService.UnAuthorizedBlock(Values))
+                if (String.IsNullOrEmpty(HttpContext.Session.GetString(ConstValues.LoginAttempt)))
                 {
-                    responseMessages.EnsureSuccessStatusCode();
-                    string stream = responseMessages.Content.ReadAsStringAsync().Result.ToString();
-                    loginResp = JsonConvert.DeserializeObject<LoginResponseModel>(stream);
-                    if (loginResp.StatusCode == "000")
+                    HttpContext.Session.SetString(ConstValues.LoginAttempt, "0");
+                }
+                if (HttpContext.Session.GetString(ConstValues.LoginAttempt) == "3")
+                {
+                    LoginModel Values = new LoginModel();
+                    Values.UserName = UserName;
+
+                    using (HttpResponseMessage responseMessages = _clientService.UnAuthorizedBlock(Values))
                     {
-                        loginResp.StatusCode = "001";
-                        loginResp.StatusDesc = loginResp.StatusDesc;
-                        HttpContext.Session.Remove(ConstValues.LoginAttempt);
-                        return Json(loginResp);                     
-                    }
-                    else
-                    {
-                        loginResp.StatusCode = "001";
-                        loginResp.StatusDesc = "Something Problem Please Reach Adminstrator";
-                        return Json(loginResp);
+                        responseMessages.EnsureSuccessStatusCode();
+                        string stream = responseMessages.Content.ReadAsStringAsync().Result.ToString();
+                        loginResp = JsonConvert.DeserializeObject<LoginResponseModel>(stream);
+                        if (loginResp.StatusCode == "000")
+                        {
+                            loginResp.StatusCode = "001";
+                            loginResp.StatusDesc = loginResp.StatusDesc;
+                            HttpContext.Session.Remove(ConstValues.LoginAttempt);
+                            return Json(loginResp);
+                        }
+                        else
+                        {
+                            loginResp.StatusCode = "001";
+                            loginResp.StatusDesc = "Something Problem Please Reach Adminstrator";
+                            return Json(loginResp);
+                        }
                     }
                 }
-            }
-            HttpContext.Session.SetString(ConstValues.Username, UserName);
-            Dictionary<string, string> requestBody = new Dictionary<string, string>();
-            requestBody.Add(ConstValues.Username, UserName);
-            requestBody.Add(ConstValues.Password, Password);
-           
-            using (HttpResponseMessage responseMessage = await _clientService.Login(requestBody))
-            {
-                if (responseMessage.IsSuccessStatusCode)
+                HttpContext.Session.SetString(ConstValues.Username, UserName);
+                Dictionary<string, string> requestBody = new Dictionary<string, string>();
+                requestBody.Add(ConstValues.Username, UserName);
+                requestBody.Add(ConstValues.Password, Password);
+                using (HttpResponseMessage responseMessage = await _clientService.Login(requestBody))
                 {
-                    responseMessage.EnsureSuccessStatusCode();
-                    string stream = responseMessage.Content.ReadAsStringAsync().Result.ToString();
-                    loginResp = JsonConvert.DeserializeObject<LoginResponseModel>(stream);
-                    if (loginResp.StatusCode == "000")
+                    if (responseMessage.IsSuccessStatusCode)
                     {
-                        loginResp.MobileOTP = utility.GetStan();
-                        DateTime otpCreationTime = DateTime.Now;
-                        HttpContext.Session.SetString(ConstValues.SessionMobileNo, loginResp.MobileNo);
-                        HttpContext.Session.SetString(ConstValues.SessionLoginOTP, loginResp.MobileOTP);
-                        HttpContext.Session.SetString(ConstValues.Otptime, otpCreationTime.ToString());
-                        _clientService.SendOTP(loginResp, loginResp.Token.encrypt());
-                        if (!string.IsNullOrEmpty(loginResp.Token))
+                        responseMessage.EnsureSuccessStatusCode();
+                        string stream = responseMessage.Content.ReadAsStringAsync().Result.ToString();
+                        loginResp = JsonConvert.DeserializeObject<LoginResponseModel>(stream);
+                        if (loginResp.StatusCode == "000")
                         {
-                            HttpContext.Session.SetString(ConstValues.JwtValue, loginResp.Token.encrypt());
+                            loginResp.MobileOTP = utility.GetStan();
+                            DateTime otpCreationTime = DateTime.Now;
+                            HttpContext.Session.SetString(ConstValues.SessionMobileNo, loginResp.MobileNo);
+                            HttpContext.Session.SetString(ConstValues.SessionLoginOTP, loginResp.MobileOTP);
+                            HttpContext.Session.SetString(ConstValues.Otptime, otpCreationTime.ToString());
+                            _clientService.SendOTP(loginResp, loginResp.Token.encrypt());
+                            if (!string.IsNullOrEmpty(loginResp.Token))
+                            {
+                                HttpContext.Session.SetString(ConstValues.JwtValue, loginResp.Token.encrypt());
+                            }
+                            HttpContext.Session.Remove(ConstValues.LoginAttempt);
                         }
-                        HttpContext.Session.Remove(ConstValues.LoginAttempt);
-                    }
-                    else
-                    {
-                        if(!String.IsNullOrEmpty(HttpContext.Session.GetString(ConstValues.LoginAttempt)))
+                        else
                         {
-                            HttpContext.Session.SetString(ConstValues.LoginAttempt, (int.Parse(HttpContext.Session.GetString(ConstValues.LoginAttempt)) + 1).ToString());
-                        }
+                            if (!String.IsNullOrEmpty(HttpContext.Session.GetString(ConstValues.LoginAttempt)))
+                            {
+                                HttpContext.Session.SetString(ConstValues.LoginAttempt, (int.Parse(HttpContext.Session.GetString(ConstValues.LoginAttempt)) + 1).ToString());
+                            }
 
+                        }
                     }
+                    return Json(loginResp);
                 }
-                return Json(loginResp);                
             }
+            catch (Exception ex){utility.ErrorLog(errorFolder, ex.Message.ToString()); return Json("1");}
+
+          
+
         }
         [HttpPost]
-        public async Task<IActionResult> ValidateOTP(string otp /*string otp1, string otp2, string otp3, string otp4, string otp5, string otp6*/)
+        public async Task<IActionResult> ValidateOTP(string otp)
         {
-            // string ReceivedOTP = otp1 + otp2 + otp3 + otp4 + otp5 + otp6;
             string ReceivedOTP = otp;
             string SentOTP = HttpContext.Session.GetString(ConstValues.SessionLoginOTP);
             string otpCreationTime = HttpContext.Session.GetString(ConstValues.Otptime);
@@ -199,10 +205,7 @@ namespace PPICards.Controllers
                                 }
 
                                 HttpContext.Session.Remove(ConstValues.OTPAttempt);
-
-                            }
-
-                           
+                            }                           
                         }
                         else
                         {
@@ -240,25 +243,15 @@ namespace PPICards.Controllers
                         return Json("user");
                         
                     }
-                    else
-                    {
-                        return Json("fail");
-                    }
-
+                    else {return Json("fail");}
                 }
-                else
-                { 
-                    return Json("2");
-                }
+                else {return Json("2");}
             }
-            catch (Exception ex)
-            {
-                return Json("3");
-            }
+            catch (Exception ex){utility.ErrorLog(errorFolder, ex.Message.ToString()); return Json("3");}
            
         
         }
-
+        [HttpPost]
         public JsonResult ResentOTP()
         {
             HttpContext.Session.Remove(ConstValues.SessionLoginOTP);
@@ -269,30 +262,16 @@ namespace PPICards.Controllers
             DateTime otpCreationTime = DateTime.Now;
             HttpContext.Session.SetString(ConstValues.SessionLoginOTP, loginResp.MobileOTP);
             HttpContext.Session.SetString(ConstValues.Otptime, otpCreationTime.ToString());
-
             string token = HttpContext.Session.GetString(ConstValues.JwtValue);
             try
             {
                 _clientService.SendOTP(loginResp, token);
                 return Json("1");
             }
-            catch (Exception ex)
-            {
-                return Json("2");
-            }
+            catch (Exception ex) {utility.ErrorLog(errorFolder, ex.Message.ToString()); return Json("2");}
 
 
         }
-
-        public IActionResult OTPValidateforLogin()
-        {
-            return View();
-        }
-        public IActionResult ForgotPassword()
-        {
-            return View();
-        }
-
         [HttpPost]
         public async Task<JsonResult> signout()
         {

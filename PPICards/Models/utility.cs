@@ -34,6 +34,21 @@ namespace MYPAY.Models
         //    return objectsList;
         //}
 
+        public static string ErrorLog(string FolderName, string Excption)
+       {
+            string logDirectory = Path.Combine(Directory.GetCurrentDirectory(), "ErrorLogFolder\\"+FolderName);
+            Directory.CreateDirectory(logDirectory);
+
+            string logFilePath = Path.Combine(logDirectory, "errorlog.txt");
+            using (StreamWriter writer = new StreamWriter(logFilePath, true))            {
+                writer.WriteLine("Error Message: " + Excption);
+               // writer.WriteLine("Stack Trace: " + ex.StackTrace);
+                writer.WriteLine("Date/Time: " + DateTime.Now.ToString());
+                writer.WriteLine();
+            }
+            return null;
+
+        }
         public static DataTable JsonStringToDataTable(string jsonString)
         {
             DataTable dt = new DataTable();
@@ -232,5 +247,9 @@ namespace MYPAY.Models
             var hash = new HMACSHA512(System.Text.Encoding.UTF8.GetBytes(key));
             return hash.ComputeHash(System.Text.Encoding.UTF8.GetBytes(message));
         }
+
+      
+
+
     }
 }

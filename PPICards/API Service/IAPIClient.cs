@@ -1,4 +1,5 @@
 ﻿using PPICards.Models;
+using System.Data;
 using static PPICards.Models.OnboardingModel;
 
 namespace PPICards.API_Service
@@ -16,6 +17,7 @@ namespace PPICards.API_Service
         HttpResponseMessage ReplaceCard(Dictionary<String, String> request, string token);
         HttpResponseMessage AvailableNewCard(string token);
         HttpResponseMessage AddKidSingle(AddKitCardDetails request, string token);
+        HttpResponseMessage AddKbulkKit(DataTable request, string token);
         HttpResponseMessage GetAdminDashboardData(string token);
         Task<HttpResponseMessage> LoadCardDetails(KITMap kitMap, string token);
         Task<HttpResponseMessage> LoadActivatedCardDetails(KITMap kitMap,string token);

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using PPICards.Helper;
 using NuGet.Common;
 using Newtonsoft.Json.Linq;
+using System.Data;
 
 namespace PPICards.API_Service
 {
@@ -210,6 +211,23 @@ namespace PPICards.API_Service
                 //throw ex;
                 return null;
 
+            }
+        }
+
+        
+        public HttpResponseMessage AddKbulkKit(DataTable request, string token)
+        {
+            try
+            {
+                _client.DefaultRequestHeaders.Accept.Clear();
+                _client.DefaultRequestHeaders.Add(ConstValues.Authorization, ConstValues.Bearer + " " + token.Decrypt());
+                string test = JsonConvert.SerializeObject(request); // just check for result
+                var stringContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, OnboardConstants.ApplicationJson);
+                return _client.PostAsync(OnboardConstants.AddBulkKitData, stringContent).Result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
         public HttpResponseMessage AddKidSingle(AddKitCardDetails request, string token)

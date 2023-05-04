@@ -8,8 +8,7 @@ namespace PPICards.Models
 
         // public const string BaseUrl = "http://localhost:5000/";
           public const string BaseUrl = "https://api.accupayd.com/";
-
-        public const string ErrorMessage = "Please contact administrator!!!";
+          public const string ErrorMessage = "Please contact administrator!!!";
 
         // public const string SendingLink = "";
         public const string ContentType = "Content-Type";
@@ -85,6 +84,7 @@ namespace PPICards.Models
         public const string ReplaceCard = "/api/Wallet/CardReplacement";
         public const string AvailableNewCards = "/api/Wallet/AvailableNewCards";        
         public const string AddKitData = "api/Kit/CreateKitDetails";
+        public const string AddBulkKitData = "api/Kit/AddBulkKitDetails";
         public const string TransactionReportByDate = "api/Wallet/FetchTransactionsByDate";
         public const string RaiseComplaint = "api/User/RaiseComplaint";
         public const string GetuserInfo = "api/v1/GetUserInfo";
@@ -123,6 +123,26 @@ namespace PPICards.Models
         public const string Flag = "Flag";
         public const string LoginAttempt = "LoginAttempt";
         public const string OTPAttempt = "OTPAttempt";
+
+    }
+
+
+    public class ErrorCode
+    {
+     public const string Zero = "000";
+     public const string One = "001";
+     public const string Two = "002";
+     public const string Three = "003";
+     public const string Four = "004";
+
+    }
+    public class ErrorMessage
+    {
+        public const string Zero = "Action Completed Successfully";
+        public const string One = "Action Failed";
+        public const string Two = "UnAuthorized Attempted";
+        public const string Three = "003";
+        public const string Four = "004";
 
     }
 }

@@ -18,6 +18,9 @@
 </style>
 <script>
     $(document).ready(function () {
+        
+        $("#otpSubmit").hide();
+        $("#otpgenarte").hide();
 
         $("#Sub_mit").click(function () {
             var Amount = $("#amount1").val();
@@ -57,7 +60,16 @@
             }
             return false;
         });
+       
+        $('#customCheck').on('change', function () {
+        
+            if ($(this).is(':checked')) {
 
+                $("#otpgenarte").show();
+            } else {
+                $("#otpgenarte").hide();
+            }
+        });
 
         $("#RefundSub_mit").click(function () {
             alert("refund");
@@ -339,15 +351,20 @@
                             </label>
                         </div>
                         <div class="form-group">
+                       
                             <div class="custom-control custom-checkbox small">
                                 <input type="checkbox" class="custom-control-input"
                                        id="customCheck">
                                 <label class="custom-control-label pl-2 pt-1" for="customCheck">
-
-                                    T& C <a href="#">link</a>
-                                    <a href="D:/GITHUB/PPI_Web_App/PPICards/TermsAndConditions/TermsAndConditions.pdf" target="_blank" onclick="javascipt:window.open('D:/GITHUB/PPI_Web_App/PPICards/TermsAndConditions/TermsAndConditions.pdf');" class="popup">Clic to open.</a>
-                                    Terms and conditions <a href="file:///D:/GITHUB/PPI_Web_App/PPICards/TermsAndConditions/TermsAndConditions.pdf">Please read our guidelines before activating the card</a>
-
+                                  
+                                    Terms & Condition : <span>I have accept the terms and condition &nbsp;&nbsp;</span><a href="~/Files/Transcorp_Terms_and_Condition.pdf" target="_blank" onclick="javascipt:window.open('D:/GITHUB/PPI_Web_App/PPICards/TermsAndConditions/TermsAndConditions.pdf');" class="popup"><b>Click to Read.</b></a>
+                                
+                                    <hr />
+                                    <span>Please read our guidelines before activating the card</span>
+                                    <div class="form-group mb-3">
+                                        <a href="~/Files/Transcorp_Terms_and_Condition.pdf" download><b>Click here to download Guidelines</b></a>
+                                        <hr />
+                                    </div>
                                 </label>
                             </div>
                         </div>
@@ -391,15 +408,15 @@
                         </form>
                         <hr>
                         <div class="d-flex justify-content-between">
-                            <a onclick="GenerateOTP();">Recent OTP</a>
+                            <a onclick="GenerateOTP();">Resent OTP</a>
                             <a href="#" onclick="showHideFlex('addcard','otp')">Back</a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary btn-block" onclick="GenerateOTP();">Generate OTP</button>
-                <button class="btn btn-primary btn-block bg-gradient-primary mt-4 btn-large" type="button"
+                <button class="btn btn-primary btn-block" onclick="GenerateOTP();" id="otpgenarte">Generate OTP</button>
+                <button class="btn btn-primary btn-block bg-gradient-primary mt-4 btn-large" type="button" id="otpSubmit"
                         onclick="ActivateCard();">
                     submit
                 </button>
@@ -662,39 +679,38 @@
     </div>
 </div>
 <!-- success Failure popup          -->
-<div class="modal fade" id="successPopup" style="" tabindex="-1" role="dialog"
+<div class="modal fade" id="SuccessPopup" tabindex="-1" role="dialog"
      aria-hidden="true">
-    <div class="modal-dialog" role="document" style="width:auto;">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="d-flex justify-content-center my-2">
-                <i class="fas fa-check-circle text-success" style="font-size:50px"></i>
-                @*<i class="fas fa-times-circle text-danger" style="font-size:72px"></i>*@
+            <div class="d-flex justify-content-center my-4">
+                <i class="fas fa-check-circle text-success" style="font-size:72px"></i>
             </div>
-            <div class="modal-body text-center" style="font-size:20px">User Creation Successfull</div>
-            <div class="modal-footer" style="padding:5px;">
-                <button class="btn btn-primary" type="button" data-dismiss="modal">Ok</button>
-                @*// <a class="btn btn-primary" onclick="ActivateCard();">OK</a>*@
+            <div id="displaysuccessmessage" class="modal-body text-center">
             </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="failurePopup" style="" tabindex="-1" role="dialog"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document" style="width:auto;">
-        <div class="modal-content">
-            <div class="d-flex justify-content-center my-2">
-                <i class="fas fa-times-circle text-danger" style="font-size:50px"></i>
-                @*<i class="fas fa-times-circle text-danger" style="font-size:72px"></i>*@
-            </div>
-            <div class="modal-body text-center" style="font-size:20px" id="con_tent"></div>
-            <div class="modal-footer" style="padding:5px;">
-                <button class="btn btn-primary" type="button" data-dismiss="modal">Ok</button>
-                @*// <a class="btn btn-primary" onclick="ActivateCard();">OK</a>*@
+            <div class="modal-footer align-self-center">
+                <button id="btnSuccessok" onclick="DisableSuccessPopup();" class="btn btn-secondary btn-lg" type="button">Ok</button>
             </div>
         </div>
     </div>
 </div>
 
+<div class="modal fade" id="alertPopup" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="d-flex justify-content-center my-4">
+                <i class="fas fa-check-circle text-danger" style="font-size:72px"></i>
+            </div>
+            <div id="displaydangermessage" class="modal-body text-center"></div>
+            <div class="modal-footer align-self-center">
+                <button class="btn btn-secondary btn-lg" type="button" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+ 
 
 @*<div class="modal fade" id="successFailurePopup" tabindex="-1" role="dialog"
      aria-hidden="true">

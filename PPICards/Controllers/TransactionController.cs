@@ -6,27 +6,20 @@ using System.Text.Json;
 using static PPICards.Models.OnboardingModel;
 using PPICards.Helper;
 using PPICards.API_Service;
+using MYPAY.Models;
 
 namespace PPICards.Controllers
 {
     [Authorize]
     public class TransactionController : Controller
     {
+        public const string errorFolder = "Transaction";
         private readonly IAPIClient _clientService;
         public TransactionController(IAPIClient clientServiceInstance) => (_clientService) = (clientServiceInstance);
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index()=> (View());
 
-        public IActionResult Refund()
-        {
-            return View();
-        }
-        public IActionResult Topup()
-        {
-            return View();
-        }
+        public IActionResult Refund()=> (View());
+        public IActionResult Topup() => (View());
         public IActionResult UPIReport()
         {
             GetStatus objRequest = new GetStatus();
@@ -78,35 +71,23 @@ namespace PPICards.Controllers
                             TempData["GetTransactionDetails"] = objReport;
                             if (objReport.Count != 0)
                             {
-                                if (objRequest.userType == "1")
-                                {
-                                    return RedirectToAction("Transactions", "Admin");
-                                }
-                                else
-                                {
-                                    return View("Index");
-                                }
+                                if (objRequest.userType == "1"){ return RedirectToAction("Transactions", "Admin");}
+                                else{ return View("Index"); }
                             }
                             else
                             {
-                                if (objRequest.userType == "1")
-                                {
-                                    return RedirectToAction("Transactions", "Admin");
-                                }
-                                else
-                                {
-                                    return View("Index");
-                                }
+                                if (objRequest.userType == "1") { return RedirectToAction("Transactions", "Admin"); }
+                                else { return View("Index"); }
                             }
                         }
 
                     }
                     }
                 return View("Index");
-
             }
             catch (Exception ex)
             {
+                utility.ErrorLog(errorFolder, ex.Message.ToString());
                 if (objRequest.userType == "1")
                 {
                     return RedirectToAction("Transactions", "Admin");
@@ -117,7 +98,6 @@ namespace PPICards.Controllers
                 }
             }
         }
-
 
         [HttpPost]
         public IActionResult GetTransactionReports(string fromdate, string todate, string actiontype)
@@ -200,27 +180,18 @@ namespace PPICards.Controllers
                         }
                     }
                     return Json(transactionDisplay);
-
                 }
-
-                return Json(transactionDisplay);
+               return Json(transactionDisplay);
             }
-            catch(Exception ex)
-            {
-                return Json(null);
-            }
+            catch(Exception ex){utility.ErrorLog(errorFolder, ex.Message.ToString());  return Json(null);}
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult CustomerWallet(WalletModel objRequest)
         {
-
             JsonRes objResponse = new JsonRes();
-
             Dictionary<string, string> requestBody = new Dictionary<string, string>();
-
             try
             {
                 string token = HttpContext.Session.GetString(ConstValues.JwtValue).Decrypt();
@@ -228,7 +199,6 @@ namespace PPICards.Controllers
                 http.BaseAddress = new Uri(OnboardConstants.BaseUrl);                
                 http.DefaultRequestHeaders.Accept.Clear();
                 http.DefaultRequestHeaders.Add(ConstValues.Authorization, ConstValues.Bearer + " " + token);
-
                 http.DefaultRequestHeaders.TryAddWithoutValidation(OnboardConstants.ContentType, OnboardConstants.ApplicationJson);
                 objRequest.customerId = HttpContext.Session.GetString(ConstValues.SessionCustomerId);
                 objRequest.cardReferenceId = "";
@@ -237,34 +207,11 @@ namespace PPICards.Controllers
                 var stringContent = new StringContent(JsonSerializer.Serialize(objRequest), Encoding.UTF8, OnboardConstants.ApplicationJson);
                 HttpResponseMessage responseMessage = http.PostAsync(OnboardConstants.Customerwallet, stringContent).Result;
                 var resultValue = responseMessage.Content.ReadAsStringAsync().Result;
-                if (string.IsNullOrEmpty(resultValue))
-                {
-                    return View("Index");
-                }
-                if (responseMessage.IsSuccessStatusCode)
-                {
-                    return View("Index");
-                }
-
-                else
-                {
-                    return View("Index");
-                }
-
+                if (string.IsNullOrEmpty(resultValue)) {return View("Index");}
+                if (responseMessage.IsSuccessStatusCode){return View("Index");}
+                else {return View("Index");}
             }
-
-            catch (Exception ex)
-            {
-                return View("Index");
-            }
-            finally
-            {
-                objRequest = null;
-            }
-
-
-
-
+             catch(Exception ex){utility.ErrorLog(errorFolder, ex.Message.ToString()); return View("Index");}            
 
         }
 

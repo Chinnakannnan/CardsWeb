@@ -8,10 +8,7 @@ namespace PPICards.Helper
         private static string EncryptionKey = DateTime.Now.ToString("dddd, dd MMMM yyyy").Replace(" ", "secure");
         public static string encrypt(this string encryptString)
         {
-            if (string.IsNullOrEmpty(encryptString))
-            {
-                return encryptString;
-            }
+            if (string.IsNullOrEmpty(encryptString)) { return encryptString; }
             //string EncryptionKey = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             byte[] clearBytes = Encoding.Unicode.GetBytes(encryptString);
             using (Aes encryptor = Aes.Create())

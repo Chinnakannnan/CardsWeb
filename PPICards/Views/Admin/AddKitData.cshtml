@@ -14,6 +14,8 @@
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/jquery/dist/jquery.js"></script>
 
+
+
 <Script>
     $(document).ready(function () {
         $('#addkiddata').click(function () {
@@ -39,13 +41,14 @@
                 url: '/Admin/AddSingleKitData?KitReferenceNumber=' + kitReferenceNumber + "&CardNumber=" + cardNo + "&CardExpiryDate=" + cardExpiryDate + "&CardType=" + cardType,
                 contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
                 success: function (result) { 
-                
-                    data = $.parseJSON(result);
-                     
+                    
+                    data = $.parseJSON(result);                     
                     if (data.statuscode == '000') {
+                        $('#addKitData').modal('hide');
                         DispalySuccess("Updated Successfully successfully !!!");
                     }
-                    else { 
+                    else {
+                        $('#addKitData').modal('hide');
                         DispalyError(data.statusdesc);
                     }
                 }
@@ -54,29 +57,35 @@
         });
 
 
-        $('#upload-excel').click(function () {
-            alert("haida");
-            var files = $('#Excel_file')[0].files;
-            if (files.length > 0) {
-                var formData = new FormData();
-                for (var i = 0; i < files.length; i++) {
-                    formData.append('excelFiles[]', files[i]);
-                }
-                $.ajax({
-                    url: '/Admin/',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (response) {
-                        // Handle successful upload
-                    },
-                    error: function (xhr, status, error) {
-                        // Handle error
+        $('#upload-form').submit(function (e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: '/Admin/AddBulkKitData',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (result) {
+                    
+                    if (result.statuscode == "000")
+                    {                      
+                        $('#importKits').modal('hide');
+                        DispalySuccess("Update Succesfully");
                     }
-                });
-            }
+                    else 
+                    { 
+                        $('#importKits').modal('hide');
+                        DispalyError(result.statusdesc);
+                    }
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
         });
+ 
     });
 
     function DispalyError(message) {
@@ -181,7 +190,32 @@
                     </svg>
                 </button>
             </div>
-            <div class="modal-body">
+            
+          
+            
+               <div class="form-group mb-3">
+                <a href="~/Files/UPLOADBULK_FORMAT.xlsx" download><b>Click here to download sample file Format</b></a>
+                <hr />
+            </div>
+            <form id="upload-form" method="post" enctype="multipart/form-data">
+                <input type="file" name="file" />
+                <hr />
+                <div class="medium">
+                    <ul>
+                        <strong>Make sure before Upload,</strong>
+                        <li> Please fill the sheet carefully </li>
+                        <li> Duplicate value Does't allow </li>
+                      
+                        <li class="text-danger">
+                            Please Download the sample file for proper format
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary btn-block" type="submit">Upload</button>
+                </div>
+            </form>
+          @*  <div class="modal-body">
                 <div class="row">
                     <div class="col-12">
                         <div class="form-group mb-3">
@@ -209,7 +243,7 @@
             <div class="modal-footer">
                 <button class="btn btn-primary btn-block" type="button" data-dismiss="modal" id="upload-excel">Import</button>
 
-            </div>
+            </div>*@
         </div>
     </div>
 </div>
