@@ -46,6 +46,7 @@ namespace PPICards.Controllers
                         ViewBag.entityflag = 1;
                     else
                         ViewBag.entityflag = 0;
+
                 }
             }
             catch (Exception ex)  { throw ex; }
@@ -84,6 +85,7 @@ namespace PPICards.Controllers
                             listUserKitDetails.UserKitDetails = result;
                         }
                     }
+
                     return Json(new { data = listUserKitDetails });
                 }
                 else

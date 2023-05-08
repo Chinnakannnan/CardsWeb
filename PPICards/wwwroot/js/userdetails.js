@@ -50,8 +50,10 @@ function LoadCardDetails() {
                 $("#cardNumber").text(cardinfo.cardNumber);
                 $("#cardexpiry").text(cardinfo.cardExpiryDate);
                 $("#cardcvv").text(cardinfo.cvv);
+               
             }
         }
+   
     });
 }
 function LoadActivatedCardDetails() {

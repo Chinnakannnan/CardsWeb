@@ -8,12 +8,8 @@
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script>
         $(document).ready(function () {
-            $("#Sub_mit").click(function () {
-                alert("mail");
-                var EmailId = $("#EmailId").val();
-
-
-                alert(Amount + kitrefno);
+            $("#Sub_mit").click(function () {           
+                var EmailId = $("#EmailId").val(); 
                 if (Amount != "" && kitrefno != null) {
                     $.ajax(
                         {
@@ -24,17 +20,16 @@
                             data: { emailId: EmailId },
                             success:
                                 function (data) {
-                                    //  alert("success" + " " + JSON.stringify(data));
+                                   
                                     if (data == 0) {
-                                        //alert("welcome");
+                                       
                                         $("#successPopup").modal("show");
                                         $("#close").trigger("click");
                                     }
                                 },
                             error:
                                 function (response) {
-                                    //alert("approve failed")
-                                    //$("#successModal").modal('show');
+                               
                                     $(".erroralert").show().delay(8000).fadeOut();
                                     $("#errortext").text("Please try again!").show().delay(8000).fadeOut();
                                 }

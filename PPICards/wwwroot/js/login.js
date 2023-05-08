@@ -16,10 +16,18 @@
 
         });
     });
+
+    $('#resendotp').click(function () {
+      
+        $("#loginbutton").hide();
+
+    });
+
 });
 
 
 function timer() {
+
     $("#resendotp").hide();
     var count = 60;
     var timer = setInterval(function () {

@@ -6,7 +6,6 @@
         public string CardExpiryDate { get; set; } = string.Empty;
         public string KitNo { get; set; } = string.Empty;
         public string CVV { get; set; } = string.Empty;
-
         public DateTime? dob { get; set; }
     }
 

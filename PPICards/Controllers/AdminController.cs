@@ -311,9 +311,7 @@ namespace PPICards.Controllers
                                 status_response_model = JsonSerializer.Deserialize<StatusResponseModel>(result);
 
                                 return Json(status_response_model);
-                            }
-                        status_response_model.statuscode = "001";
-                        status_response_model.statusdesc = "Unable to read file.Please Double check the file datas";
+                            }                    
                         return Json(status_response_model);
 
                     }
@@ -323,7 +321,7 @@ namespace PPICards.Controllers
             catch (Exception ex)
             {
                 status_response_model.statuscode = "001";
-                status_response_model.statusdesc = "UnExpected Error";
+                status_response_model.statusdesc = "Unable to read file.Please Double check the file datas";
                 utility.ErrorLog(errorFolder, ex.Message.ToString());
                 return Json(status_response_model);
             }
@@ -335,13 +333,36 @@ namespace PPICards.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public JsonResult UpdateStatus(string Status,string CustomerId, string Name1, string MobileNo, string EmailId,  string Address1,
-                   string Address2, string Address3, string City1, string Pin1, string State1, string Country1, string AadhaarNo,
-                   string PanNo, string GstNo,  string MiddleName,  string LastName,  string ShopName,  string Title, string Gender,
-                   string ProofType, string DrivingLicense, string VoterId,  string Dob)
-          {
+        public JsonResult UpdateStatus(
+            string Status,
+            string CustomerId,
+            string Name1,
+            string MobileNo,
+            string EmailId,
+            string Address1,
+            string Address2,
+            string Address3,
+            string City1,
+            string Pin1,
+            string State1,
+            string Country1,
+            string AadhaarNo,
+            string PanNo,
+            string GstNo,
+            string MiddleName,
+            string LastName,
+            string ShopName,
+            string Title,
+            string Gender,
+            string ProofType,
+            string DrivingLicense,
+            string VoterId,
+          string Dob
+            )
+        {
             string user = HttpContext.Session.GetString(ConstValues.SessionUserType);
             if (user != "1")   {  return Json(1);  }
+
             ResponseModel resp = new ResponseModel();
             JsonRes objResponse = new JsonRes();
             RegistrationRequest objRequest = new RegistrationRequest();
@@ -403,8 +424,8 @@ namespace PPICards.Controllers
                 http.DefaultRequestHeaders.Accept.Clear();
                 http.DefaultRequestHeaders.Add(ConstValues.Authorization, ConstValues.Bearer + " " + token);
                 http.DefaultRequestHeaders.TryAddWithoutValidation(OnboardConstants.ContentType, OnboardConstants.ApplicationJson);
-                string strRequest = JsonSerializer.Serialize(objRequest);
-                var stringContent = new StringContent(JsonSerializer.Serialize(strRequest), Encoding.UTF8, OnboardConstants.ApplicationJson);
+               // string strRequest = JsonSerializer.Serialize(objRequest);
+               var stringContent = new StringContent(JsonSerializer.Serialize(objRequest), Encoding.UTF8, OnboardConstants.ApplicationJson);
                 HttpResponseMessage responseMessage = http.PostAsync(OnboardConstants.UpdateStatus, stringContent).Result;
                 string responsestring = JsonSerializer.Serialize(responseMessage);
                 if (string.IsNullOrEmpty(responsestring))

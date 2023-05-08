@@ -17,11 +17,9 @@
     }
 </style>
 <script>
-    $(document).ready(function () {
-        
+    $(document).ready(function () {        
         $("#otpSubmit").hide();
         $("#otpgenarte").hide();
-
         $("#Sub_mit").click(function () {
             var Amount = $("#amount1").val();
             var kitrefno = $("#Active_Card").val();
@@ -139,6 +137,13 @@
             }
 
         });
+
+        var pageReloaded = false; 
+        function reloadPageOnce() {
+            if (!pageReloaded) {
+                pageReloaded = true;  
+                window.location.reload();
+            }
     });
 
 </script>
