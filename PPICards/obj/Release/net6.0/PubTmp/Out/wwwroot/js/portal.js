@@ -120,7 +120,6 @@ $(document).ready(function () {
         var Comment = $("#complaintcommand").val();
 
         if (Comment == '') {
-            alert("Please Something write in Command section")
             DispalyError("Please Something write in Command section");
             return;
         }
@@ -131,7 +130,6 @@ $(document).ready(function () {
             
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
             success: function (result) {
-                alert(JSON.stringify(result));
                 if (result.result = 'true') {
                     DispalySuccess("Complaint Raised Successfully. Your problem will solve sortly");
                 }

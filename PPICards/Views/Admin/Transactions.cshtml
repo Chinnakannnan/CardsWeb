@@ -5,7 +5,6 @@
 @{
     IList<PPICards.Models.PayoutHistoryDetails> objUserDtls = new List<PPICards.Models.PayoutHistoryDetails>();
     objUserDtls = (IList<PPICards.Models.PayoutHistoryDetails>)TempData["GetTransactionDetails"];
-
     int indexs = 0;
 }
 @{
@@ -22,7 +21,7 @@
                 <div class="card shadow mb-4">
                     <div class="card-body">
                     
-                        @using (Html.BeginForm("PPITransactionReport", "Transaction", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        @using (Html.BeginForm("PPITransactionReport", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
                           {
                             @Html.AntiForgeryToken()
                          
@@ -49,8 +48,7 @@
                                 </div>
                             </div>
                     
-                                }
-                    
+                                }                   
                  
                         @if (objUserDtls != null)
 

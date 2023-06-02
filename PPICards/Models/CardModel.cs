@@ -84,5 +84,23 @@
 
         public string pagination { get; set; }
     }
+    public class Exceptions
+    {
+        public string detailMessage { get; set; }
+        public object cause { get; set; }
+        public string shortMessage { get; set; }
+        public string languageCode { get; set; }
+        public string errorCode { get; set; }
+        public List<string> fieldErrors { get; set; }
+        public object message { get; set; }
+        public object localizedMessage { get; set; }
+        public List<object> suppressed { get; set; }
+    }
 
+    public class CardActivationResult
+    {
+        public object result { get; set; }
+        public Exceptions exception { get; set; }
+        public object pagination { get; set; }
+    }
 }

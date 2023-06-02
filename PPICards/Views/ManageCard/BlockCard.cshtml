@@ -11,12 +11,12 @@
 
         $("#submitcontent").click(function () {
 
-            if ($("#cardNo").val() == "") {
+            if ($("#Active_Card").val() == "") {
                 $("#noReason").text("Please select card to proceed!").show().delay(5000).fadeOut();
             }
 
             else {
-                var cardno = $("#cardNo").val();
+                var cardno = $("#Active_Card").val();
 
                 var flag = $("#reason").val();
 
@@ -40,7 +40,7 @@
                         data: { CardNo: cardno, Flag: flag, Reason: reason },
                         success:
                             function (data) {
-                                //  alert("success" + " " + JSON.stringify(data));
+                                                          
                                 if (data == "1") {
                                     
                                     $("#successPopup").modal('show');
@@ -55,6 +55,9 @@
                                     
                                     $("#SuccessPopup").modal('show');
                                     $("#success_content").text("your card has been blocked successfully");
+                                }else
+                                {
+                                  alert(data);                                    
                                 }
 
                             },
@@ -96,6 +99,12 @@
 
     });
 
+    function DispalyError(message) {
+        if (message != '') {
+            $('#displaydangermessage').text(message);
+            $('#alertPopup').modal('show');
+        }
+    }
 </script>
 
 <div class="row justify-content-center" id="blockCard">

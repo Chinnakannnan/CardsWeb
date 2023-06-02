@@ -150,9 +150,16 @@ namespace PPICards.Controllers
                 var resultValue = responseMessage.Content.ReadAsStringAsync().Result;
                 if (string.IsNullOrEmpty(resultValue)) {  return Json(0); }
                 if (responseMessage.IsSuccessStatusCode)
-                { if (Reason == "1") { return Json(1); }
-                  if (Reason == "2") { return Json(2); }
-                } if (Reason == "3") { return Json(3); }
+                {
+                    CardActivationResult  deserializedResponse = JsonConvert.DeserializeObject<CardActivationResult>(resultValue);
+                    if(deserializedResponse.result==null)
+                    {
+                        return Json(deserializedResponse.exception.detailMessage.ToString());
+                    }                 
+
+                  if (Flag == "L") { return Json(1); }
+                  if (Flag == "UL") { return Json(2); }
+                } if (Flag == "BL") { return Json(3); }
                   else { return Json(0); }
             }
             catch (Exception ex) { utility.ErrorLog(errorFolder, ex.Message.ToString()); return Json(0); }

@@ -68,14 +68,26 @@ namespace PPICards.Controllers
                             IList<PayoutHistoryDetails> objReport = new List<PayoutHistoryDetails>();
                             var resultValue = responseMessage.Content.ReadAsStringAsync().Result;
                             objReport = JsonSerializer.Deserialize<IList<PayoutHistoryDetails>>(resultValue);
-                            TempData["GetTransactionDetails"] = objReport;
+                           
                             if (objReport.Count != 0)
-                            {
+                            { 
+                                TempData["GetTransactionDetails"] = objReport;
                                 if (objRequest.userType == "1"){ return RedirectToAction("Transactions", "Admin");}
                                 else{ return View("Index"); }
                             }
                             else
                             {
+                                PayoutHistoryDetails objReports = new PayoutHistoryDetails();
+                                objReports.balance = "Null";
+                                objReports.credit = "Null";
+                                objReports.debit = "Null";
+                                objReports.description = "Null";
+                                objReports.balance = "Null";
+                                objReports.openingBalance = "Null";
+                                objReports.closingBalance = "Null";
+                                objReports.transactionAmount = "Null";
+       
+                                 TempData["GetTransactionDetails"] = objReports;
                                 if (objRequest.userType == "1") { return RedirectToAction("Transactions", "Admin"); }
                                 else { return View("Index"); }
                             }

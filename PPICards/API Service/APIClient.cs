@@ -80,6 +80,7 @@ namespace PPICards.API_Service
             {
                 _client.DefaultRequestHeaders.Clear();
                 _client.DefaultRequestHeaders.Add(ConstValues.Authorization, ConstValues.Bearer + " " + token.Decrypt());
+                var json = (JsonConvert.SerializeObject(loginResp));
                 var stringContent = new StringContent(JsonConvert.SerializeObject(loginResp), Encoding.UTF8, OnboardConstants.ApplicationJson);
                 HttpResponseMessage responseMessage = _client.PostAsync(OnboardConstants.LoginOTP, stringContent).Result;
                 if (responseMessage.IsSuccessStatusCode)

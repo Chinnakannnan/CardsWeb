@@ -16,10 +16,18 @@
 
         });
     });
+
+    $('#resendotp').click(function () {
+      
+        $("#loginbutton").hide();
+
+    });
+
 });
 
 
 function timer() {
+
     $("#resendotp").hide();
     var count = 60;
     var timer = setInterval(function () {
@@ -60,8 +68,10 @@ function showLoginHide(element1, element2) {
                 myElement2.style.display = "none";
                 const myElement1 = document.getElementById(element1);
                 myElement1.style.display = "block";
-            } else {
-                
+ 
+            }
+            else
+            {
                     $('#displaydangermessage').text("Login failed:" + result.statusDesc);
                     $('#alertPopup').modal('show');
  

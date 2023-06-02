@@ -25,7 +25,6 @@
 
 });
 
-
 function timer() {
 
     $("#resendotp").hide();
@@ -53,6 +52,8 @@ function timer2() {
     }, 1000);
 }
 function showLoginHide(element1, element2) {
+    $('#loginbutton').hide();
+    
     var data = $("#loginForm").serialize();
     timer();
     $.ajax({
@@ -68,8 +69,10 @@ function showLoginHide(element1, element2) {
                 myElement2.style.display = "none";
                 const myElement1 = document.getElementById(element1);
                 myElement1.style.display = "block";
-            } else {
-                
+ 
+            }
+            else
+            {
                     $('#displaydangermessage').text("Login failed:" + result.statusDesc);
                     $('#alertPopup').modal('show');
  

@@ -32,6 +32,7 @@ namespace PPICards.Controllers
         {
             string user = HttpContext.Session.GetString(ConstValues.SessionUserType);
             if (user != "1") {  return RedirectToAction("Login", "Login"); }
+
             if (HttpContext.Session.GetString(ConstValues.LoginName) != null)
             {
                 string admin = HttpContext.Session.GetString(ConstValues.LoginName);
@@ -72,11 +73,71 @@ namespace PPICards.Controllers
         public IActionResult Transactions()
         {
             string user = HttpContext.Session.GetString(ConstValues.SessionUserType);
-            if (user != "1") { return RedirectToAction("Login", "Login");}
+            if (user != "1") { return RedirectToAction("Login", "Login"); }
             int hh = 0;
             hh = hh + 10;
             return View("Transactions");
         }
+        public IActionResult PPITransactionReport(TransactionModel objRequest)
+        {
+            string aesKey = string.Empty;
+            string FromDate = string.Empty;
+            string ToDate = string.Empty;
+
+            try
+            {
+                if (HttpContext.Session.GetString(ConstValues.SessionCustomerId) != null)
+                {
+                    if (objRequest.fromdate != null)
+                    {
+                        string[] splitFromDate = objRequest.fromdate.Split('-');
+                        FromDate = splitFromDate[1] + "-" + splitFromDate[2] + "-" + splitFromDate[0];
+                    }
+                    if (objRequest.todate != null)
+                    {
+                        string[] splitToDate = objRequest.todate.Split('-');
+                        ToDate = splitToDate[1] + "-" + splitToDate[2] + "-" + splitToDate[0];
+                    }
+                    objRequest.userType = HttpContext.Session.GetString(ConstValues.SessionUserType);
+                    objRequest.customerId = HttpContext.Session.GetString(ConstValues.SessionCustomerId);
+                    string token = HttpContext.Session.GetString(ConstValues.JwtValue);
+
+                    string responsestring = string.Empty;
+                    using (HttpResponseMessage responseMessage = _clientService.PPITransactionReport(objRequest, token))
+                    {
+                        responsestring = JsonSerializer.Serialize(responseMessage);
+
+                        if (string.IsNullOrEmpty(responsestring))
+                        {
+                            ViewBag.data = ResponseCode.Invalid_Response + "|" + ResponseMsg.Invalid_Response;
+                            return View("Transactions");
+                        }
+                        if (responseMessage.IsSuccessStatusCode)
+                        {
+                            IList<PayoutHistoryDetails> objReport = new List<PayoutHistoryDetails>();
+                            var resultValue = responseMessage.Content.ReadAsStringAsync().Result;
+                            objReport = JsonSerializer.Deserialize<IList<PayoutHistoryDetails>>(resultValue);
+                            TempData["GetTransactionDetails"] = objReport;
+                              return View("Transactions"); 
+                        }
+                    }
+                }
+                return View("Transactions");
+            }
+            catch (Exception ex)
+            {
+                utility.ErrorLog(errorFolder, ex.Message.ToString());
+                if (objRequest.userType == "1")
+                {
+                    return RedirectToAction("Transactions", "Admin");
+                }
+                else
+                {
+                    return View("Index");
+                }
+            }
+        }
+
         public IActionResult AddKitData()
         {
             string user = HttpContext.Session.GetString(ConstValues.SessionUserType);
