@@ -206,10 +206,21 @@ namespace PPICards.Controllers
                             if (responseMessage.IsSuccessStatusCode)
                             {
                                 string stream = responseMessage.Content.ReadAsStringAsync().Result.ToString();
-                                displayModel.IsSuccess = true;
+
+                                ResponseModel responseObj = JsonConvert.DeserializeObject<ResponseModel>(stream);
+
+                                if(responseObj.statuscode !="000")
+                                {
+                                    displayModel.IsSuccess = false;
+                                    displayModel.ErrorMessage = responseObj.statusdesc;
+                                }
+                                else
+                                {
+                                    displayModel.IsSuccess = true;
+                                }
                             }
                             else
-                            { displayModel.IsSuccess = false;  }
+                            { displayModel.IsSuccess = false; }
                         }
 
                     }

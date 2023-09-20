@@ -633,14 +633,16 @@
 
 
         public class TxnLimit
-        {
-            public TxnLimit()
-            {
-                limitConfig = new LimitConfig();
-            }
+        { 
             public string entityId { get; set; }
-            public LimitConfig limitConfig { get; set; }
-        }
+            public string KitReferenceNumber { get; set; }
+            public string txnType { get; set; }
+            public string dailyLimitValue { get; set; }
+ 
+    }
+
+
+
         public class LimitConfig
         {
             public string txnType { get; set; }

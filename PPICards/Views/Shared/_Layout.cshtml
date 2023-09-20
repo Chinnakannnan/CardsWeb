@@ -289,14 +289,13 @@
                         <div class="col-12">
                             <div class="form-group my-3">
                                 <label class="floating-label">
-                                    <input type="text" class="form-control" placeholder="Enter Subject" id="complaintsubject">
+                                    <input type="text" class="form-control" placeholder="Enter Subject" id="complaintsubject" required>
                                     <span class="floating-text">Subject</span>
                                 </label>
                             </div>
                             <div class="form-group mb-3">
                                 <label class="floating-label">
-                                    <textarea class="form-control" name="comments" placeholder="Comments" rows="3" id="complaintcommand"
-                                              value="" required></textarea>
+                                    <textarea class="form-control" name="comments" placeholder="Comments" rows="3" id="complaintcommand" value="" required></textarea>
                                     <span class="floating-text">
                                         Comments<span class="mandatory">*</span>
                                     </span>
@@ -371,6 +370,21 @@
 
 
     <script src="~/js/portal.js"></script>
-
+    <script>
+        $(document).ready(function () {
+            $('#complaintsubject').on('input', function () {
+                var inputText = $(this).val();
+                var cleanedText = inputText.replace(/[^a-zA-Z\s]/g, '');
+                $(this).val(cleanedText);
+            });
+        });
+        $(document).ready(function () {
+            $('#complaintcommand').on('input', function () {
+                var inputText = $(this).val();
+                var cleanedText = inputText.replace(/[^a-zA-Z\s]/g, '');
+                $(this).val(cleanedText);
+            });
+        });
+        </script>
 </body>
 </html>

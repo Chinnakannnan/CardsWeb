@@ -3,7 +3,6 @@
     public string statuscode { get; set; }
     public string statusdesc { get; set; }
 
-
 }
 public class ResponseCode
 {

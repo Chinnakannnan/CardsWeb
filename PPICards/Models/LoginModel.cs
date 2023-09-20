@@ -31,5 +31,7 @@
         public string EntityId { get; set; }
         public string kycstatus { get; set; }
         public string Token { get; set; }
+        public string KitReferenceNumber { get; set; }
+        
     }
 }

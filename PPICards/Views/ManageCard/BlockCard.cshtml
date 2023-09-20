@@ -8,7 +8,6 @@
         LoadActivatedCardDetails();
 
 
-
         $("#submitcontent").click(function () {
 
             if ($("#Active_Card").val() == "") {
@@ -22,13 +21,12 @@
 
                 if ($("#reason").val() == "UL") {
                     var reason = $("#reissuereason").val();
-                    alert(reason, "reasonublk");
+                   // alert(reason, "reasonublk");
                 }
                 else {
                     var reason = $("#reissue").val();
-                    alert(reason, "reasonloblo");
+                  //  alert(reason, "reasonloblo");
                 }
-
 
 
                 $.ajax(
@@ -44,20 +42,27 @@
                                 if (data == "1") {
                                     
                                     $("#successPopup").modal('show');
-                                    $("#success_content").text("Your card has been locked successfully");
+                                    $("#success_content").text("Your card has been locked successfully");      
+                                     return 
                                 }
-                                if (data == "2") {
+                                else if (data == "2") {
                                     
                                     $("#successPopup").modal('show');
-                                    $("#success_content").text("your card has been unlocked successfully");
+                                    $("#success_content").text("your card has been unlocked successfully");    
+                                    return
                                 }
-                                if (data == "3") {
+                                else if (data == "3") {
                                     
                                     $("#SuccessPopup").modal('show');
-                                    $("#success_content").text("your card has been blocked successfully");
-                                }else
+                                    $("#success_content").text("your card has been blocked successfully"); 
+                                    return
+                                }
+                                else
                                 {
-                                  alert(data);                                    
+                                    $("#failurePopup").modal('show');
+                                    $("#Failure_content").text(data);
+                                    return
+                                   
                                 }
 
                             },
@@ -120,8 +125,7 @@
                         <div class="col-12">
                             <div class="row justify-content-center">
                                 <div class="col-lg-8 col-12">
-                                    @using (Html.BeginForm("LockUnlockCard", "ManageCard", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                                    {
+                                    
                                         @Html.AntiForgeryToken()
                                         <div class="form-group">
                                             <label for="cardNo" class="floating-label">
@@ -194,7 +198,7 @@
                                                 Submit
                                             </button>
                                         </div>
-                                    }
+                                  
                                 </div>
                             </div>
                             <div class="notes my-4 small">
@@ -244,7 +248,7 @@
                 <i class="fas fa-times-circle text-danger" style="font-size:50px"></i>
                 @*<i class="fas fa-times-circle text-danger" style="font-size:72px"></i>*@
             </div>
-            <div class="modal-body text-center" style="font-size:20px" >Please Try again</div>
+            <div class="modal-body text-center" style="font-size:20px" id="Failure_content">Please Try again</div>
             <div class="modal-footer" style="padding:5px;">
                 <button class="btn btn-primary" type="button" data-dismiss="modal">Ok</button>
                 @*// <a class="btn btn-primary" onclick="ActivateCard();">OK</a>*@

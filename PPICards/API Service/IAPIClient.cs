@@ -31,5 +31,6 @@ namespace PPICards.API_Service
         HttpResponseMessage PPITransactionReport(TransactionModel objRequest, string token);
         HttpResponseMessage GetTransactionReports(TransactionRequestModel objRequest, string token);
         HttpResponseMessage CustomerWallet(WalletModel objRequest, string token);
+        HttpResponseMessage GetLimit(GetLimitRequest objRequest, string token);
     }
 }

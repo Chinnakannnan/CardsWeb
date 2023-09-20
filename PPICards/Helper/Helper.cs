@@ -11,7 +11,6 @@ namespace PPICards.Helper
             else{returnvalue = "xxxx xxxx xxxx xxxx";}
             return returnvalue;
         }
-
         public static string ConvertExpiryDate(this string ExpiryDate, int type)
         {
             string returnvalue = ExpiryDate;
@@ -19,7 +18,6 @@ namespace PPICards.Helper
             else{returnvalue = "xx/xx";}
             return returnvalue;
         }
-
         public static string ConvertCVV(this string cvv, int type)
         {
             string returnvalue = cvv;
@@ -27,7 +25,6 @@ namespace PPICards.Helper
             else{returnvalue = "xxx";}
             return returnvalue;
         }
-
         public static bool IsCheckValidFromTodate(this string Fromdate, string Todate, out string errormessage, out DateTime fromdate, out DateTime todate)
         {
             bool retunvalue = true;

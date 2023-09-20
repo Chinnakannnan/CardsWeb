@@ -82,7 +82,8 @@ namespace PPICards.Controllers
                         loginResp = JsonConvert.DeserializeObject<LoginResponseModel>(stream);
                         if (loginResp.StatusCode == "000")
                         {
-                            loginResp.MobileOTP = utility.GetStan();
+                            var otp = utility.GetStan();
+                            loginResp.MobileOTP = Security.AES_ENCRYPT(otp);
                             DateTime otpCreationTime = DateTime.Now;
                             HttpContext.Session.SetString(ConstValues.SessionMobileNo, loginResp.MobileNo);
                             HttpContext.Session.SetString(ConstValues.SessionLoginOTP, loginResp.MobileOTP);
@@ -115,7 +116,7 @@ namespace PPICards.Controllers
         public async Task<IActionResult> ValidateOTP(string otp)
         {
             string ReceivedOTP = otp;
-            string SentOTP = HttpContext.Session.GetString(ConstValues.SessionLoginOTP);
+            string SentOTP = Security.AES_DECRYPT(HttpContext.Session.GetString(ConstValues.SessionLoginOTP)); 
             string otpCreationTime = HttpContext.Session.GetString(ConstValues.Otptime);
             DateTime createdDateTime = DateTime.Parse(otpCreationTime);
             bool exp=HasExpired(createdDateTime);
@@ -183,10 +184,17 @@ namespace PPICards.Controllers
                                 HttpContext.Session.SetString(ConstValues.SessionEmailId, loginResp.emailAddress);
                                 HttpContext.Session.SetString(ConstValues.SessionCustomerId, loginResp.CustomerId);
                                 HttpContext.Session.SetString(ConstValues.SessionMobileNo, loginResp.MobileNo);
+                          
                                 if (!string.IsNullOrEmpty(loginResp.UserType))
                                 {
                                     HttpContext.Session.SetString(ConstValues.SessionUserType, loginResp.UserType);
                                 }
+                                if (HttpContext.Session.GetString(ConstValues.SessionUserType) != "1")
+                                {
+                                    HttpContext.Session.SetString(ConstValues.KitReferenceNumber, loginResp.KitReferenceNumber);
+                                }                          
+
+
                                 if (!string.IsNullOrEmpty(loginResp.LoginName))
                                 {
                                     string[] names = loginResp.LoginName.Split(' ');
@@ -255,9 +263,12 @@ namespace PPICards.Controllers
         public JsonResult ResentOTP()
         {
             HttpContext.Session.Remove(ConstValues.SessionLoginOTP);
-            HttpContext.Session.Remove(ConstValues.Otptime);
+            HttpContext.Session.Remove(ConstValues.Otptime);        
+       
             LoginResponseModel loginResp = new LoginResponseModel();
-            loginResp.MobileOTP = utility.GetStan();
+            var otp = utility.GetStan();
+            loginResp.MobileOTP = Security.AES_ENCRYPT(otp);
+           // loginResp.MobileOTP = utility.GetStan();
             loginResp.MobileNo = HttpContext.Session.GetString(ConstValues.SessionMobileNo);
             DateTime otpCreationTime = DateTime.Now;
             HttpContext.Session.SetString(ConstValues.SessionLoginOTP, loginResp.MobileOTP);

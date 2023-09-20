@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-
+  
 
     $('#resendotp').click(function () {
 
@@ -74,7 +74,8 @@ function showLoginHide(element1, element2) {
             else
             {
                     $('#displaydangermessage').text("Login failed:" + result.statusDesc);
-                    $('#alertPopup').modal('show');
+                $('#alertPopup').modal('show');
+                $('#loginbutton').show();
  
                
             }
@@ -99,6 +100,7 @@ function submitLogin() {
         data: data,
         success: function (result) {
             if (result == 'admin') {
+              
                 window.location.href = "/admin/index";
             } else if (result == 'user') {
                 window.location.href = "/home/index";

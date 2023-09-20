@@ -49,8 +49,7 @@ function LoadCardDetails() {
                 var cardinfo = result.data.cardModel;
                 $("#cardNumber").text(cardinfo.cardNumber);
                 $("#cardexpiry").text(cardinfo.cardExpiryDate);
-                $("#cardcvv").text(cardinfo.cvv);
-               
+                $("#cardcvv").text(cardinfo.cvv);               
             }
         }
    

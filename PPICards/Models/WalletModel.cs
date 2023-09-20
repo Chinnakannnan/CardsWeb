@@ -21,4 +21,21 @@
         public string emailID { get; set; }
 
     }
+
+    public class GetLimit
+    {
+        public string ATM { get; set; }
+        public string CONTACTLESS { get; set; }
+        public string POS { get; set; }
+        public string ECOM { get; set; }       
+
+
+
+    }
+    public class GetLimitRequest
+    {
+        public string KitReferenceNumber { get; set; } 
+ 
+
+    }
 }

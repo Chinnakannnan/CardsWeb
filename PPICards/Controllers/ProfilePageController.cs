@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MYPAY.Models;
 using PPICards.API_Service;
 using PPICards.Helper;
 using PPICards.Models;
+using System;
 using System.Text;
 using System.Text.Json;
 
@@ -45,7 +47,7 @@ namespace PPICards.Controllers
         public JsonResult ChangePassword(ResetPassword request)
         {
             try
-            {
+            { 
                 ResetPassword values = new ResetPassword();
                 string token = HttpContext.Session.GetString(ConstValues.JwtValue);
                 if (HttpContext.Session.GetString(ConstValues.SessionCustomerId) != null)
@@ -71,7 +73,12 @@ namespace PPICards.Controllers
         public JsonResult RaiseComplaint(RaiseComplaint request)
         {
             try
+
             {
+                if(request.Subject.GetType() != typeof(string) || request.Comment.GetType() != typeof(string))
+                {
+                    return Json("Input is invalid");
+                }
                 RaiseComplaint values = new RaiseComplaint();
                 string token = HttpContext.Session.GetString(ConstValues.JwtValue);
                 if (HttpContext.Session.GetString(ConstValues.SessionCustomerId) != null)

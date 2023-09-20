@@ -24,17 +24,26 @@ $('#limit1action').click(function () {
         DispalyError("Maximum Limit is Rs.10000... Please try Below 10000 Rupees");
         return;
     }
-
+    if (Limit == null) {
+        DispalyError("Please Fill the Limit");
+        return;
+    }
     $.ajax({
         type: 'POST',
         url: '/ManageCard/ManageCardLimitDoestic?flag=' + Flag + "&Limit=" + Limit,
         contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
         success: function (result) {
-            if (result.result = 'true') {
+            if (result == '1') {
+                DispalyError("Limit Set Failed !!!");
+                return;
+            }
+            if (result == 'Success') {
                 DispalySuccess("Limit Set successfully !!!");
+                return;
             }
             else {
-                DispalyError("Limit Set Failed ");
+                DispalyError("Limit Set Failed ! Please try after some time");
+                return;
             }
         }
     });;
@@ -48,16 +57,26 @@ $('#limit2action').click(function () {
         DispalyError("Maximum Limit is Rs.10000... Please try Below 10000 Rupees");
         return false;
     }
+    if (Limit == null) {
+        DispalyError("Please Fill the Limit");
+        return;
+    }
     $.ajax({
         type: 'POST',
         url: '/ManageCard/ManageCardLimitDoestic?flag=' + Flag + "&Limit=" + Limit,
         contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
         success: function (result) {
-            if (result.result = 'true') {
+            if (result == '1') {
+                DispalyError("Limit Set Failed !!!");
+                return;
+            }
+            if (result == 'Success') {
                 DispalySuccess("Limit Set successfully !!!");
+                return;
             }
             else {
-                DispalyError("Limit Set Failed ");
+                DispalyError("Limit Set Failed ! Please try after some time");
+                return;
             }
         }
     });
@@ -71,16 +90,26 @@ $('#limit3action').click(function () {
         DispalyError("Maximum Limit is Rs.10000... Please try Below 10000 Rupees");
         return;
     }
+    if (Limit == null) {
+        DispalyError("Please Fill the Limit");
+        return;
+    }
     $.ajax({
         type: 'POST',
         url: '/ManageCard/ManageCardLimitDoestic?flag=' + Flag + "&Limit=" + Limit,
         contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
         success: function (result) {
-            if (result.result = 'true') {
+            if (result == '1') {
+                DispalyError("Limit Set Failed !!!");
+                return;
+            }
+            if (result == 'Success') {
                 DispalySuccess("Limit Set successfully !!!");
+                return;
             }
             else {
-                DispalyError("Limit Set Failed ");
+                DispalyError("Limit Set Failed ! Please try after some time");
+                return;
             }
         }
     });;
@@ -95,16 +124,27 @@ $('#limit4action').click(function () {
 
         return;
     }
+    if (Limit == null) {
+        DispalyError("Please Fill the Limit");
+        return;
+    }
     $.ajax({
         type: 'POST',
         url: '/ManageCard/ManageCardLimitDoestic?flag=' + Flag + "&Limit=" + Limit,
         contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-        success: function (result) {
-            if (result.result = 'true') {
+        success: function (result) {          
+
+            if (result == '1') {
+                DispalyError("Limit Set Failed !!!");
+                return;
+            }
+            if (result == 'Success') {
                 DispalySuccess("Limit Set successfully !!!");
+                return;
             }
             else {
-                DispalyError("Limit Set Failed ");
+                DispalyError("Limit Set Failed ! Please try after some time");
+                return;
             }
         }
     });;

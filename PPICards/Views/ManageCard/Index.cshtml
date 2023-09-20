@@ -3,7 +3,39 @@
 <script src="~/js/jquery.min.js"></script>
 <script src="~/js/useractivity.js"></script>
 <script src="~/js/portal.js"></script>
-<script src="~/js/CardManagement.js"></script> 
+<script src="~/js/CardManagement.js"></script>  
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var input = document.querySelector('input[name="myInput"]');
+        input.addEventListener('input', function () {
+            // Remove non-numeric characters
+            this.value = this.value.replace(/\D/g, '');
+        });
+    });
+       document.addEventListener('DOMContentLoaded', function () {
+        var input = document.querySelector('input[name="myInput2"]');
+        input.addEventListener('input', function () {
+            // Remove non-numeric characters
+            this.value = this.value.replace(/\D/g, '');
+        });
+    });
+       document.addEventListener('DOMContentLoaded', function () {
+        var input = document.querySelector('input[name="myInput3"]');
+        input.addEventListener('input', function () {
+            // Remove non-numeric characters
+            this.value = this.value.replace(/\D/g, '');
+        });
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+        var input = document.querySelector('input[name="myInput4"]');
+        input.addEventListener('input', function () {
+            // Remove non-numeric characters
+            this.value = this.value.replace(/\D/g, '');
+        });
+    });
+</script>
 
 <div class="d-sm-flex align-items-center justify-content-between mt-4 mb-4">
     <h1 class="h3 mb-0 text-gray-800">Manage Card</h1>
@@ -31,8 +63,8 @@
                             <div class="form-group mt-md-0 mt-3">
                                 <label for="limit" class="floating-label" >
                                     <input type="hidden" id="limitflag1" value="ATM">
-                                    <input type="text" class="form-control h-auto"
-                                           pattern="^[0-9]{4}$" placeholder="Enter Limit" id="limit1" value="0000">
+                                    <input type="text" class="form-control h-auto" name="myInput"
+                                           pattern="^[0-9]{4}$" placeholder="Enter Limit" id="limit1" value=@ViewBag.ATMLIMIT required>
                                     <span class="floating-text">Limit</span>
 
                                 </label>
@@ -54,8 +86,8 @@
                             <div class="form-group mt-md-0 mt-3">
                                 <label for="limit" class="floating-label">
                                     <input type="hidden" id="limitflag2" value="CONTACTLESS">
-                                    <input type="text" class="form-control h-auto"
-                                           pattern="^[0-9]{4}$" placeholder="Enter Limit" id="limit2" value="0000">
+                                    <input type="text" class="form-control h-auto" name="myInput2"
+                                           pattern="^[0-9]{4}$" placeholder="Enter Limit" id="limit2" value=@ViewBag.CONTACTLESSLIMIT required>
                                     <span class="floating-text">Limit</span>
 
                                 </label>
@@ -77,8 +109,8 @@
                             <div class="form-group mt-md-0 mt-3">
                                 <label for="limit" class="floating-label">
                                     <input type="hidden" id="limitflag3" value="POS">
-                                    <input type="text" class="form-control h-auto"
-                                           pattern="^[0-9]{4}$" placeholder="Enter Limit" id="limit3" value="0000">
+                                    <input type="text" class="form-control h-auto" name="myInput3"
+                                           pattern="^[0-9]{4}$" placeholder="Enter Limit" id="limit3" value=@ViewBag.POSLIMIT required>
                                     <span class="floating-text">Limit</span>
 
                                 </label>
@@ -100,8 +132,8 @@
                             <div class="form-group mt-md-0 mt-3">
                                 <label for="limit" class="floating-label">
                                     <input type="hidden" id="limitflag4" value="ECOM" >
-                                    <input type="text" class="form-control h-auto"
-                                           pattern="^[0-9]{4}$" placeholder="Enter Limit" id="limit4" value="0000">
+                                    <input type="text" class="form-control h-auto" name="myInput4"
+                                           pattern="^[0-9]{4}$" placeholder="Enter Limit" id="limit4" value=@ViewBag.ECOMLIMIT required>
                                     <span class="floating-text">Limit</span>
 
                                 </label>

@@ -254,8 +254,7 @@ namespace PPICards.API_Service
                 //Setting TLS 1.2 protocol
                 ServicePointManager.Expect100Continue = true;
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-                //var stringContent = new StringContent(entityId, Encoding.UTF8, OnboardConstants.ApplicationJson);
-
+                var json  = JsonConvert.SerializeObject(limit);
 
                 var stringContent = new StringContent(JsonConvert.SerializeObject(limit), Encoding.UTF8, OnboardConstants.ApplicationJson);
                 return _client.PostAsync(OnboardConstants.TrancationLimitControl, stringContent).Result;
@@ -439,6 +438,20 @@ namespace PPICards.API_Service
             }
         }
 
+        public HttpResponseMessage GetLimit(GetLimitRequest objRequest, string token) 
+        {
 
+            try
+            {
+                _client.DefaultRequestHeaders.Clear();
+                _client.DefaultRequestHeaders.Add(ConstValues.Authorization, ConstValues.Bearer + " " + token.Decrypt());
+                var stringContent = new StringContent(JsonConvert.SerializeObject(objRequest), Encoding.UTF8, OnboardConstants.ApplicationJson);
+                return _client.PostAsync(OnboardConstants.GetLimit, stringContent).Result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

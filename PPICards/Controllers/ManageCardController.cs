@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using MYPAY.Models;
 using Newtonsoft.Json;
 using PPICards.API_Service;
@@ -63,13 +64,30 @@ namespace PPICards.Controllers
                     if (responseMessage.IsSuccessStatusCode)
                     {
                         responseMessage.EnsureSuccessStatusCode();
-                        String result = responseMessage.Content.ReadAsStringAsync().Result.ToString();                         
+                        string result = responseMessage.Content.ReadAsStringAsync().Result.ToString();                         
                         CustomerPreferencesResponse objResponse = JsonConvert.DeserializeObject<CustomerPreferencesResponse>(result);
                         ViewBag.ATM = ((objResponse.result.atm == "true") ? "Checked" : "");
                         ViewBag.POS = ((objResponse.result.pos == "true") ? "Checked" : "");
                         ViewBag.CONTACTLESS = ((objResponse.result.contactless == "true") ? "Checked" : "");
                         ViewBag.ECOM = ((objResponse.result.ecom == "true") ? "Checked" : "");
-                        return View("Index");
+
+                        var KitReferenceNumber = HttpContext.Session.GetString(ConstValues.KitReferenceNumber);
+                        GetLimitRequest value= new GetLimitRequest();
+                        value.KitReferenceNumber = KitReferenceNumber;
+                       
+                        using (HttpResponseMessage responseItems = _clientService.GetLimit(value, token))                            
+                        if (responseItems.IsSuccessStatusCode)
+                        {
+                            string objresult = responseItems.Content.ReadAsStringAsync().Result.ToString();
+                            GetLimit objRes = JsonConvert.DeserializeObject<GetLimit>(objresult);
+
+                            ViewBag.ATMLIMIT = objRes.ATM;
+                            ViewBag.POSLIMIT = objRes.POS;
+                            ViewBag.CONTACTLESSLIMIT = objRes.CONTACTLESS;
+                            ViewBag.ECOMLIMIT = objRes.ECOM;
+
+                        }
+                            return View("Index");
                     }
                 return View("Index");
             }
@@ -100,37 +118,59 @@ namespace PPICards.Controllers
             catch (Exception ex) { utility.ErrorLog(errorFolder, ex.Message.ToString()); return Json(1); }           
 
         }
+         
         [HttpPost]
-        public IActionResult ManageCardLimitDoestic(string Flag, string Limit)
+        public IActionResult ManageCardLimitDoestic(string Flag, double Limit)
         {
             try
             {
+                double value = Limit;
+                int roundedValue = (int)Math.Round(value);
+                string roundedValueString = roundedValue.ToString();
+                bool containsNonNumeric = System.Text.RegularExpressions.Regex.IsMatch(roundedValueString, @"\D");
+                if (containsNonNumeric)
+                {
+                    return Json(1);
+                }
+                 
+
                 var entityId = HttpContext.Session.GetString(ConstValues.EntityId).Decrypt();
                 HttpClient http = new HttpClient();
                 TxnLimit values = new TxnLimit();
                 values.entityId = entityId;
-                values.limitConfig.txnType = Flag;
-                values.limitConfig.dailyLimitValue = Limit;
+                values.KitReferenceNumber = HttpContext.Session.GetString(ConstValues.KitReferenceNumber);
+                values.txnType = Flag;
+                values.dailyLimitValue = Limit.ToString();
                 string token = HttpContext.Session.GetString(ConstValues.JwtValue);
                 using (HttpResponseMessage responseMessage = _clientService.CustomerTransactionLimit(values, token))
                     if (responseMessage.IsSuccessStatusCode)
                     {
                         responseMessage.EnsureSuccessStatusCode();
                         String result = responseMessage.Content.ReadAsStringAsync().Result.ToString();
-                        return Json(result);
+                        return Json("Success");
                     }
-                return Json(1);
+
+                return Json("Failed");
             }
             catch(Exception ex) { utility.ErrorLog(errorFolder, ex.Message.ToString()); return Json(1); };            
         }
         [HttpPost]
         public JsonResult LockUnlockCard(string CardNo, string Flag, string Reason)
+        
         {
             JsonRes objResponse = new JsonRes();
             LockUnlock objRequest = new LockUnlock();
             Dictionary<string, string> requestBody = new Dictionary<string, string>();
             try
             {
+                if (string.IsNullOrEmpty(CardNo) || string.IsNullOrEmpty(Flag) || string.IsNullOrEmpty(Reason))
+                {
+                    return Json("Input is Empty");
+                }
+                if (CardNo.GetType() != typeof(string) || Flag.GetType() != typeof(string) || (Reason.GetType() != typeof(string)))
+                {
+                    return Json("Input is invalid");
+                }
                 string token = HttpContext.Session.GetString(ConstValues.JwtValue).Decrypt();               
                 HttpClient http = new HttpClient();
                 http.BaseAddress = new Uri(OnboardConstants.BaseUrl);

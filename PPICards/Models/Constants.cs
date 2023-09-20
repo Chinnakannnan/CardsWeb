@@ -13,7 +13,7 @@ namespace PPICards.Models
         // public const string SendingLink = "";
         public const string ContentType = "Content-Type";
         public const string ApplicationJson = "application/json";
-
+        public static string EMAILKEY = "9BE744B6F2379746"; //otp
         //Login url
         public const string LoginValidate = "/api/v1/Login";
         public const string GetAssignedKitMappingDetailsByCustomer = "api/KitMapping/GetAssignedKitMappingDetailsByCustomer";
@@ -25,7 +25,7 @@ namespace PPICards.Models
         public const string GetKitData = "/api/Kit/GetKitDetails";
         public const string SetKitNo = "/api/KitMapping/SaveKitMappingDetails";
         public const string LoginOTP = "/api/v1/LoginOtp";
-        public const string PassswordReset = "api/User/ResetPassword";
+        public const string PassswordReset = "api/Wallet/ResetPassword";
         public const string GetOTP = "/api/Prepaid/ActivateCardOTP";
         public const string CardActivation = "api/Prepaid/ActivateCard";
         public const string GetCustomerBalance = "api/Wallet/FetchCustomerBalance";
@@ -89,7 +89,7 @@ namespace PPICards.Models
         public const string RaiseComplaint = "api/User/RaiseComplaint";
         public const string GetuserInfo = "api/v1/GetUserInfo";
         public const string UnauthorizedBlock = "api/v1/BlockUnauthorized";
-        
+        public const string GetLimit = "api/Wallet/GetTxnLimt";
     }
 
     public class ConstValues
@@ -108,6 +108,7 @@ namespace PPICards.Models
         public const string UserAccount = "bankaccount";
         public const string EntityId = "entityId";
         public const string SessionMobileNo = "MobileNo";
+        public const string KitReferenceNumber = "KitReferenceNumber";
         public const string SessionDOB = "DOB";
         public const string CardDetails = "mappingtext";
         public const string KycStatus = "KycStatus";
